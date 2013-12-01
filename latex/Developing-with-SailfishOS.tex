@@ -1,0 +1,902 @@
+% !TEX TS-program = pdflatex
+% !TEX encoding = UTF-8 Unicode
+
+% This is a simple template for a LaTeX document using the "article" class.
+% See "book", "report", "letter" for other types of document.
+
+\documentclass[12pt]{scrartcl} % use larger type; default would be 10pt
+\usepackage[utf8]{inputenc} % set input encoding (not needed with XeLaTeX)
+
+%%% Examples of Article customizations
+% These packages are optional, depending whether you want the features they provide.
+% See the LaTeX Companion or other references for full information.
+
+%%% PAGE DIMENSIONS
+\usepackage{geometry} % to change the page dimensions
+\geometry{a4paper} % or letterpaper (US) or a5paper or....
+% \geometry{margin=2in} % for example, change the margins to 2 inches all round
+% \geometry{landscape} % set up the page for landscape
+%   read geometry.pdf for detailed page layout information
+
+\usepackage{graphicx} % support the \includegraphics command and options
+
+% \usepackage[parfill]{parskip} % Activate to begin paragraphs with an empty line rather than an indent
+
+%%% PACKAGES
+\usepackage{booktabs} % for much better looking tables
+\usepackage{array} % for better arrays (eg matrices) in maths
+\usepackage{paralist} % very flexible & customisable lists (eg. enumerate/itemize, etc.)
+\usepackage{verbatim} % adds environment for commenting out blocks of text & for better verbatim
+\usepackage{subfig} % make it possible to include more than one captioned figure/table in a single float
+%\usepackage[ngerman]{babel} % German umlauts
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern} % fancy fonts for PDF(Reader)
+\usepackage{graphicx} % show graphics
+\usepackage{float} % keep images in place
+\usepackage{url} %fance urls
+\usepackage{nameref}
+
+%%% source code listings %%%
+\usepackage{listings}
+\usepackage{color}
+
+\definecolor{mygreen}{rgb}{0,0.6,0}
+\definecolor{mygray}{rgb}{0.5,0.5,0.5}
+\definecolor{mymauve}{rgb}{0.58,0,0.82}
+
+\lstset{ %
+  backgroundcolor=\color{white},   % choose the background color; you must add \usepackage{color} or \usepackage{xcolor}
+  basicstyle=\footnotesize,        % the size of the fonts that are used for the code
+  breakatwhitespace=false,         % sets if automatic breaks should only happen at whitespace
+  breaklines=true,                 % sets automatic line breaking
+  captionpos=b,                    % sets the caption-position to bottom
+  commentstyle=\color{mygreen},    % comment style
+  %deletekeywords={...},            % if you want to delete keywords from the given language
+  escapeinside={\%*}{*)},          % if you want to add LaTeX within your code
+  extendedchars=true,              % lets you use non-ASCII characters; for 8-bits encodings only, does not work with UTF-8
+  frame=single,                    % adds a frame around the code
+  keepspaces=true,                 % keeps spaces in text, useful for keeping indentation of code (possibly needs columns=flexible)
+  keywordstyle=\color{blue},       % keyword style
+  language=Octave,                 % the language of the code
+  %morekeywords={*,...},            % if you want to add more keywords to the set
+  numbers=left,                    % where to put the line-numbers; possible values are (none, left, right)
+  numbersep=5pt,                   % how far the line-numbers are from the code
+  numberstyle=\tiny\color{mygray}, % the style that is used for the line-numbers
+  rulecolor=\color{black},         % if not set, the frame-color may be changed on line-breaks within not-black text (e.g. comments (green here))
+  showspaces=false,                % show spaces everywhere adding particular underscores; it overrides 'showstringspaces'
+  showstringspaces=false,          % underline spaces within strings only
+  showtabs=false,                  % show tabs within strings adding particular underscores
+  stepnumber=2,                    % the step between two line-numbers. If it's 1, each line will be numbered
+  stringstyle=\color{mymauve},     % string literal style
+  tabsize=2,                       % sets default tabsize to 2 spaces
+  title=\lstname                   % show the filename of files included with \lstinputlisting; also try caption instead of title
+}
+
+%%% JOBNAME %%%
+\edef\Jobname{\jobname}
+\catcode`\*=\active
+\def*{ }
+\edef\Jobname{"\scantokens\expandafter{\Jobname\noexpand}"}
+\catcode`\*=12 %
+%\show\Jobname
+
+%%% HEADERS & FOOTERS
+\usepackage{fancyhdr} % This should be set AFTER setting up the page geometry
+\pagestyle{fancy} % options: empty , plain , fancy
+\renewcommand{\headrulewidth}{0pt} % customise the layout...
+\lhead{}\chead{}\rhead{\includegraphics[scale=0.3]{./gfx/hardcodes-03-logo.png}}
+\lfoot{\Jobname}\cfoot{}\rfoot{\thepage}
+\setlength{\headheight}{65pt}
+
+%%% SECTION TITLE APPEARANCE
+\usepackage{sectsty}
+\allsectionsfont{\sffamily\mdseries\upshape} % (See the fntguide.pdf for font help)
+% (This matches ConTeXt defaults)
+
+%%% ToC (table of contents) APPEARANCE
+\usepackage[nottoc,notlof,notlot]{tocbibind} % Put the bibliography in the ToC
+\usepackage[titles,subfigure]{tocloft} % Alter the style of the Table of Contents
+\renewcommand{\cftsecfont}{\rmfamily\mdseries\upshape}
+\renewcommand{\cftsecpagefont}{\rmfamily\mdseries\upshape} % No bold!
+
+%%% PDF details %%%
+\usepackage[pdftex]{hyperref}
+  \hypersetup{
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% CHANGE HERE
+    pdftitle={SolMan},
+    pdfsubject={manual},
+    pdfauthor={Sven Putze},
+    pdfproducer={hardcodes.de},
+    pdfkeywords={SailfishOS, Jolla, Development},
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    pdfcreator={LaTeX},
+    colorlinks,
+    citecolor=black,
+    filecolor=black,
+    linkcolor=black,
+    urlcolor=black
+  }
+%%% END Article customizations
+
+
+\begin{document}
+\begin{titlepage}
+\pagenumbering{gobble}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% CHANGE HERE
+\title{Developing with SailfishOS}
+\subtitle{a short introduction}
+\author{Sven Putze, \url{hardcodes.de}}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\date{} 
+
+\maketitle
+\vspace{60mm}
+\begin{center}
+\includegraphics[scale=0.3]{./gfx/sailfish-logo.png}
+\end{center}
+\end{titlepage}
+\pagenumbering{arabic}
+\setcounter{page}{1}
+\tableofcontents
+\pagebreak
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% CONTENT
+
+\chapter{}
+
+\section{About}
+
+Hi, my name is Sven\cite{hc01} and I am eager to develop for the Jolla smartphone. On my way some questions came up and I tried to answer them as good as I can. After a while I decided to write down what I've learned, so that I had a central place to come back to and maybe others can benefit from this small document, too. The latest and greatest version is to be found on Github\cite{hc02}.
+
+\emph{This work is licensed under the Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License. To view a copy of this license, visit \url{http://creativecommons.org/licenses/by-nc-sa/4.0/deed.en_US}.}
+This goes only for content I have written myself, I don't claim ownership or copyright/left on cited content. Content from other parties remains under its original license.
+
+All mentioned trademarks and trade names are the property of their respective holders, I have not marked them with a \texttrademark, \textregistered \hspace{4 pt} or \copyright \hspace{4 pt} sign. Use some common sense here. Not all information is written by myself, I've tried to quote as responsible as possible and quite intensive if appropiate. Rad this notes as a human being, not like a lawyer.
+
+If you find typos, errors or quirks, have suggestions how to make this document better, please drop me a note. Or collaborate.\hspace{4 pt}\verb,#jolla2gether,!
+%
+\section{Download and install}\label{sec:dai}
+%
+You will need Virtual Box, because some components of the SailfishOS SDK come as virtual machines. Download for your development machine\cite{vbox01}.
+%
+\begin{figure}[H]
+  \centering
+  \includegraphics[scale=0.32]{./gfx/vboxdownload.png} 
+  \caption{Download VirtualBox from the virtualbox website.}
+  \label{fig:vboxdownload}
+\end{figure}
+%
+If you already use VirtualBox, you don't need to load it again, just skip that step. Just make sure that you have the latest updates installed.
+
+To take a dip, head over to the Sailfish Website\cite{sailfishos01} and download the SDK for your operating system.
+%
+\begin{figure}[H]
+  \centering
+  \includegraphics[scale=0.4]{./gfx/downloadsdk.png} 
+  \caption{Download the SDK from the SailfishOS website.}
+  \label{fig:downloadsdk}
+\end{figure}
+%
+\subsection{OSX}\label{subsec:osxinstall}
+%
+Double click on the downloaded disk image for VirtualBox and run the installer application inside. Some file go into system folders and you must be or elevate to an admin account to install successfully.
+\begin{figure}[H]
+  \centering
+  \includegraphics[scale=0.2]{./gfx/osxdiskimage.png} 
+  \caption{Downloaded diskimage.}
+  \label{fig:osxdiskimage}
+\end{figure}
+%
+If you use VirtualBox just for the SailfishOS SDK you don't have to care about the VirtualBox application, although you can see which folders are shared inside the preferences.
+
+Double click on the downloaded disk image for the SailfishOS SDK and run the installer app that's inside. The installed files will end in your user directory, you don't need to be an administrator to achieve that.
+%
+\begin{figure}[H]
+  \centering
+  \includegraphics[scale=0.6]{./gfx/installsdk01.png} 
+  \caption{Install SailfishOS SDK, step 1.}
+  \label{fig:installsdk01}
+\end{figure}
+%
+%
+\begin{figure}[H]
+  \centering
+  \includegraphics[scale=0.6]{./gfx/installsdk02.png} 
+  \caption{Install SailfishOS SDK, step 2.}
+  \label{fig:installsdk02}
+\end{figure}
+%
+%
+\begin{figure}[H]
+  \centering
+  \includegraphics[scale=0.6]{./gfx/installsdk03.png} 
+  \caption{Install SailfishOS SDK, step 3. Enter the path to your source code. There is no folder selector dialog, you must enter it by hand.}
+  \label{fig:installsdk03}
+\end{figure}
+%
+%
+\begin{figure}[H]
+  \centering
+  \includegraphics[scale=0.6]{./gfx/installsdk04.png} 
+  \caption{Install SailfishOS SDK, step 4.}
+  \label{fig:installsdk04}
+\end{figure}
+%
+%
+\begin{figure}[H]
+  \centering
+  \includegraphics[scale=0.6]{./gfx/installsdk05.png} 
+  \caption{Install SailfishOS SDK, step 5.}
+  \label{fig:installsdk05}
+\end{figure}
+%
+%
+\begin{figure}[H]
+  \centering
+  \includegraphics[scale=0.6]{./gfx/installsdk06.png} 
+  \caption{Install SailfishOS SDK, step 6.}
+  \label{fig:installsdk06}
+\end{figure}
+%
+%
+\begin{figure}[H]
+  \centering
+  \includegraphics[scale=0.6]{./gfx/installsdk07.png} 
+  \caption{Install SailfishOS SDK, step 7.}
+  \label{fig:installsdk07}
+\end{figure}
+%
+%
+\begin{figure}[H]
+  \centering
+  \includegraphics[scale=0.6]{./gfx/installsdk08.png} 
+  \caption{Unmount SailfishOS SDK disk image, step 8.}
+  \label{fig:installsdk08}
+\end{figure}
+%
+With the installation came two hidden directories, you should know about. More about those directories will follow later on.
+\\
+\\
+\verb,$HOME/.config/SailfishAlpha2,\\
+\verb,$HOME/.scratchbox2,\\
+\\
+After you installed the SDK, you should immediately update the components. As of now the progress inside Jolla is at good pace, so it might be that there is some stuff slightly out of date in the installer (see figures \ref{fig:osxupdate} and \ref{fig:osxupdate2}).
+%
+\begin{figure}[H]
+  \centering
+  \includegraphics[scale=0.8]{./gfx/OSXSDKMaintenaceTool.png} 
+  \caption{Inside the SailfishOS folder you find the maintenance application. Run it directly after the installation.}
+  \label{fig:osxupdate}
+\end{figure}
+%
+%
+\begin{figure}[H]
+  \centering
+  \includegraphics[scale=0.6]{./gfx/OSXSDKMaintenaceTool_run.png} 
+  \caption{Update components, choose everything that is in store.}
+  \label{fig:osxupdate2}
+\end{figure}
+%
+With the SDK comes QtCreator, a complete IDE for C++ development. This IDE is part of the Qt Framework\cite{qt01} and is simply reused\footnote{Customized with some little tweaks to suite the SailfishOS development.}by Jolla. Personally I use the QtCreator on my machines as well and for better differentiation I made a custom icon for the one in the SailfishOS SDK - feel free to download and use it, too\cite{hc03}.
+\begin{figure}[H]
+  \centering
+  \includegraphics[scale=3.0]{./gfx/Sailfish_Logo_Ocean.png} 
+  \caption{Alternative icon for the QtCreator inside the SDK.}
+  \label{fig:sdklogocustom}
+\end{figure}
+%
+%
+\subsubsection{Remove plugins}\label{subsubsec:removeplugins}
+%
+If you want to improve the startup time of QtCreator, you can deactivate plugins you don't need. Don't shoot in your foot here.
+%
+\begin{figure}[H]
+  \centering
+  \includegraphics[scale=0.6]{./gfx/qtcreatorplugins.png} 
+  \caption{About plugins = manage plugins.}
+  \label{fig:qtcreatorplugins}
+\end{figure}
+%
+%
+\begin{figure}[H]
+  \centering
+  \includegraphics[scale=0.6]{./gfx/qtcreatordeactivateplugin.png} 
+  \caption{Deactivate every plugin you don't need.}
+  \label{fig:qtcreatordeactivateplugin}
+\end{figure}
+%
+%
+\subsection{Windows}
+%
+Double click the executables that you have downloaded and follow the installer. From there on it should be more or less like the OSX install. Look in section \textit{\nameref{subsec:osxinstall}} on page \pageref{subsec:osxinstall}.
+%
+%
+\subsection{Linux}
+%
+Since I have not installed the SDK on Linux yet, I can not provide any information here. Sorry!
+
+Apart from that I have no physical Linux machine that is connected to a display and can be diverted for a test installation. A virtual machine might work but that would result in VMs inside a VM, not very promising.
+
+Volunteers present?
+%
+%
+\section{Quickstart}\label{sec:quickstart}
+%
+Start the QtCreator from the fresh installed SDK.
+
+``The SDK comes with a handy SailfishOS application template that gives you a quick way to create your very first Sailfish OS application.
+Just go to File-> New File or Project in the IDE''\cite{sailfishos2}
+
+Start the SDK from inside the QtCreator.
+\begin{figure}[H]
+  \centering
+  \includegraphics[scale=1.0]{./gfx/SDKstart.png} 
+  \caption{Starting the SDK.}
+  \label{fig:sdkstartcreator}
+\end{figure}
+%
+When the virtual machine with the SDK is running, apply updates if necessary.
+\begin{figure}[H]
+  \centering
+  \includegraphics[scale=0.3]{./gfx/managesdkupdate.png} 
+  \caption{Updating the SDK.}
+  \label{fig:managesdkupdate}
+\end{figure}
+%
+%
+Start the Emulator.
+\begin{figure}[H]
+  \centering
+  \includegraphics[scale=1.0]{./gfx/SDKemulator.png} 
+  \caption{Starting the Emulator.}
+  \label{fig:emulatorstartcreator}
+\end{figure}
+%
+Compile and run your application.
+\begin{figure}[H]
+  \centering
+  \includegraphics[scale=1.0]{./gfx/runappincreator.png} 
+  \caption{Start the application.}
+  \label{fig:runappincreator}
+\end{figure}
+%
+Easy as pie, also see figure \ref{fig:emulatorexample} on page \pageref{fig:emulatorexample}. But what happens when and where if you click on those Icons? Look in section \textit{\nameref{sec:tools}}.
+
+A good starting point to look for a more sophisticated starting example is \emph{The missing HelloWorld. Wizard included} by Artem Marchenko\cite{gh01}. You should check that out!
+%
+%
+\section{Know your tools}\label{sec:tools}
+%
+Jolla chose the Qt framework to be part of their technology stack.
+``Qt is a cross-platform application and UI framework for developers using C++ or QML, a CSS \& JavaScript like language. Qt Creator is the supporting Qt IDE.
+Qt, Qt Quick and the supporting tools are developed as an open source project governed by an inclusive meritocratic model. Qt can be used under open source (LGPL v2.1) or commercial terms.''\cite{qt01}
+
+``Qt - code once, deploy everywhere'', that's the mantra of the Qt framework. If you have developed for more than one platform in the past, you know that this sounds like heaven. Maintaining different source code and technologies for each and every platform is a tedious task that can eat up all your developer resources. As if software development is not difficult enough if you stay on one platform\footnote{In my eyes software development is an art of craftsmanship and can not be done by Mr. Average and thus is a more or less complicated thing to do.}.
+
+So there were good reasons to choose Qt as framework, no doubt about that. As of now you can develop for Android, iOS, BlackBerry and of course SailfishOS. If you look into the documentation and examples of all these platforms, you will find that those examples assume, that you are developing for this platform only. Quite stupid, if you use the Qt framework. Understandable if you think about the effort that would be necessary to build a documentation that incorporates all other possible platforms. For some time now I was wondering how I should organize my code in such a way, that allows me to develop for more than one target platform at a time. It's not just compiling for another platform! Each platform has a unique UI that behaves in an own different way, e.g. SailfishOS is gesture based, other ones are touch based.
+In the long run you will create an UI for each of those targets. Period. Patterns like MVC\cite{wiki01} will come to mind, using separate business logic, yada yada.
+
+To cut a long story short, why am I writing about this stuff, this section is supposed to be about tools? When you prepare a software project for the use for more than one target platform, you will start organizing stuff differently. Maybe you use folders that have the name of the targets to differentiate stuff that's platform dependent. Maybe you even create a business logic that is really unique and capsulated in such clever way that it can be reused and does not know anything about the outside world. Such a business logic or model can be driven from tests, command line tools, web or different native UIs. Would be nice to have it in a separate folder or even subproject. If you start to move and/or rename things, your tools will break. Intentionally.
+
+By examining those fractures you can learn a lot about your tools that otherwise work so silently in the background. So go on and break your tools!\footnote{Ok, not so short :-)}
+
+Here is what I've learned so far.
+%
+\subsection{Technology stack}
+%
+\begin{figure}[H]
+  \centering
+  \includegraphics[scale=0.8]{./gfx/Sailfish_Architecture.png} 
+  \caption{Sailfish architecture, taken from\\https://sailfishos.org/images/Sailfish\_Architecture.png.}
+  \label{fig:SailfishArchitecture}
+\end{figure}
+%
+\subsection{QtCreator integrated development environment (IDE)}\label{subset:QtCreator}
+%
+``QtCreator is a cross platform integrated development environment (IDE) tailored to the needs of Qt developers. It has been extended to add support for Sailfish UI application development using Sailfish Silica components. It provides a sophisticated code editor with version control, project and build management system integration.''\cite{sailfishos3}.
+
+Reusing an existing open source IDE is a smart move from Jolla. Why should they waste resources on developing something that has already done by others? Or why should they burn up their staff for all those development solutions out there? Be it Visual Studio, Eclipse, Emacs or even Vi. If you really dive in the tools, you can also use those but I doubt that Jolla will provide you with support if something does not work. Working with QtCreator is also quite natural in the Qt universe albeit being a fast IDE. So have a look in the preferences\footnote{On Windows and Linux they should be found in Extras/Options.}.
+\begin{figure}[H]
+  \centering
+  \includegraphics[scale=0.7]{./gfx/QtCreatorPreferences.png} 
+  \caption{Open the QtCreator preferences.}
+  \label{fig:creatorpref}
+\end{figure}
+%
+I will not walk through every setting of QtCreator, \cite{qt02} is a better place to start for basic questions.
+Also I will not use the order of tabs in the preferences, but try to follow the sequence in which those tools touch your source code.
+%
+%
+\subsubsection{kits}
+%
+But before we do that, we must talk about \textit{kits}. A kit is kind of an umbrella setting, which combines the information of the following bits and pieces, like \verb,qmake,, \verb,compiler,, and \verb,device type,. When we try to do some of the steps manually via command line, we will see that it often does not work but the same action succeeds invoked by QtCreator. One of the reasons are those kits. This is the information hub that QtCreator uses to pull all information together and initiate its actions.
+\begin{figure}[H]
+  \centering
+  \includegraphics[scale=0.35]{./gfx/kits486.png} 
+  \caption{Preferences, kits tab.}
+  \label{fig:creatorkits}
+\end{figure}
+%
+%
+\subsubsection{qmake}
+%
+\begin{figure}[H]
+  \centering
+  \includegraphics[scale=0.35]{./gfx/QtCreatorQtVersions.png} 
+  \caption{Preferences, QtVersions tab.}
+  \label{fig:qmake486pref}
+\end{figure}
+%
+``qmake is a tool that helps simplify the build process for development project across different platforms. qmake automates the generation of Makefiles so that only a few lines of information are needed to create each Makefile. qmake can be used for any software project, whether it is written in Qt or not.
+qmake generates a Makefile based on the information in a project file. Project files are created by the developer, and are usually simple, but more sophisticated project files can be created for complex projects. qmake contains additional features to support development with Qt, automatically including build rules for moc and uic. qmake can also generate projects for Microsoft Visual studio without requiring the developer to change the project file.''\cite{qt03}
+%
+\begin{figure}[H]
+  \centering
+  \includegraphics[scale=0.45]{./gfx/qmakedetails.png} 
+  \caption{Preferences, QtVersions tab., qmake details}
+  \label{fig:qmakedetailspref}
+\end{figure}
+%
+UIC is a tool that creates C++ classes from XML information generated with the UI designer inside QtCreator. This designer is for Qt widgets which should not be used with SailfishOS and is not further explained in this document.
+
+MOC is the Meta-Object Compiler which ``reads a C++ header file. If it finds one or more class declarations that contain the \verb,Q_OBJECT, macro, it produces a C++ source file containing the meta-object code for those classes.''\cite{qt04}. If you use \verb,qmake, to produce your Makefile, you don't have to worry about it, the rules are created automatically.
+%
+\begin{figure}[H]
+  \centering
+  \includegraphics[scale=0.6]{./gfx/qmake486.png} 
+  \caption{Running qmake from command line.}
+  \label{fig:qmake486commandline}
+\end{figure}
+%
+If you run qmake manually, you will find out that it tries to connect to the \textit{Mer build engine for cross compilation}. The error also appears if the virtual machine is up and running. In the Projects settings you can see how \verb,qmake, is invoked if started by QtCreator.
+%
+\begin{figure}[H]
+  \centering
+  \includegraphics[scale=0.8]{./gfx/projects.png} 
+  \caption{Project settings.}
+  \label{fig:qmakeprojectsettings}
+\end{figure}
+%
+%
+\begin{figure}[H]
+  \centering
+  \includegraphics[scale=0.5]{./gfx/buildstepsqmake.png} 
+  \caption{Build steps for qmake.}
+  \label{fig:qmakebuildsteps}
+\end{figure}
+%
+Using those parameters via command line does not work, too.
+\begin{figure}[H]
+  \centering
+  \includegraphics[scale=0.6]{./gfx/qmakewithparam.png} 
+  \caption{Running qmake from command line with parameters from build steps.}
+  \label{fig:qmake486buildstepsparamcommandline}
+\end{figure}
+%
+If \verb,qmake, is invoked by the QtCreator it works just fine.
+\begin{figure}[H]
+  \centering
+  \includegraphics[scale=0.5]{./gfx/qmakerunfromqtcreator.png} 
+  \caption{Running qmake from QtCreator (Build menu).}
+  \label{fig:qmake486runfromqtcreator}
+\end{figure}
+%
+As a result you will find a \verb,Makefile, in your project directory.
+\begin{figure}[H]
+  \centering
+  \includegraphics[scale=0.5]{./gfx/qmakeresult.png} 
+  \caption{Result of running qmake from QtCreator (Build menu).}
+  \label{fig:qmake486result}
+\end{figure}
+%
+Here is the snippet about the MOC.
+%
+\begin{lstlisting}[language=make]
+####### Sub-libraries
+
+distclean: clean
+	-$(DEL_FILE) $(TARGET) 
+	-$(DEL_FILE) Makefile
+
+
+mocclean: compiler_moc_header_clean compiler_moc_source_clean
+
+mocables: compiler_moc_header_make_all compiler_moc_source_make_all
+
+check: first
+
+compiler_rcc_make_all:
+compiler_rcc_clean:
+compiler_wayland-server-header_make_all:
+compiler_wayland-server-header_clean:
+compiler_wayland-client-header_make_all:
+compiler_wayland-client-header_clean:
+compiler_qtwayland-client-header_make_all:
+compiler_qtwayland-client-header_clean:
+compiler_qtwayland-server-header_make_all:
+compiler_qtwayland-server-header_clean:
+compiler_moc_header_make_all: moc/moc_qbusinesslogic.cpp
+compiler_moc_header_clean:
+	-$(DEL_FILE) moc/moc_qbusinesslogic.cpp
+moc/moc_qbusinesslogic.cpp: /usr/include/qt5/QtCore/QObject \
+		/usr/include/qt5/QtCore/qobject.h \
+		/usr/include/qt5/QtCore/qobjectdefs.h \
+		/usr/include/qt5/QtCore/qnamespace.h \
+		/usr/include/qt5/QtCore/qglobal.h \
+		/usr/include/qt5/QtCore/qconfig.h \
+		/usr/include/qt5/QtCore/qfeatures.h \
+		/usr/include/qt5/QtCore/qsystemdetection.h \
+		/usr/include/qt5/QtCore/qcompilerdetection.h \
+		/usr/include/qt5/QtCore/qprocessordetection.h \
+		/usr/include/qt5/QtCore/qglobalstatic.h \
+		/usr/include/qt5/QtCore/qatomic.h \
+		/usr/include/qt5/QtCore/qbasicatomic.h \
+		/usr/include/qt5/QtCore/qatomic_bootstrap.h \
+		/usr/include/qt5/QtCore/qgenericatomic.h \
+		/usr/include/qt5/QtCore/qatomic_msvc.h \
+		/usr/include/qt5/QtCore/qatomic_integrity.h \
+		/usr/include/qt5/QtCore/qoldbasicatomic.h \
+		/usr/include/qt5/QtCore/qatomic_vxworks.h \
+		/usr/include/qt5/QtCore/qatomic_power.h \
+		/usr/include/qt5/QtCore/qatomic_alpha.h \
+		/usr/include/qt5/QtCore/qatomic_armv7.h \
+		/usr/include/qt5/QtCore/qatomic_armv6.h \
+		/usr/include/qt5/QtCore/qatomic_armv5.h \
+		/usr/include/qt5/QtCore/qatomic_bfin.h \
+		/usr/include/qt5/QtCore/qatomic_ia64.h \
+		/usr/include/qt5/QtCore/qatomic_mips.h \
+		/usr/include/qt5/QtCore/qatomic_s390.h \
+		/usr/include/qt5/QtCore/qatomic_sh4a.h \
+		/usr/include/qt5/QtCore/qatomic_sparc.h \
+		/usr/include/qt5/QtCore/qatomic_x86.h \
+		/usr/include/qt5/QtCore/qatomic_cxx11.h \
+		/usr/include/qt5/QtCore/qatomic_gcc.h \
+		/usr/include/qt5/QtCore/qatomic_unix.h \
+		/usr/include/qt5/QtCore/qmutex.h \
+		/usr/include/qt5/QtCore/qlogging.h \
+		/usr/include/qt5/QtCore/qflags.h \
+		/usr/include/qt5/QtCore/qtypeinfo.h \
+		/usr/include/qt5/QtCore/qtypetraits.h \
+		/usr/include/qt5/QtCore/qsysinfo.h \
+		/usr/include/qt5/QtCore/qobjectdefs_impl.h \
+		/usr/include/qt5/QtCore/qstring.h \
+		/usr/include/qt5/QtCore/qchar.h \
+		/usr/include/qt5/QtCore/qbytearray.h \
+		/usr/include/qt5/QtCore/qrefcount.h \
+		/usr/include/qt5/QtCore/qarraydata.h \
+		/usr/include/qt5/QtCore/qstringbuilder.h \
+		/usr/include/qt5/QtCore/qlist.h \
+		/usr/include/qt5/QtCore/qalgorithms.h \
+		/usr/include/qt5/QtCore/qiterator.h \
+		/usr/include/qt5/QtCore/qcoreevent.h \
+		/usr/include/qt5/QtCore/qscopedpointer.h \
+		/usr/include/qt5/QtCore/qmetatype.h \
+		/usr/include/qt5/QtCore/qvarlengtharray.h \
+		/usr/include/qt5/QtCore/qcontainerfwd.h \
+		/usr/include/qt5/QtCore/qisenum.h \
+		/usr/include/qt5/QtCore/qobject_impl.h \
+		model/qt/qbusinesslogic.h
+	/usr/lib/qt5/bin/moc $(DEFINES) $(INCPATH) -I/usr/lib/gcc/i486-meego-linux/4.6.4/../../../../include/c++/4.6.4 -I/usr/lib/gcc/i486-meego-linux/4.6.4/../../../../include/c++/4.6.4/i486-meego-linux -I/usr/lib/gcc/i486-meego-linux/4.6.4/../../../../include/c++/4.6.4/backward -I/usr/lib/gcc/i486-meego-linux/4.6.4/include -I/usr/local/include -I/usr/include model/qt/qbusinesslogic.h -o moc/moc_qbusinesslogic.cpp
+\end{lstlisting}
+%
+The \verb,qmake, from the SailfishOS SDK is just a simple bash script, that invokes \verb,merssh,.
+%
+\begin{lstlisting}[language=bash]
+#!/bin/bash
+exec "/Users/sven/SailfishOS/bin/Qt Creator.app/Contents/MacOS/../Resources/merssh" -sdktoolsdir "/Users/sven/.config/SailfishAlpha2/mer-sdk-tools/MerSDK" -commandtype mb2 -mertarget SailfishOS-i486-x86 qmake $@oluhuone:SailfishOS-i486-x86
+\end{lstlisting}
+%
+So that's the trick: \verb,$@, is replaced with the \verb,qmake, call parameters, \verb,oluhuone, is just the name of one of my computers.
+%
+\subsubsection{merssh}\label{subsubsec:merssh}
+%
+Looking with \verb,top, showed a process called \verb,merssh, when \verb,qmake, was started via QtCreator. Interesting, what's that?
+%
+\begin{figure}[H]
+  \centering
+  \includegraphics[scale=0.6]{./gfx/merssh.png} 
+  \caption{What is merssh?.}
+  \label{fig:merssh}
+\end{figure}
+%
+So it is part of the QtCreator that is shipped with the SailfishOS SDK.
+%
+\begin{figure}[H]
+  \centering
+  \includegraphics[scale=0.6]{./gfx/mersshinvoked.png} 
+  \caption{merssh invoked, what's it?.}
+  \label{fig:mersshinvoked}
+\end{figure}
+%
+The existence of \verb,merssh, need further investigation, I can not tell more at the moment. Probably it corresponds to the settings of the Mer SDK, shown in figure \ref{fig:creatormersdk} on page \pageref{fig:creatormersdk}.
+
+More than that, it calls \verb,sb2, which is short for Scratchbox2, have a look at section \nameref{subsec:scratchbox2} on page \pageref{subsec:scratchbox2}, there are more details. For now let's just assume that ``Scratchbox 2 is a cross-compilation engine, it can be used to create a highly flexible SDK.''\cite{sb2}.
+%
+\begin{figure}[H]
+  \centering
+  \includegraphics[scale=0.5]{./gfx/merplugin.png} 
+  \caption{Mer plugin, maybe that's the source of merssh?.}
+  \label{fig:merplugin}
+\end{figure}
+%
+I've grepped the command line for the \verb,merssh,
+\begin{lstlisting}[language=bash]
+$ ps -ef|grep "merssh"
+\end{lstlisting}
+%
+And the result is:
+\begin{lstlisting}[language=bash]
+/Users/sven/SailfishOS/bin/Qt Creator.app/Contents/MacOS/../Resources/merssh -sdktoolsdir /Users/sven/.config/SailfishAlpha2/mer-sdk-tools/MerSDK -commandtype mb2 -mertarget SailfishOS-i486-x86 qmake /Users/sven/QtProjects/TestSailfishOS/TestSailfishOS.pro -r -spec linux-g++ CONFIG+=debug CONFIG+=declarative_debug CONFIG+=qml_debug -after OBJECTS_DIR=obj MOC_DIR=moc UI_DIR=ui RCC_DIR=rcc
+\end{lstlisting}
+%
+The picture is getting clearer now. QtCreator starts the SDK version of \verb,qmake, which call \verb,merssh, with all parameters needed to call \verb,qmake, via \verb,mb2, on the virtual machine.
+%
+%
+\subsubsection{Compilers}
+%
+%
+\begin{figure}[H]
+  \centering
+  \includegraphics[scale=0.4]{./gfx/Compilers.png} 
+  \caption{Preferences, compiler tab.}
+  \label{fig:creatorcompilers}
+\end{figure}
+%
+The SailfishOS SDK uses GCC as compiler. It is run inside the \nameref{subsec:MerSDK}, see page \pageref{subsec:MerSDK}. Stored on your development machine is only a stub or proxy that wants to connect to the virtual machine and start compiling from there.
+%
+\begin{figure}[H]
+  \centering
+  \includegraphics[scale=0.6]{./gfx/gcc486.png} 
+  \caption{Running GCC from command line.}
+  \label{fig:gcc486commandline}
+\end{figure}
+%
+So far I don't know why this piece of software is not installed with the rest of the SDK, \verb, ~/.config, is not a directory where I would expect executables. The error message even shows up if the \textit{Mer build engine for cross compilation} is up and running. Again this helper program is invoked via \nameref{subsubsec:merssh}, see page \pageref{subsubsec:merssh}.
+
+Looking inside \verb,gcc, from the SDK I also find a bash script:
+\begin{lstlisting}[language=bash]
+#!/bin/bash
+exec "/Users/sven/SailfishOS/bin/Qt Creator.app/Contents/MacOS/../Resources/merssh" -sdktoolsdir "/Users/sven/.config/SailfishAlpha2/mer-sdk-tools/MerSDK" -commandtype sb2 -mertarget SailfishOS-i486-x86 gcc $@oluhuone:SailfishOS-i486-x86
+\end{lstlisting}
+%
+\verb,$@, is replaced with the \verb,gcc, call parameters, \verb,oluhuone, is just the name of my current machine.
+%
+%
+\subsubsection{make}\label{subsubsec:make}
+%
+Again, \verb,make, is just a bash script, \verb,$@, replaced, \verb,oluhuone, my machine:
+%
+\begin{lstlisting}[language=bash]
+#!/bin/bash
+exec "/Users/sven/SailfishOS/bin/Qt Creator.app/Contents/MacOS/../Resources/merssh" -sdktoolsdir "/Users/sven/.config/SailfishAlpha2/mer-sdk-tools/MerSDK" -commandtype mb2 -mertarget SailfishOS-i486-x86 make $@oluhuone:SailfishOS-i486-x86
+\end{lstlisting}
+%
+%
+I've grepped the command line for the \verb,merssh, while building the application.
+%
+\begin{lstlisting}[language=bash]
+$ ps -ef|grep "merssh"
+\end{lstlisting}
+%
+Resulting in
+%
+\begin{lstlisting}[language=bash]
+/Users/sven/SailfishOS/bin/Qt Creator.app/Contents/MacOS/../Resources/merssh -sdktoolsdir /Users/sven/.config/SailfishAlpha2/mer-sdk-tools/MerSDK -commandtype mb2 -mertarget SailfishOS-i486-x86 make
+\end{lstlisting}
+%
+%
+\subsubsection{rpm}\label{subsubsec:rpm}
+%
+Guess what, a bash script:
+%
+\begin{lstlisting}[language=bash]
+#!/bin/bash
+exec "/Users/sven/SailfishOS/bin/Qt Creator.app/Contents/MacOS/../Resources/merssh" -sdktoolsdir "/Users/sven/.config/SailfishAlpha2/mer-sdk-tools/MerSDK" -commandtype mb2 -mertarget SailfishOS-i486-x86 rpm $@oluhuone:SailfishOS-i486-x86
+\end{lstlisting}
+%
+%
+\subsection{Mer build engine for cross compilation}\label{subsec:MerSDK}
+%
+``The Mer build engine is a virtual machine (VM) containing the Mer development toolchains and tools. It also includes a SailfishOS target for building and running Sailfish and QML applications. The target is mounted as a shared folder to allow QtCreator to access the compilation target. Additionally, your home directory is shared and mounted in the VM, thus giving access to your source code for compilation.
+The build engine also supports additional build targets and cross-compilation toolchains. These can be managed from the SDK Control Centre interface within QtCreator which allows toolchains, targets and even individual target packages to be added and removed.''\cite{sailfishos3}.
+%
+\begin{figure}[H]
+  \centering
+  \includegraphics[scale=0.5]{./gfx/MerSDKsettings.png} 
+  \caption{SailfishOS icon.}
+  \label{fig:creatormersdkicon}
+\end{figure}
+%
+The VM runs headless, you can not see it running. For you as a developer there is a webpage served by this VM accessible through the SailfishOS icon inside QtCreator. See figure \ref{fig:managesdkupdate} on page \pageref{fig:managesdkupdate}.
+%
+\begin{figure}[H]
+  \centering
+  \includegraphics[scale=0.3]{./gfx/MerSDK.png} 
+  \caption{Preferences, Mer SDK - virtual machine.}
+  \label{fig:creatormersdk}
+\end{figure}
+%
+\subsection{Scratchbox2}\label{subsec:scratchbox2}
+%
+``Scratchbox2 (sbox2 or sb2) is a cross-compilation toolkit designed to make embedded Linux application development easier. It also provides a full set of tools to integrate and cross-compile an entire Linux distribution.
+
+In the Linux world, when building software, many parameters are auto-detected based on the host system (like installed libraries and system configurations), through autotools "./configure" scripts for example. But so, when one wants to build for an embedded target (cross-compilation), most of the detected parameters are incorrect (i.e. host configuration is not the same as the embedded target configuration).
+
+Without Scratchbox2, one has to manually set many parameters and "hack" the "configure" process to be able to generate code for the embedded target.
+
+At the opposite, Scratchbox2 allows one to set up a "virtual" environment that will trick the autotools and executables into thinking that they are directly running on the embedded target with its configuration.
+
+Moreover, Scratchbox2 provides a technology called CPU-transparency that goes further in that area. With CPU-transparency, executables built for the host CPU or for the target CPU could be executed directly on the host with sbox2 handling the task to CPU-emulate if needed to run a program compiled for the target CPU. So, a build process could mix the usage of program built for different CPU architectures. That is especially useful when a build process requires building the program X to be able to use it to build the program Y (Example: building a Lexer that will be used to generate code for a specific package).''\cite{wiki02}
+
+The Wiki page of the Mer project contains a exhaustive description how to compile a program on platform A for platform B\cite{mer01}.
+%
+%
+\subsection{The SailfishOS Emulator}\label{subsec:SailfishEmulator}
+%
+``The emulator is an x86 VM image containing a stripped down version of the target device software. It emulates most of the functions of the target device running Sailfish operating system, such as gestures, task switching and ambience theming.''\cite{sailfishos3}.
+At least with the AlphaSDK2 the emulator can not simulate device rotations.
+%
+\begin{figure}[H]
+  \centering
+  \includegraphics[scale=0.3]{./gfx/emulatorexample.png} 
+  \caption{Emulator running the templated SailfishOS Qt Quick Application.}
+  \label{fig:emulatorexample}
+\end{figure}
+%
+%
+\subsection{Sailfish Silica}\label{subsec:SailfishSilica}
+%
+``Sailfish Silica is a QML module which provides Sailfish UI components for applications. Their look and feel fits with the Sailfish visual style and behavior and enables unique Sailfish UI application features, such as pulley menus and application covers.''\cite{sailfishos3}.
+
+QML\cite{qt05} is the Qt \emph{Q}uick \emph{M}arkup \emph{L}anguage\cite{qt06} that supersedes widgets for designing user interfaces. It is a declarative ``language'' that can contain a small subset of Javascript.
+%
+
+Also have a look at some open source examples on Github\cite{sailfishos5}.
+%
+%
+\subsection{Tools chained up}\label{subset:toolschainedup}
+%
+Now that we have seen all the tools, bits and pieces, I will try to give an overview how everything works together, when you compile your code in QtCreator for SailfishOS.
+%
+
+TODO put some text and images here.
+TODO find out, how the packaging happens, Makefile?
+%
+%
+\section{Installing additional packages}\label{sec:addpkg}
+%
+TODO see also caveats on sailfish site
+%
+%
+\section{Templates for QtCreator}\label{sec:templateqtcreator}
+%
+The SailfishOS SDK comes with a template for a new SailfishOS Qt Quick Application project. On OSX those templates are stored inside the QtCreaor bundle, you can change those templates there or create new ones.
+%
+\begin{figure}[H]
+  \centering
+  \includegraphics[scale=0.4]{./gfx/newprojecttemplate1.png} 
+  \caption{Template for a new SailfishOS Qt Quick Application.}
+  \label{fig:newprojecttemplate1}
+\end{figure}
+%
+Just make sure that you don't use the names \verb,, \verb,obj,, \verb,moc,, \verb,ui, or \verb,rcc, inside your template. These are going to be used to store the compile results and temporaries if you compile a SailfishOS program.
+
+Updates of the SDK may delete changed or new templates, you might want to create a backup in a safe place.
+%
+TODO example of a new template, figure out the caveats here!
+%
+%
+\section{Physical device}\label{sec:device}
+%
+Developing with the emulator only will do you no good. You have to experience your program on a real device. Things that might look great on an emulator, may not even work for you on a real phone. It maybe just you fingers that are hiding the screen.
+\subsection{How to connect to SSH over usb connection from PC}
+%
+\begin{itemize}
+\item the usb is either \verb,usb_storage, or \verb,usb_net,
+\item enable developer mode
+\item enable SSH (it's openssh, not dropbear)
+\item set password
+\item goto usb settings
+\item change that to developer mode
+\item reconnect usb cable
+\item you should see the ip address of the device on the UI
+\item you should be able to ssh to that address from PC (set an ip address first)
+\end{itemize}
+Taken from \cite{ex01}.
+
+This section obviously needs a lot more information. Lacking a physical device or an SDK that enables me to interact with it, this has to be done in future.
+%
+%
+\section{Community}\label{sec:community}
+%
+\subsection{Jolla}
+%
+Jolla homepage \url{http://jolla.com}.
+\\
+Jolla on Twitter: \url{https://twitter.com/JollaHQ}.
+%
+%
+\subsubsection{SailfishOS}
+%
+As a developer you should subscribe to the mailing list at \url{https://lists.sailfishos.org/cgi-bin/mailman/listinfo/devel}.
+
+Have a look at the Wiki at \url{https://sailfishos.org/wiki/Main_Page}.
+%
+\\At freenode \verb,#sailfishos,.
+%
+%
+\subsubsection{Mer}
+%
+At freenode \verb,#mer,.
+%
+\subsubsection{Nemo mobile}
+%
+At freenode \verb,#nemomobile,.
+%
+%
+\section{Thanks}\label{sec:thanks}
+%
+Of course a big thanks goes out to everybody at Jolla. You are \verb,#unlike,!
+%
+%
+\begin{thebibliography}{xxxxxxxxxxxx}
+%
+%
+\bibitem [jolla01]{jolla01}
+  Jolla ltd., based in Finland - the inventors of the Jolla smartphone \\\url{http://jolla.com}
+ %
+ %
+\bibitem [sailfishos01]{sailfishos01}
+	SailfisoS - the operating system driving the Jolla smartphone \\\url{https://sailfishos.org}
+\bibitem [sailfishos2]{sailfishos2} Quick introduction into development with the SailfishOS SDK \\\url{https://sailfishos.org/develop.html}
+\bibitem [sailfishos3]{sailfishos3} SailfishOS SDK overview \\\url{https://sailfishos.org/develop-overview-article.html}
+\bibitem [sailfishos4]{sailfishos4} SailfishOS open source code \\\url{http://releases.sailfishos.org/sdk/}
+\bibitem [sailfishos5]{sailfishos5} Unofficial Sailfish OS third party open source apps collection \\\url{https://github.com/sailfishapps}
+%
+%
+\bibitem[vbox01]{vbox01} VirtualBox, a virtualization platform from Oracle\\\url{https://www.virtualbox.org/wiki/Downloads}
+\bibitem [hc01]{hc01} hardcodes, that's my nickname and my website\\\url{http://www.hardcodes.de}
+\bibitem [hc02]{hc02} This document on Github\\\url{https://github.com/hardcodes/developwithsailfishos.git}
+\bibitem [hc03]{hc03} Alternative Icon for the QtCreator inside of the SailfishOS SDK\\\url{http://blog.hardcodes.de/articles/68/sailfish-os-icon}
+%
+%
+\bibitem [qt01]{qt01} The Qt Project. \\\url{https://qt-project.org}
+\bibitem [qt02]{qt02} QtCreator. \\\url{https://qt-project.org/doc/
+qtcreator-2.8/}
+\bibitem [qt03]{qt03} qmake manual. \\\url{http://qt-project.org/doc/qt-4.8/qmake-manual.html}
+\bibitem [qt04]{qt04} Meta-Object Compiler (MOC) \\\url{http://qt-project.org/doc/qt-4.8/moc.html}
+\bibitem [qt05]{qt05} QML \\\url{http://qt-project.org/doc/qt-5.0/qtqml/qtqml-index.html}
+\bibitem [qt06]{qt06} QtQuick \\\url{http://qt-project.org/doc/qt-5.0/qtquick/qtquick-index.html}
+\bibitem [qt07]{qt07} QtCreator, Adding New Custom Wizards\\\url{http://qt-project.org/doc/qtcreator-2.8/creator-project-wizards.html}
+%
+%
+\bibitem [wiki01]{wiki01} Wikipedia, Model–view–controller (MVC) \\\url{http://en.wikipedia.org/wiki/Model–view–controller}
+\bibitem [wiki02]{wiki02} Wikipedia, Scratchbox2 \\\url{http://en.wikipedia.org/wiki/Scratchbox2}
+%
+%
+\bibitem[sb2]{sb2} Scratchbox2 homepage \\\url{https://maemo.gitorious.org/scratchbox2}
+%
+%
+\bibitem[mer01]{mer01} Mer Wiki, Platform SDK and SB2 \\\url{https://wiki.merproject.org/wiki/Platform_SDK_and_SB2}
+%
+%
+\bibitem [ex01]{ex01} Jolla details on eLinux \\\url{http://elinux.org/Jolla}
+%
+%
+\bibitem [sdc01]{sdc01} SmartDevCon \\\url{http://smartdevcon.eu}
+%
+%
+\bibitem [gh01]{gh01} The missing HelloWorld. Wizard included by Artem Marchenko \\\url{https://github.com/amarchen/helloworld-pro-sailfish}
+%
+\end{thebibliography}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\end{document}
+
+
+
+
+
+
+
+
+
