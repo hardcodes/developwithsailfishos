@@ -18,8 +18,6 @@
 % \geometry{landscape} % set up the page for landscape
 %   read geometry.pdf for detailed page layout information
 
-\usepackage{graphicx} % support the \includegraphics command and options
-
 % \usepackage[parfill]{parskip} % Activate to begin paragraphs with an empty line rather than an indent
 
 %%% PACKAGES
@@ -36,9 +34,11 @@
 \usepackage{float} % keep images in place
 \usepackage{url} %fance urls
 \usepackage{nameref}
+%\usepackage{subfigure} %
 
 %%% source code listings %%%
 \usepackage{listings}
+\usepackage{courier}
 \usepackage{color}
 
 \definecolor{mygreen}{rgb}{0,0.6,0}
@@ -47,7 +47,7 @@
 
 \lstset{ %
   backgroundcolor=\color{white},   % choose the background color; you must add \usepackage{color} or \usepackage{xcolor}
-  basicstyle=\footnotesize,        % the size of the fonts that are used for the code
+  basicstyle=\footnotesize\ttfamily, % the size of the fonts that are used for the code
   breakatwhitespace=false,         % sets if automatic breaks should only happen at whitespace
   breaklines=true,                 % sets automatic line breaking
   captionpos=b,                    % sets the caption-position to bottom
@@ -60,7 +60,7 @@
   keywordstyle=\color{blue},       % keyword style
   language=Octave,                 % the language of the code
   %morekeywords={*,...},            % if you want to add more keywords to the set
-  numbers=left,                    % where to put the line-numbers; possible values are (none, left, right)
+  numbers=none,                    % where to put the line-numbers; possible values are (none, left, right)
   numbersep=5pt,                   % how far the line-numbers are from the code
   numberstyle=\tiny\color{mygray}, % the style that is used for the line-numbers
   rulecolor=\color{black},         % if not set, the frame-color may be changed on line-breaks within not-black text (e.g. comments (green here))
@@ -127,6 +127,7 @@
 \title{Developing with SailfishOS}
 \subtitle{a short introduction}
 \author{Sven Putze, \url{hardcodes.de}}
+%\contactemail{mailcontact [AT] hardcodes [DOT] de}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %\date{} 
 
@@ -154,6 +155,8 @@ This goes only for content I have written myself, I don't claim ownership or cop
 All mentioned trademarks and trade names are the property of their respective holders, I have not marked them with a \texttrademark, \textregistered \hspace{4 pt} or \copyright \hspace{4 pt} sign. Use some common sense here. Not all information is written by myself, I've tried to quote as responsible as possible and quite intensive if appropiate. Rad this notes as a human being, not like a lawyer.
 
 If you find typos, errors or quirks, have suggestions how to make this document better, please drop me a note. Or collaborate.\hspace{4 pt}\verb,#jolla2gether,!
+
+Don't panic if you are not comfortable with writing in \LaTeX, I am happy to use your Libre/Open Office or even Word documents.
 %
 \section{Download and install}\label{sec:dai}
 %
@@ -161,10 +164,12 @@ You will need Virtual Box, because some components of the SailfishOS SDK come as
 %
 \begin{figure}[H]
   \centering
-  \includegraphics[scale=0.32]{./gfx/vboxdownload.png} 
+  \includegraphics[scale=0.4]{./gfx/vboxdownload.png} 
   \caption{Download VirtualBox from the virtualbox website.}
   \label{fig:vboxdownload}
 \end{figure}
+%
+% TODO provide images of a vbox installation
 %
 If you already use VirtualBox, you don't need to load it again, just skip that step. Just make sure that you have the latest updates installed.
 
@@ -409,7 +414,7 @@ Also I will not use the order of tabs in the preferences, but try to follow the 
 %
 \subsubsection{kits}
 %
-But before we do that, we must talk about \textit{kits}. A kit is kind of an umbrella setting, which combines the information of the following bits and pieces, like \verb,qmake,, \verb,compiler,, and \verb,device type,. When we try to do some of the steps manually via command line, we will see that it often does not work but the same action succeeds invoked by QtCreator. One of the reasons are those kits. This is the information hub that QtCreator uses to pull all information together and initiate its actions.
+But before we do that, we must talk about \textit{kits}. A kit is kind of an umbrella setting, which combines the information of the following bits and pieces, like \verb,qmake,, \verb,compiler,, and \verb,device type,. This is the information hub that QtCreator uses to pull all information together and initiate its actions.
 \begin{figure}[H]
   \centering
   \includegraphics[scale=0.35]{./gfx/kits486.png} 
@@ -695,6 +700,38 @@ exec "/Users/sven/SailfishOS/bin/Qt Creator.app/Contents/MacOS/../Resources/mers
 \end{lstlisting}
 %
 %
+\subsubsection{Project settings}\label{subsubsec:projectsettings}
+%
+
+%
+%
+\subsubsection{Pimp the clean process}\label{subsubsec:pimpclean}
+%
+Every now and then you clean your project. What bugged my for some time using QtCreator\footnote{That has nothing to do with the SailfishOS SDK, the regular QtCreator does that, too.} was that it left the Makefile after you cleaned the project. This way \verb,qmake, is often not run after a \verb,make clean,. No problem, just hit the button $\vcenter{\hbox{\includegraphics[scale=0.6]{./gfx/addcleanstep.png}}}$ and create an extra step that is executed every time after the cleanup has been done.
+%
+\begin{figure}[H]
+  \centering
+  \includegraphics[scale=0.6]{./gfx/customprocessstep.png} 
+  \caption{Create a custom process step.}
+  \label{fig:customprocessstep}
+\end{figure}
+%
+%
+\begin{figure}[H]
+  \centering
+  \includegraphics[scale=0.55]{./gfx/rmMakefile.png} 
+  \caption{Clean step: Remove the Makefile.}
+  \label{fig:rmMakefile}
+\end{figure}
+%
+Here again for copy and paste:
+\begin{lstlisting}[language=bash]
+rm
+-f %{buildDir}/Makefile
+%{buildDir}
+\end{lstlisting}
+%
+%
 \subsection{Mer build engine for cross compilation}\label{subsec:MerSDK}
 %
 ``The Mer build engine is a virtual machine (VM) containing the Mer development toolchains and tools. It also includes a SailfishOS target for building and running Sailfish and QML applications. The target is mounted as a shared folder to allow QtCreator to access the compilation target. Additionally, your home directory is shared and mounted in the VM, thus giving access to your source code for compilation.
@@ -752,6 +789,81 @@ QML\cite{qt05} is the Qt \emph{Q}uick \emph{M}arkup \emph{L}anguage\cite{qt06} t
 %
 
 Also have a look at some open source examples on Github\cite{sailfishos5}.
+The emulator comes with a demo application that shows the silica components.
+%
+\begin{figure}[H]
+\centering
+\subfloat{
+  \centering
+  \includegraphics[scale=0.3]{./gfx/silica01.png}
+  \label{fig:silica01}
+}%
+\subfloat{
+  \centering
+  \includegraphics[scale=0.3]{./gfx/silica02.png}
+  \label{fig:silica02}
+}
+\end{figure}
+%
+%
+\begin{figure}[H]
+\centering
+\subfloat{
+  \centering
+  \includegraphics[scale=0.3]{./gfx/silica03.png}
+  \label{fig:silica03}
+}%
+\subfloat{
+  \centering
+  \includegraphics[scale=0.3]{./gfx/silica04.png}
+  \label{fig:silica04}
+}
+\end{figure}
+%
+%
+\begin{figure}[H]
+\centering
+\subfloat{
+  \centering
+  \includegraphics[scale=0.3]{./gfx/silica05.png}
+  \label{fig:silica05}
+}%
+\subfloat{
+  \centering
+  \includegraphics[scale=0.3]{./gfx/silica06.png}
+  \label{fig:silica06}
+}
+\end{figure}
+%
+%
+\begin{figure}[H]
+\centering
+\subfloat{
+  \centering
+  \includegraphics[scale=0.3]{./gfx/silica07.png}
+  \label{fig:silica07}
+}%
+\subfloat{
+  \centering
+  \includegraphics[scale=0.3]{./gfx/silica08.png}
+  \label{fig:silica08}
+}
+\end{figure}
+%
+%
+\begin{figure}[H]
+\centering
+\subfloat{
+  \centering
+  \includegraphics[scale=0.3]{./gfx/silica09.png}
+  \label{fig:silica09}
+}%
+\subfloat{
+  \centering
+  \includegraphics[scale=0.3]{./gfx/silica10.png}
+  \label{fig:silica10}
+}
+\end{figure}
 %
 %
 \subsection{Tools chained up}\label{subset:toolschainedup}
