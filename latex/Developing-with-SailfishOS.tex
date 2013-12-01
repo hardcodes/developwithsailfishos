@@ -148,8 +148,11 @@
 \section{About}
 
 Hi, my name is Sven\cite{hc01} and I am eager to develop for the Jolla smartphone. On my way some questions came up and I tried to answer them as good as I can. After a while I decided to write down what I've learned, so that I had a central place to come back to and maybe others can benefit from this small document, too. The latest and greatest version is to be found on Github\cite{hc02}.
-
+\\
+\\
 \emph{This work is licensed under the Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License. To view a copy of this license, visit \url{http://creativecommons.org/licenses/by-nc-sa/4.0/deed.en_US}.}
+\\
+\\
 This goes only for content I have written myself, I don't claim ownership or copyright/left on cited content. Content from other parties remains under its original license.
 
 All mentioned trademarks and trade names are the property of their respective holders, I have not marked them with a \texttrademark, \textregistered \hspace{4 pt} or \copyright \hspace{4 pt} sign. Use some common sense here. Not all information is written by myself, I've tried to quote as responsible as possible and quite intensive if appropiate. Read these notes as a human being, not like a lawyer.
@@ -409,7 +412,7 @@ Compile and run your application.
 \begin{figure}[H]
   \centering
   \includegraphics[scale=1.0]{./gfx/runappincreator.png} 
-  \caption{Start the application.}
+  \caption{Build and run the application.}
   \label{fig:runappincreator}
 \end{figure}
 %
@@ -925,7 +928,7 @@ TODO find out, how the packaging happens, Makefile?
 %
 \section{Installing additional packages}\label{sec:addpkg}
 %
-TODO see also caveats on sailfish site
+TODO write how to do it and also see caveats on sailfish site
 %
 %
 \section{Templates for QtCreator}\label{sec:templateqtcreator}
@@ -943,12 +946,16 @@ Just make sure that you don't use the names \verb,, \verb,obj,, \verb,moc,, \ver
 
 Updates of the SDK may delete changed or new templates, you might want to create a backup in a safe place.
 %
+\\
+\\
 TODO example of a new template, figure out the caveats here!
 %
 %
 \section{Physical device}\label{sec:device}
 %
-Developing with the emulator only will do you no good. You have to experience your program on a real device. Things that might look great on an emulator, may not even work for you on a real phone. It maybe just you fingers that are hiding the screen.
+Developing with the emulator only will do you no good. You have to experience your program on a real device. Things that might look great on an emulator, may not even work on a real phone. It maybe just you fingers that are hiding the screen. Buttons are too small or too close.
+%
+%
 \subsection{How to connect to SSH over usb connection from PC}
 %
 \begin{itemize}
@@ -971,7 +978,7 @@ This section obviously needs a lot more information. Lacking a physical device o
 %
 \subsection{Jolla}
 %
-Jolla homepage \url{http://jolla.com}.
+Jolla homepage: \url{http://jolla.com}.
 \\
 Jolla on Twitter: \url{https://twitter.com/JollaHQ}.
 %
@@ -982,21 +989,25 @@ As a developer you should subscribe to the mailing list at \url{https://lists.sa
 
 Have a look at the Wiki at \url{https://sailfishos.org/wiki/Main_Page}.
 %
-\\At freenode \verb,#sailfishos,.
+\\At freenode: \verb,#sailfishos,.
 %
 %
 \subsubsection{Mer}
 %
-At freenode \verb,#mer,.
+At freenode: \verb,#mer,.
+Homepage: \url{http://merproject.org}.
 %
 \subsubsection{Nemo mobile}
 %
-At freenode \verb,#nemomobile,.
+At freenode: \verb,#nemomobile,.
+Mer Wiki page about the Nemo project: \url{https://wiki.merproject.org/wiki/Nemo}.
 %
 %
 \section{Thanks}\label{sec:thanks}
 %
 Of course a big thanks goes out to everybody at Jolla. You are \verb,#unlike,!
+%
+% TODO name some special persons here!
 %
 %
 \begin{thebibliography}{xxxxxxxxxxxx}
