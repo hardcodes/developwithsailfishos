@@ -391,10 +391,10 @@ Start the SDK from inside the QtCreator.
   \label{fig:sdkstartcreator}
 \end{figure}
 %
-When the virtual machine with the SDK is running, apply updates if necessary.
+When the virtual machine with the SDK is running, apply updates if necessary\footnote{For some users (this includes me), the management webpage is not shown, instead there is an empty webpage ("about:blank"). Type "127.0.0.1:8080" as URL and hit <Enter> (the complete URL is http://127.0.0.1:8080/C/targets/).}.
 \begin{figure}[H]
   \centering
-  \includegraphics[scale=0.3]{./gfx/managesdkupdate.png} 
+  \includegraphics[scale=0.4]{./gfx/managesdkupdate.png} 
   \caption{Updating the SDK.}
   \label{fig:managesdkupdate}
 \end{figure}
@@ -795,7 +795,7 @@ The build engine also supports additional build targets and cross-compilation to
   \label{fig:creatormersdkicon}
 \end{figure}
 %
-The VM runs headless, you can not see it running. For you as a developer there is a webpage served by this VM accessible through the SailfishOS icon inside QtCreator. See figure \ref{fig:managesdkupdate} on page \pageref{fig:managesdkupdate}.
+The VM runs headless\footnote{You can change that in Preferences->Mer, uncheck "Headless" and restart the VM or start in from the VirtualBox control center of you need it just once.}, you can not see it running. For you as a developer there is a webpage served by this VM accessible through the SailfishOS icon inside QtCreator. See figure \ref{fig:managesdkupdate} on page \pageref{fig:managesdkupdate}.
 %
 \begin{figure}[H]
   \centering
@@ -928,7 +928,8 @@ TODO find out, how the packaging happens, Makefile?
 %
 \section{Installing additional packages}\label{sec:addpkg}
 %
-You can use additional libraries for your code, so you don't have to write all functionality for yourself. Some of them are available on the emulator and the physical device later on. Sadly not all library packages that are available for Nemo/Mer are usable here. Have look in section \nameref{harbor} on \pageref{harbour} for details about allowed packages.
+You can use additional libraries for your code, so you don't have to write all functionality for yourself. Some of them are available on the emulator and the physical device later on. Sadly not all library packages that are available for Nemo/Mer are usable here. Have look in section \nameref{harbor} on \pageref{harbour} for details about allowed packages. That does not mean, that you can not use libraries that are not part of SailfishOS. You can deliver them with your app, linked to the correct location. Mind the problems\footnote{Think security updates.} that you inherit by doing so.
+%
 %
 \subsection{Emulator}\label{subsec:pkgemulator}
 %
@@ -943,10 +944,10 @@ nemo@localhost's password:
 [nemo@SailfishEmul ~]$
 \end{lstlisting}
 %
-As an alternative you can log in the running VM of the emulator. Press CMD+F2\footnote{On OSX your function keys will probably not work as regular function keys, they provide OSX functionality as printed on then, e.g. volume up/down. Go to System Preferences"->Keyboard->Keyboard and check check "Use all F1, F2, etc. as standard function keys".}\footnote{On Windows and Linux use the CTRL Key instead of CMD.} to change to the login screen. User and password are of course the same.
+As an alternative you can log in the running VM of the emulator. Press CMD+F2\footnote{On OSX your function keys will probably not work as regular function keys, they provide OSX functionality as printed on then, e.g. volume up/down. Go to System Preferences->Keyboard->Keyboard and check check "Use all F1, F2, etc. as standard function keys".}\footnote{On Windows and Linux use the CTRL Key instead of CMD.} to change to the login screen. User and password are of course the same.
 %
 %
-\subsubsection{zypper}\label{zypper}
+\subsubsection{zypper}\label{subsubsec:zypper}
 %
 Additional software and libraries come in \verb,RPM, packages and the management tool on the emulator is \verb,zypper,. It provides ``functions like repository access, dependency solving, package installation''\cite{suse01}.\\
 \\
@@ -988,6 +989,33 @@ Of course you can install additional software on the emulator\footnote{As long a
 \\
 \\
 \emph{Note}: you do \underline{not} need the development packages on the emulator of physical device.
+%
+%
+\subsubsection{Known Logins}{subsubsec:emulatorlogins}
+%
+TODO
+%
+%
+\subsection{Mer SDK Build Engine}\label{subsec:mersdkpkg}
+%
+\begin{figure}[H]
+  \centering
+  \includegraphics[scale=0.4]{./gfx/MerSDKsettings.png} 
+  \caption{Choose ``SailfishOS'' from the left pane.}
+  \label{fig:mersdkpkg:sailfishos}
+\end{figure}
+%
+TODO
+%
+%
+\subsubsection{Directories}{subsubsec:mersdkdirectories}
+%
+TODO
+%
+%
+\subsubsection{Known Logins}{subsubsec:mersdklogins}
+%
+TODO
 %
 %
 \section{Templates for QtCreator}\label{sec:templateqtcreator}
@@ -1037,7 +1065,7 @@ This section obviously needs a lot more information. Lacking a physical device o
 %
 our wrote a fantastic app and now you want to bring it to the people. Head over to the Jolla Harbour\cite{jolla02} and submit your app.
 
-There are some things about naming an such to consider when you perpare your app, here is the Sailfish FAQ from the Jolla Harbour as of now = Dec. 2nd 2013. This is of course a moving target, which means there will be more libraries available in future. Even if you don't have an app ready to submit, you should look there once in a while. Ne need to re-invent the wheel here. If there is missing something, contact Jolla.
+There are some things about naming an such to consider when you prepare your app, here is the Sailfish FAQ from the Jolla Harbour as of now = Dec. 2nd 2013. This is of course a moving target, which means there will be more libraries available in future. Even if you don't have an app ready to submit, you should look there once in a while. Ne need to re-invent the wheel here. If there is missing something, contact Jolla.
 
 \begin{lstlisting}[language=TeX]
 Naming
@@ -1155,6 +1183,11 @@ Currently not, there are some enablers missing for that. But we are working on i
 Can I submit Perl/Ruby/$MY_FAVOURITE_LANGUAGE applications?
 No, and we currently do not plan to support that. But feel free to request it, if there is enough interest, we might allow it in the future.
 \end{lstlisting}
+%
+%
+\section{Bug Reports}\label{sec:bugreports}
+%
+TODO what's the correct way to report bugs? IMHO IRC and mailing list are just temporary solutions.
 %
 %
 \section{Community}\label{sec:community}
