@@ -943,10 +943,20 @@ nemo@localhost's password:
 [nemo@SailfishEmul ~]$
 \end{lstlisting}
 %
+As an alternative you can log in the running VM of the emulator. Press CMD+F2\footnote{On OSX your function keys will probably not work as regular function keys, they provide OSX functionality as printed on then, e.g. volume up/down. Go to System Preferences"->Keyboard->Keyboard and check check "Use all F1, F2, etc. as standard function keys".}\footnote{On Windows and Linux use the CTRL Key instead of CMD.} to change to the login screen. User and password are of course the same.
+%
 %
 \subsubsection{zypper}\label{zypper}
 %
 Additional software and libraries come in \verb,RPM, packages and the management tool on the emulator is \verb,zypper,. It provides ``functions like repository access, dependency solving, package installation''\cite{suse01}.\\
+\\
+%
+\begin{lstlisting}[language=bash]
+[nemo@SailfishEmul ~]$ zypper refresh
+\end{lstlisting}
+will update the meta data that is stored from the package repository.
+%
+\\
 \\
 %
 \begin{lstlisting}[language=bash]
