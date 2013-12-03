@@ -127,6 +127,8 @@
 \title{Developing with SailfishOS}
 \subtitle{a short introduction}
 \author{Sven Putze, \url{hardcodes.de}}
+% if contribution takes place and it gets a community document,
+% this will be changed to represent the community efforts.
 %\contactemail{mailcontact [AT] hardcodes [DOT] de}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %\date{} 
@@ -391,14 +393,13 @@ Start the SDK from inside the QtCreator.
   \label{fig:sdkstartcreator}
 \end{figure}
 %
-When the virtual machine with the SDK is running, apply updates if necessary\footnote{For some users (this includes me), the management webpage is not shown, instead there is an empty webpage ("about:blank"). Type "127.0.0.1:8080" as URL and hit <Enter> (the complete URL is http://127.0.0.1:8080/C/targets/).}.
+When the virtual machine with the SDK is running, apply updates if necessary. %
 \begin{figure}[H]
   \centering
   \includegraphics[scale=0.4]{./gfx/managesdkupdate.png} 
   \caption{Updating the SDK.}
   \label{fig:managesdkupdate}
 \end{figure}
-%
 %
 Start the Emulator.
 \begin{figure}[H]
@@ -419,6 +420,8 @@ Compile and run your application.
 Easy as pie, also see figure \ref{fig:emulatorexample} on page \pageref{fig:emulatorexample}. But what happens when and where if you click on those Icons? Look in section \textit{\nameref{sec:tools}}.
 
 A good starting point to look for a more sophisticated starting example is \emph{The missing HelloWorld. Wizard included} by Artem Marchenko\cite{gh01}. You should check that out!
+
+And you should look in the \verb,examples, folder of the SDK of course.
 %
 %
 \section{Know your tools}\label{sec:tools}
@@ -991,9 +994,14 @@ Of course you can install additional software on the emulator\footnote{As long a
 \emph{Note}: you do \underline{not} need the development packages on the emulator of physical device.
 %
 %
-\subsubsection{Known Logins}{subsubsec:emulatorlogins}
+\subsubsection{Known Logins}\label{subsubsec:emulatorlogins}
 %
-TODO
+\begin{tabular}{lll}
+  \emph{user} & \emph{password} & \emph{comment} \\
+  \hline 
+  nemo & nemo &  \\
+  root &  & no password needed, just works in the VM for me \\
+\end{tabular}
 %
 %
 \subsection{Mer SDK Build Engine}\label{subsec:mersdkpkg}
@@ -1008,14 +1016,21 @@ TODO
 TODO
 %
 %
-\subsubsection{Directories}{subsubsec:mersdkdirectories}
+\subsubsection{Directories}\label{subsubsec:mersdkdirectories}
 %
 TODO
 %
 %
 \subsubsection{Known Logins}{subsubsec:mersdklogins}
 %
-TODO
+\begin{tabular}{lll}
+  \emph{user} & \emph{password} & \emph{comment} \\
+  \hline 
+  nemo & nemo &  \\
+  root &  & no password needed, just works in the VM for me \\
+\end{tabular}
+%
+
 %
 %
 \section{Templates for QtCreator}\label{sec:templateqtcreator}
@@ -1190,6 +1205,99 @@ No, and we currently do not plan to support that. But feel free to request it, i
 TODO what's the correct way to report bugs? IMHO IRC and mailing list are just temporary solutions.
 %
 %
+\section{Troubleshooting}\label{sec:troubleshooting}
+%
+\subsection{Mer build engine for cross compilation}\label{subset:ts:mersdk}
+%
+\subsubsection{Management Webpage}
+%
+For some users (this includes me), the management webpage is not shown, instead there is an empty webpage ("about:blank"). Type "127.0.0.1:8080" as URL and hit <Enter>\footnote{the complete URL is http://127.0.0.1:8080/C/targets/}. If it doesn't work at all (even that happened to me), then you can enter "127.0.0.1:8080" in your regular browser. TODO check that.
+
+If you are in doubt that there is anything running at all, you can use \verb,telnet, or \verb,mmap,\cite{nm01} to check if someone is listening on the given address and port.
+%
+\begin{lstlisting}[language=bash]
+$ telnet 127.0.0.1 8080
+Trying 127.0.0.1...
+Connected to localhost.
+Escape character is '^]'.
+\end{lstlisting}
+%
+\begin{lstlisting}[language=bash]
+$ nmap 127.0.0.1 -p 8080
+
+Starting Nmap 6.25 ( http://nmap.org ) at 2013-12-03 07:33 CET
+Nmap scan report for localhost (127.0.0.1)
+Host is up (0.000079s latency).
+PORT     STATE SERVICE
+8080/tcp open  http-proxy
+
+Nmap done: 1 IP address (1 host up) scanned in 0.19 seconds
+\end{lstlisting}
+%
+%
+\subsubsection{SSH login}
+%
+You try to connect via SSH with the VM and get this:
+\begin{lstlisting}[language=bash]
+$ ssh -p 2222 nemo@localhost
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+@    WARNING: REMOTE HOST IDENTIFICATION HAS CHANGED!     @
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+IT IS POSSIBLE THAT SOMEONE IS DOING SOMETHING NASTY!
+Someone could be eavesdropping on you right now (man-in-the-middle attack)!
+It is also possible that a host key has just been changed.
+The fingerprint for the RSA key sent by the remote host is
+75:51:61:e8:3a:80:41:ab:81:36:bc:45:8f:ca:56:76.
+Please contact your system administrator.
+Add correct host key in /Users/sven/.ssh/known_hosts to get rid of this message.
+Offending RSA key in /Users/sven/.ssh/known_hosts:3
+RSA host key for [localhost]:2222 has changed and you have requested strict checking.
+Host key verification failed.
+\end{lstlisting}
+%
+Somehow the image of the VM has changed since you last logged in. Remove it from \verb,known_hosts, and re-connect to accept the new host key.
+%
+\begin{lstlisting}[language=bash]
+$ ssh-keygen -R [localhost]:2222
+/Users/sven/.ssh/known_hosts updated.
+Original contents retained as /Users/sven/.ssh/known_hosts.old
+sylimikro:~ sven$ ssh -p 2222 nemo@localhost
+The authenticity of host '[localhost]:2222 ([127.0.0.1]:2222)' can't be established.
+RSA key fingerprint is 75:51:61:e8:3a:80:41:ab:81:36:bc:45:8f:ca:56:76.
+Are you sure you want to continue connecting (yes/no)? yes
+Warning: Permanently added '[localhost]:2222' (RSA) to the list of known hosts.
+\end{lstlisting}
+%
+TODO add public key to \verb,authorized_keys, if missing
+%
+If your \verb,SSH, connection still does not work, it may be that the drive with the \verb,authorized_keys, file is not mounted.
+%
+%
+\subsubsection{Drive(s) not mounted}\label{subsubsec:ts:nodrive}
+%
+Log into the VM and have a look if the drive with the \verb,authorized_keys, file is mounted.
+\begin{figure}[H]
+  \centering
+  \includegraphics[scale=0.5]{./gfx/vboxmersdkcheckdrives.png} 
+  \caption{Check for authorized\_keys.}
+  \label{fig:vboxmersdkcheckdrives}
+\end{figure}
+%
+If the drive exists\footnote{It seems that the output of mount does not show it right, even if it is mounted and accessible.}, you can check if the file is accessible.
+\begin{lstlisting}[language=bash]
+ls -lah /etc/ssh/authorized_keys/mersdk/authorized_keys
+ls -lah /etc/ssh/authorized_keys/root/authorized_keys
+\end{lstlisting}
+%
+TODO talk about the other drives.
+TODO maybe caused by missing VBox extension pack
+%
+I had the situation where everything seems perfect and still it didn't work. For me the last resort was re-installing the VM with the Mer SDK.
+%
+
+TODO check if we can do that via the SDKMaintenanceTool - how to invalidate the VM image?
+%
+%
 \section{Community}\label{sec:community}
 %
 \subsection{Jolla}
@@ -1279,15 +1387,8 @@ qtcreator-2.8/}
 %
 \bibitem[suse01]{suse01} openSUSE Portal:Zypper \\\url{http://en.opensuse.org/Portal:Zypper}
 %
+%
+\bibitem [nm01]{nm01} Nmap, network security scanner \\\url{http://nmap.org}
 \end{thebibliography}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \end{document}
-
-
-
-
-
-
-
-
-
