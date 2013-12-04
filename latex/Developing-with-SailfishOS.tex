@@ -296,28 +296,9 @@ With the SDK comes QtCreator\footnote{Look in in the "bin" folder of the SDK.}, 
 \end{figure}
 %
 %
-\subsubsection{Remove plugins}\label{subsubsec:removeplugins}
-%
-If you want to improve the startup time of QtCreator, you can deactivate plugins you don't need or want. Just don't shoot in your foot here.
-%
-\begin{figure}[H]
-  \centering
-  \includegraphics[scale=0.6]{./gfx/qtcreatorplugins.png} 
-  \caption{About plugins = manage plugins.}
-  \label{fig:qtcreatorplugins}
-\end{figure}
-%
-%
 \subsection{Windows}
 %
 Double click the $\vcenter{\hbox{\includegraphics[scale=0.6]{./gfx/vboxinstaller.png}}}$ executable that you have downloaded and follow the installer.
-%
-\begin{figure}[H]
-  \centering
-  \includegraphics[scale=0.6]{./gfx/qtcreatordeactivateplugin.png} 
-  \caption{Deactivate every plugin you don't need.}
-  \label{fig:qtcreatordeactivateplugin}
-\end{figure}
 %
 \begin{figure}[H]
   \centering
@@ -500,6 +481,25 @@ Apart from that I have no physical Linux machine that is connected to a display 
 Volunteers present?
 %
 %
+\subsection{Remove plugins}\label{subsec:removeplugins}
+%
+If you want to improve the startup time of QtCreator, you can deactivate plugins you don't need or want\footnote{On Windows and Linux the plugins should be found in Extras/Plugins.}. Just don't shoot in your foot here.
+%
+\begin{figure}[H]
+  \centering
+  \includegraphics[scale=0.6]{./gfx/qtcreatorplugins.png} 
+  \caption{About plugins = manage plugins.}
+  \label{fig:qtcreatorplugins}
+\end{figure}
+%
+\begin{figure}[H]
+  \centering
+  \includegraphics[scale=0.6]{./gfx/qtcreatordeactivateplugin.png} 
+  \caption{Deactivate every plugin you don't need.}
+  \label{fig:qtcreatordeactivateplugin}
+\end{figure}
+%
+%
 \section{Quickstart}\label{sec:quickstart}
 %
 Start the QtCreator from the fresh installed SDK.
@@ -509,7 +509,7 @@ Just go to File-> New File or Project in the IDE''\cite{sailfishos2}
 %
 \begin{figure}[H]
   \centering
-  \includegraphics[scale=0.4]{./gfx/newsailfishproject01.png} 
+  \includegraphics[scale=0.6]{./gfx/newsailfishproject01.png} 
   \caption{First example, step 1.}
   \label{fig:newsailfishproject01}
 \end{figure}
@@ -1466,6 +1466,13 @@ I had the situation where everything seems perfect and still it didn't work. For
 %
 
 TODO check if we can do that via the SDKMaintenanceTool - how to invalidate the VM image?
+%
+%
+\section{Use your editor of choice}\label{sec:editorofchoice}
+%
+Now you are happy with coding for a device with SailfishOS and the SDK, API and all, but for some reason you want to use \emph{your} editor\footnote{notepad^^, vi, emacs, eclipse, named it.} of choice. Because you are used to it, never used something else, it's better, whatever.
+%
+TODO provide one example of how to build with a foreign editor
 %
 %
 \section{Community}\label{sec:community}
