@@ -1381,7 +1381,7 @@ TODO what's the correct way to report bugs? IMHO IRC and mailing list are just t
 %
 \subsubsection{Management Webpage}
 %
-For some users (this includes me), the management webpage is not shown, instead there is an empty webpage ("about:blank"). Type "127.0.0.1:8080" as URL and hit <Enter>\footnote{the complete URL is http://127.0.0.1:8080/C/targets/}. If it doesn't work at all (even that happened to me), then you can enter "127.0.0.1:8080" in your regular browser. TODO check that.
+For some users (this includes me), the management webpage is not shown, instead there is an empty webpage ("about:blank"). Type "127.0.0.1:8080" as URL and hit <Enter>\footnote{the complete URL is http://127.0.0.1:8080/C/targets/}. If it doesn't work at all (even that happened to me), then you can enter "127.0.0.1:8080" in your regular browser.
 
 If you are in doubt that there is anything running at all, you can use \verb,telnet, or \verb,mmap,\cite{nm01} to check if someone is listening on the given address and port.
 %
@@ -1393,15 +1393,16 @@ Escape character is '^]'.
 \end{lstlisting}
 %
 \begin{lstlisting}[language=bash]
-$ nmap 127.0.0.1 -p 8080
+nmap -p 8080 -sV localhost
 
-Starting Nmap 6.25 ( http://nmap.org ) at 2013-12-03 07:33 CET
+Starting Nmap 6.25 ( http://nmap.org ) at 2013-12-05 18:20 CET
 Nmap scan report for localhost (127.0.0.1)
-Host is up (0.000079s latency).
-PORT     STATE SERVICE
-8080/tcp open  http-proxy
+Host is up (0.000071s latency).
+PORT     STATE SERVICE VERSION
+8080/tcp open  http    WEBrick httpd 1.3.1 (Ruby 1.9.3 (2013-06-05))
 
-Nmap done: 1 IP address (1 host up) scanned in 0.19 seconds
+Service detection performed. Please report any incorrect results at http://nmap.org/submit/ .
+Nmap done: 1 IP address (1 host up) scanned in 6.49 seconds
 \end{lstlisting}
 %
 %
@@ -1438,8 +1439,58 @@ Are you sure you want to continue connecting (yes/no)? yes
 Warning: Permanently added '[localhost]:2222' (RSA) to the list of known hosts.
 \end{lstlisting}
 %
-TODO add public key to \verb,authorized_keys, if missing
+Check with \verb,mmap,\cite{nm01} if a \verb,ssh, service is listening at all.
 %
+\begin{lstlisting}[language=bash]
+# this is an example of a non-working ssh daemon
+nmap -p 2222 -sV localhost
+
+Starting Nmap 6.25 ( http://nmap.org ) at 2013-12-05 13:37 CET
+Nmap scan report for localhost (127.0.0.1)
+Host is up (0.00021s latency).
+PORT     STATE SERVICE        VERSION
+2222/tcp open  EtherNet/IP-1?
+
+Service detection performed. Please report any incorrect results at http://nmap.org/submit/ .
+Nmap done: 1 IP address (1 host up) scanned in 89.49 seconds
+\end{lstlisting}
+%
+If you can see that the ssh daemon is not working, you can restart the VM directly from VirtualBox, log into the VM as user \verb,root, from there, check for the daemon and start it.
+%
+\begin{lstlisting}[language=bash]
+ps -ef | grep sshd
+root     533   0  2:05pm tty2    0:00.01 grep sshd
+# OK, it is not running - start it
+systemctl start sshd.service
+# check again
+ps -ef | grep sshd
+root    534   1  2:06pm tty2    0:00.01 /usr/sbin/sshd -D -f /etc/ssh/sshd_config_engine
+root    535   1  2:06pm tty2    0:00.01 grep sshd
+\end{lstlisting}
+%
+Now you can check from your development machine again.
+%
+\begin{lstlisting}[language=bash]
+# here the ssh daemon works
+nmap -p 2222 -sV localhost
+
+Starting Nmap 6.25 ( http://nmap.org ) at 2013-12-05 14:01 CET
+Nmap scan report for localhost (127.0.0.1)
+Host is up (0.00013s latency).
+PORT     STATE SERVICE VERSION
+2222/tcp open  ssh     OpenSSH 5.6 (protocol 2.0)
+
+Service detection performed. Please report any incorrect results at http://nmap.org/submit/ .
+Nmap done: 1 IP address (1 host up) scanned in 0.24 seconds
+\end{lstlisting}
+It may even happen that your public key is missing, check with
+\begin{lstlisting}[language=bash]
+ls ~/.ssh/mer-qt-creator-rsa
+ls: /Users/sven/.ssh/mer-qt-creator-rsa: No such file or directory
+\end{lstlisting}
+%
+Right at the moment I am not sure when the key files are delivered. At install time would make sense but here must investigate further. Ok, I have demoved them during the last uninstall but shouldn't they come with a new install?
+
 If your \verb,SSH, connection still does not work, it may be that the drive with the \verb,authorized_keys, file is not mounted.
 %
 %
@@ -1484,6 +1535,12 @@ I had the situation where everything seems perfect and still it didn't work. For
 %
 
 TODO check if we can do that via the SDKMaintenanceTool - how to invalidate the VM image?
+%
+
+One one machine the VM was running but slow\footnote{As in tar pit.}, so every connection attempt timed out. Even control from VirtualBox itself was almost impossible. Until now I found no solution for this.
+
+TODO find out if installing the Guest Additions helps.
+%
 %
 \subsubsection{update via command line}
 %
@@ -1570,7 +1627,7 @@ You really want to quit? Stay here, the water is warm! Jokes aside, for whatever
   \label{fig:uninst:osxuninstall04}
 \end{figure}
 %
-To make it really clean, remove orphaned files and directories.
+To make it really clean, remove orphaned files and directories. Of course you can keep those files for later use.
 %
 \begin{lstlisting}[language=bash]
 # I've seen conflicts with changing ssh keys. Remove to prevent that
