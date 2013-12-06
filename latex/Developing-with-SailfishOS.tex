@@ -1038,7 +1038,6 @@ The emulator comes with a demo application that shows the silica components.
 }
 \end{figure}
 %
-%
 \begin{figure}[H]
 \centering
 \subfloat{
@@ -1052,7 +1051,6 @@ The emulator comes with a demo application that shows the silica components.
   \label{fig:silica04}
 }
 \end{figure}
-%
 %
 \begin{figure}[H]
 \centering
@@ -1068,7 +1066,6 @@ The emulator comes with a demo application that shows the silica components.
 }
 \end{figure}
 %
-%
 \begin{figure}[H]
 \centering
 \subfloat{
@@ -1082,7 +1079,6 @@ The emulator comes with a demo application that shows the silica components.
   \label{fig:silica08}
 }
 \end{figure}
-%
 %
 \begin{figure}[H]
 \centering
@@ -1205,11 +1201,30 @@ TODO
 \begin{tabular}{lll}
   \emph{user} & \emph{password} & \emph{comment} \\
   \hline 
-  nemo & nemo &  \\
-  root &  & no password needed, just works in the VM for me \\
+  nemo & nemo & no private keys provided \\
+  mersdk &  & for use with \verb,ssh, and private key \\
+  root &  & no password needed in the VM \\
 \end{tabular}
 %
-
+%
+\subsubsection{SSH login}\label{subsubsec:mersdk:sshlogin}
+%
+Open your terminal and enter
+%
+\begin{lstlisting}[language=bash]
+# connection as user mersdk
+ssh -p 2222 -i ~/SailfishOS/vmshare/ssh/private_keys/engine/mersdk mersdk@localhost
+-bash-3.2$ 
+\end{lstlisting}
+%
+or
+%
+\begin{lstlisting}[language=bash]
+# connection as user root
+ssh -p 2222 -i /Users/sven/SailfishOS/vmshare/ssh/private_keys/engine/root root@localhost
+Last login: Fri Dec  6 16:41:16 2013
+[root@SailfishSDK ~]# 
+\end{lstlisting}
 %
 %
 \section{Templates for QtCreator}\label{sec:templateqtcreator}
@@ -1416,11 +1431,13 @@ Nmap done: 1 IP address (1 host up) scanned in 6.49 seconds
 \end{lstlisting}
 %
 %
-\subsubsection{SSH login}
+\subsubsection{SSH login pre Alpha2SDK}
 %
+The first SsilfishOS SDK and the SailfishOS Alpha SDK used to store the private keys in the directory \verb,~./ssh,. Here come some quirks that happened to me. \emph{You should upgrade!}
+
 You try to connect via SSH with the VM and get this:
 \begin{lstlisting}[language=bash]
-ssh -p 2222 nemo@localhost
+ssh -p 2222 -i ~/.ssh/mer-qt-creator-rsa nemo@localhost
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 @    WARNING: REMOTE HOST IDENTIFICATION HAS CHANGED!     @
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
@@ -1442,13 +1459,62 @@ Somehow the image of the VM has changed since you last logged in. Remove it from
 ssh-keygen -R [localhost]:2222
 /Users/sven/.ssh/known_hosts updated.
 Original contents retained as /Users/sven/.ssh/known_hosts.old
-sylimikro:~ sven$ ssh -p 2222 nemo@localhost
+ssh -p 2222 -i ~/SailfishOS/vmshare/ssh/private_keys/engine/mersdk mersdk@localhost
 The authenticity of host '[localhost]:2222 ([127.0.0.1]:2222)' can't be established.
 RSA key fingerprint is 75:51:61:e8:3a:80:41:ab:81:36:bc:45:8f:ca:56:76.
 Are you sure you want to continue connecting (yes/no)? yes
 Warning: Permanently added '[localhost]:2222' (RSA) to the list of known hosts.
 \end{lstlisting}
 %
+It may even happen that your (local) private key is missing, check with
+%
+\begin{lstlisting}[language=bash]
+ls ~/.ssh/mer-qt-creator-rsa
+ls: /Users/sven/.ssh/mer-qt-creator-rsa: No such file or directory
+\end{lstlisting}
+%
+Right at the moment I am not sure when the key files were delivered since I don't have a SDK older than Alpha2 installed.
+
+I had problems, when the public key was in the \verb,.ssh, directory.
+%
+\begin{lstlisting}[language=bash]
+ssh -p 2222 -i ~/.ssh/mer-qt-creator-rsa root@localhost
+Permission denied (publickey).
+# just a generic error message, then
+mv ~/.ssh/mer-qt-creator-rsa.pub ~/.ssh/mer-qt-creator-rsa.pub.backup
+ssh -p 2222 -i ~/.ssh/mer-qt-creator-rsa nemo@localhost
+TODO
+\end{lstlisting}
+%
+The private key file may have wrong permissions, the error message is very clear about that.
+
+\begin{lstlisting}[language=bash]
+ssh -p 2222 -i ~/.ssh/mer-qt-creator-rsa nemo@localhost
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+@         WARNING: UNPROTECTED PRIVATE KEY FILE!          @
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+Permissions 0644 for '/Users/sven/.ssh/mer-qt-creator-rsa' are too open.
+It is required that your private key files are NOT accessible by others.
+This private key will be ignored.
+bad permissions: ignore key: /Users/sven/.ssh/mer-qt-creator-rsa
+Permission denied (publickey).
+# so change them
+chmod 600 ~/.ssh/mer-qt-creator-rsa
+\end{lstlisting}
+%
+%
+\subsubsection{SSH login Alpha2SDK and later}
+%
+No Alpha2 specific bugs yet. If you have trouble with the private keys, please note that they are now stored in another directory\cite{mer02}.
+%
+\begin{lstlisting}[language=bash]
+~/SailfishOS/vmshare/ssh/private_keys/engine
+\end{lstlisting}
+%
+%
+\subsubsection{SSH login any SDK}
+%
+If your \verb,SSH, connection still does not work, it may be that the drive with the \verb,authorized_keys, file is not mounted.
 Check with \verb,mmap,\cite{nm01} if a \verb,ssh, service is listening at all.
 %
 \begin{lstlisting}[language=bash]
@@ -1493,43 +1559,37 @@ PORT     STATE SERVICE VERSION
 Service detection performed. Please report any incorrect results at http://nmap.org/submit/ .
 Nmap done: 1 IP address (1 host up) scanned in 0.24 seconds
 \end{lstlisting}
-It may even happen that your (local) private key is missing, check with
+%
+To enable the service check if it disabled at all.
 %
 \begin{lstlisting}[language=bash]
-ls ~/.ssh/mer-qt-creator-rsa
-ls: /Users/sven/.ssh/mer-qt-creator-rsa: No such file or directory
-\end{lstlisting}
-%
-Right at the moment I am not sure when the key files are delivered. At install time would make sense but here must investigate further. Ok, I have removed them during the last uninstall but shouldn't they come with a new install? Solution for me was to copy them from another machine but that's just a dirty workaround.
+[root@SailfishSDK ~]# systemctl status sshd.service
+sshd.service - OpenSSH Daemon
+	  Loaded: loaded (/lib/systemd/system/sshd.service; disabled)
+#                                                           ^
+#                                                           |
+# look here ------------------------------------------------+
+	  Active: active (running) since Fri, 06 Dec 2013 16:46:45 +0000; 28min ago
+	 Process: 523 ExecStartPre=/bin/bash -c if [ \( ! -s /etc/ssh/ssh_host_dsa_key \) -a \( ! -s /etc/ssh/ssh_host_dsa_key.pub \) -a \( ! -s /etc/ssh/ssh_host_rsa_key \) -a \( ! -s /etc/ssh/ssh_host_rsa_key.pub \) ]; then /usr/sbin/sshd-hostkeys; fi (code=exited, status=0/SUCCESS)
+	Main PID: 527 (sshd)
+	  CGroup: name=systemd:/system/sshd.service
+		  + 527 /usr/sbin/sshd -D -f /etc/ssh/sshd_config_engine
 
-I had problems, when the public key was in the \verb,.ssh, directory.
-%
-\begin{lstlisting}[language=bash]
-ssh -p 2222 -i ~/.ssh/mer-qt-creator-rsa root@localhost
-Permission denied (publickey).
-# just a generic error message, then
-mv ~/.ssh/mer-qt-creator-rsa.pub ~/.ssh/mer-qt-creator-rsa.pub.backup
-ssh -p 2222 -i ~/.ssh/mer-qt-creator-rsa nemo@localhost
-TODO
+Dec 06 16:46:45 SailfishSDK sshd[527]: Server listening on 0.0.0.0 port 22.
+Dec 06 16:46:45 SailfishSDK sshd[527]: Server listening on :: port 22.
+Dec 06 16:49:59 SailfishSDK sshd[1288]: Accepted publickey for mersdk from 10.0.2.2 port 49275 ssh2
+Dec 06 17:11:35 SailfishSDK sshd[1315]: Connection closed by 10.0.2.2
+Dec 06 17:13:09 SailfishSDK sshd[1316]: Accepted publickey for root from 10.0.2.2 port 49300 ssh2
+[root@SailfishSDK ~]#
 \end{lstlisting}
 %
-The private key file may have wrong permissions, the error message is very clear about that.
-
+Enable the service AKA unit.
 \begin{lstlisting}[language=bash]
-ssh -p 2222 -i ~/.ssh/mer-qt-creator-rsa nemo@localhost
-@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-@         WARNING: UNPROTECTED PRIVATE KEY FILE!          @
-@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-Permissions 0644 for '/Users/sven/.ssh/mer-qt-creator-rsa' are too open.
-It is required that your private key files are NOT accessible by others.
-This private key will be ignored.
-bad permissions: ignore key: /Users/sven/.ssh/mer-qt-creator-rsa
-Permission denied (publickey).
-# so change them
-chmod 600 ~/.ssh/mer-qt-creator-rsa
+[root@SailfishSDK ~]# systemctl enable sshd.service
+ln -s '/lib/systemd/system/sshd.service' '/etc/systemd/system/multi-user.target.wants/sshd.service'
+# check with reboot
+[root@SailfishSDK ~]# shutdown -r now
 \end{lstlisting}
-%
-If your \verb,SSH, connection still does not work, it may be that the drive with the \verb,authorized_keys, file is not mounted.
 %
 %
 \subsubsection{Drive(s) not mounted}\label{subsubsec:ts:nodrive}
@@ -1550,7 +1610,6 @@ ls -lah /etc/ssh/authorized_keys/root/authorized_keys
 %
 
 TODO talk about the other drives.
-TODO maybe caused by missing VBox extension pack
 
 %
 Your VM acts strange and you don't know why? Check if updates for VirtualBox are available. If yes, download and install the latest version and don't forget the extension pack.
@@ -1571,10 +1630,6 @@ Your VM acts strange and you don't know why? Check if updates for VirtualBox are
 %
 I had the situation where everything seems perfect and still it didn't work. For me the last resort was re-installing the VM with the Mer SDK, see section \nameref{sec:uninstall} on page \pageref{sec:uninstall}.
 %
-
-TODO check if we can do that via the SDKMaintenanceTool - how to invalidate the VM image?
-%
-
 One one machine the VM was running but slow\footnote{As in tar pit.}, so every connection attempt timed out. Even control from VirtualBox itself was almost impossible.
 %
 \begin{figure}[H]
@@ -1585,8 +1640,6 @@ One one machine the VM was running but slow\footnote{As in tar pit.}, so every c
 \end{figure}
 %
 Until now I found no solution for this.
-
-TODO find out if installing the Guest Additions helps.
 %
 %
 \subsubsection{update via command line}
@@ -1757,6 +1810,7 @@ qtcreator-2.8/}
 %
 %
 \bibitem[mer01]{mer01} Mer Wiki, Platform SDK and SB2 \\\url{https://wiki.merproject.org/wiki/Platform_SDK_and_SB2}
+\bibitem[mer02]{mer02} Mer Wiki, SailfishOS SDK hacks \\\url{https://wiki.merproject.org/wiki/Sailfish_SDK_Hacks}
 %
 %
 \bibitem [ex01]{ex01} Jolla details on eLinux \\\url{http://elinux.org/Jolla}
