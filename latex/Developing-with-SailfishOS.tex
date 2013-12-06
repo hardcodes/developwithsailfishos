@@ -1386,7 +1386,8 @@ For some users (this includes me), the management webpage is not shown, instead 
 If you are in doubt that there is anything running at all, you can use \verb,telnet, or \verb,mmap,\cite{nm01} to check if someone is listening on the given address and port.
 %
 \begin{lstlisting}[language=bash]
-$ telnet 127.0.0.1 8080
+telnet 127.0.0.1 8080
+# you should see some web server welcome messages
 Trying 127.0.0.1...
 Connected to localhost.
 Escape character is '^]'.
@@ -1410,7 +1411,7 @@ Nmap done: 1 IP address (1 host up) scanned in 6.49 seconds
 %
 You try to connect via SSH with the VM and get this:
 \begin{lstlisting}[language=bash]
-$ ssh -p 2222 nemo@localhost
+ssh -p 2222 nemo@localhost
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 @    WARNING: REMOTE HOST IDENTIFICATION HAS CHANGED!     @
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
@@ -1429,7 +1430,7 @@ Host key verification failed.
 Somehow the image of the VM has changed since you last logged in. Remove it from \verb,known_hosts, and re-connect to accept the new host key.
 %
 \begin{lstlisting}[language=bash]
-$ ssh-keygen -R [localhost]:2222
+ssh-keygen -R [localhost]:2222
 /Users/sven/.ssh/known_hosts updated.
 Original contents retained as /Users/sven/.ssh/known_hosts.old
 sylimikro:~ sven$ ssh -p 2222 nemo@localhost
@@ -1464,8 +1465,8 @@ root     533   0  2:05pm tty2    0:00.01 grep sshd
 systemctl start sshd.service
 # check again
 ps -ef | grep sshd
-root    534   1  2:06pm tty2    0:00.01 /usr/sbin/sshd -D -f /etc/ssh/sshd_config_engine
-root    535   1  2:06pm tty2    0:00.01 grep sshd
+root    534   1  0 2:06pm ?       0:00.01 /usr/sbin/sshd -D -f /etc/ssh/sshd_config_engine
+root    535   1  0 2:06pm tty2    0:00.01 grep sshd
 \end{lstlisting}
 %
 Now you can check from your development machine again.
@@ -1537,7 +1538,16 @@ I had the situation where everything seems perfect and still it didn't work. For
 TODO check if we can do that via the SDKMaintenanceTool - how to invalidate the VM image?
 %
 
-One one machine the VM was running but slow\footnote{As in tar pit.}, so every connection attempt timed out. Even control from VirtualBox itself was almost impossible. Until now I found no solution for this.
+One one machine the VM was running but slow\footnote{As in tar pit.}, so every connection attempt timed out. Even control from VirtualBox itself was almost impossible.
+%
+\begin{figure}[H]
+  \centering
+  \includegraphics[scale=0.6]{./gfx/vboxtarpit.png} 
+  \caption{Vm can not be controlled.}
+  \label{fig:vboxtarpit}
+\end{figure}
+%
+Until now I found no solution for this.
 
 TODO find out if installing the Guest Additions helps.
 %
@@ -1630,8 +1640,9 @@ You really want to quit? Stay here, the water is warm! Jokes aside, for whatever
 To make it really clean, remove orphaned files and directories. Of course you can keep those files for later use.
 %
 \begin{lstlisting}[language=bash]
-# I've seen conflicts with changing ssh keys. Remove to prevent that
-# (you may want to install again later on)
+# I've seen conflicts with changing ssh keys. Remove to prevent that.
+# You may want to install the SDK again later on. But I have also seen
+# installs where the keys were not created anymore :-/
 rm ~/.ssh/mer-qt-creator-rsa*
 # There seem remains of every iteration of the SDK
 rm -R ~/.config/SailfishAlpha*
