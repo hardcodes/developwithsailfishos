@@ -1484,14 +1484,42 @@ PORT     STATE SERVICE VERSION
 Service detection performed. Please report any incorrect results at http://nmap.org/submit/ .
 Nmap done: 1 IP address (1 host up) scanned in 0.24 seconds
 \end{lstlisting}
-It may even happen that your public key is missing, check with
+It may even happen that your (local) private key is missing, check with
+%
 \begin{lstlisting}[language=bash]
 ls ~/.ssh/mer-qt-creator-rsa
 ls: /Users/sven/.ssh/mer-qt-creator-rsa: No such file or directory
 \end{lstlisting}
 %
-Right at the moment I am not sure when the key files are delivered. At install time would make sense but here must investigate further. Ok, I have demoved them during the last uninstall but shouldn't they come with a new install?
+Right at the moment I am not sure when the key files are delivered. At install time would make sense but here must investigate further. Ok, I have removed them during the last uninstall but shouldn't they come with a new install? Solution for me was to copy them from another machine but that's just a dirty workaround.
 
+I had problems, when the public key was in the \verb,.ssh, directory.
+%
+\begin{lstlisting}[language=bash]
+ssh -p 2222 -i ~/.ssh/mer-qt-creator-rsa root@localhost
+Permission denied (publickey).
+# just a generic error message, then
+mv ~/.ssh/mer-qt-creator-rsa.pub ~/.ssh/mer-qt-creator-rsa.pub.backup
+ssh -p 2222 -i ~/.ssh/mer-qt-creator-rsa nemo@localhost
+TODO
+\end{lstlisting}
+%
+The private key file may have wrong permissions, the error message is very clear about that.
+
+\begin{lstlisting}[language=bash]
+ssh -p 2222 -i ~/.ssh/mer-qt-creator-rsa nemo@localhost
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+@         WARNING: UNPROTECTED PRIVATE KEY FILE!          @
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+Permissions 0644 for '/Users/sven/.ssh/mer-qt-creator-rsa' are too open.
+It is required that your private key files are NOT accessible by others.
+This private key will be ignored.
+bad permissions: ignore key: /Users/sven/.ssh/mer-qt-creator-rsa
+Permission denied (publickey).
+# so change them
+chmod 600 ~/.ssh/mer-qt-creator-rsa
+\end{lstlisting}
+%
 If your \verb,SSH, connection still does not work, it may be that the drive with the \verb,authorized_keys, file is not mounted.
 %
 %
@@ -1646,6 +1674,8 @@ To make it really clean, remove orphaned files and directories. Of course you ca
 rm ~/.ssh/mer-qt-creator-rsa*
 # There seem remains of every iteration of the SDK
 rm -R ~/.config/SailfishAlpha*
+# created if you deploy an app
+rm -R ~/rpmbuild
 \end{lstlisting}
 %
 If you don't need VirtualBox anymore, mount the diskimage\footnote{You still have that,don't you?} and start the \verb,VirtualBox_Uninstall.tool,, a bash script that removes all components form your system.
