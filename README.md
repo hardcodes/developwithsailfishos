@@ -15,6 +15,6 @@ Candidates (at the moment) are:
 * markdown
 * MultiMarkDown
 
-Before I choose the alternative and convert the document, I want to add some topics that spin around in my head right now. After that I will start to add some structure into the graphic resources, having them all in one folder was not the most clever decission^^.
+Before I choose the alternative and convert the document, I want to add some topics that spin around in my head right now.
 
 This work is licensed under the Creative Commons Attribution-NonCommercial- ShareAlike 4.0 International License. To view a copy of this license, visit http: // creativecommons. org/ licenses/ by-nc-sa/ 4. 0/ deed. en_ US .
