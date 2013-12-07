@@ -149,7 +149,7 @@
 
 \section{About}
 
-Hi, my name is Sven\cite{hc01} and I am eager to develop for the Jolla smartphone. On my way some questions came up and I tried to answer them as good as I can. After a while I decided to write down what I've learned, so that I had a central place to come back to and maybe others can benefit from this small document, too. The latest and greatest version is to be found on Github\cite{hc02}.
+Hi, my name is Sven\cite{hc01} and I am eager to develop for the Jolla smartphone. On my way some questions came up and I tried to answer them as good as I can. After a while I decided to write down what I've learned, so that I had a central place to come back to and maybe others can benefit from this small document, too. The latest and greatest version is to be found on Github\cite{hc02}. For those who don't want to clone the git project there will be just the pdf version at \url{http://hardcodes.de/SailfishOS/Developing-with-SailfishOS.pdf}.
 \\
 \\
 \emph{This work is licensed under the Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License. To view a copy of this license, visit \url{http://creativecommons.org/licenses/by-nc-sa/4.0/deed.en_US}.}
@@ -1656,6 +1656,9 @@ TODO provide one example of how to build with a foreign editor
 %
 \section{Community}\label{sec:community}
 %
+Much of the communication is done via \verb,IRC,\cite{irc01}, you should make yourself familiar with that and follow the guidelines of the respective channels. You will see that not each of them is chatty like a marketplace.
+%
+%
 \subsection{Jolla}
 %
 Jolla homepage: \url{http://jolla.com}.
@@ -1730,9 +1733,9 @@ You really want to quit? Stay here, the water is warm! Jokes aside, for whatever
 To make it really clean, remove orphaned files and directories. Of course you can keep those files for later use.
 %
 \begin{lstlisting}[language=bash]
-# Remains from the pre Alpha2 SDK
+# remains from the pre Alpha2 SDK
 rm ~/.ssh/mer-qt-creator-rsa*
-# There seem remains of every iteration of the SDK
+# there seem remains of every iteration of the SDK
 rm -R ~/.config/SailfishAlpha*
 # created if you deploy an app
 rm -R ~/rpmbuild
@@ -1788,6 +1791,7 @@ Of course a big thanks goes out to everybody at Jolla. You are \verb,#unlike,!
 \bibitem [hc01]{hc01} hardcodes, that's my nickname and my website\\\url{http://www.hardcodes.de}
 \bibitem [hc02]{hc02} This document on Github\\\url{https://github.com/hardcodes/developwithsailfishos.git}
 \bibitem [hc03]{hc03} Alternative Icon for the QtCreator inside of the SailfishOS SDK\\\url{http://blog.hardcodes.de/articles/68/sailfish-os-icon}
+\bibitem [hc04]{hc04} Just the PDF version of this document \\\url{http://hardcodes.de/SailfishOS/Developing-with-SailfishOS.pdf}
 %
 %
 \bibitem [qt01]{qt01} The Qt Project. \\\url{https://qt-project.org}
@@ -1824,6 +1828,11 @@ qtcreator-2.8/}
 %
 %
 \bibitem [nm01]{nm01} Nmap, network security scanner \\\url{http://nmap.org}
+%
+%
+\bibitem[irc01]{irc01} A Short IRC Primer \\\url{http://irchelp.org/irchelp/ircprimer.html}
+%
+%
 \end{thebibliography}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \end{document}
