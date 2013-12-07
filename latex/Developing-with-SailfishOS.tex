@@ -645,7 +645,7 @@ I will not walk through every setting of QtCreator, \cite{qt02} is a better plac
 Also I will not use the order of tabs in the preferences, but try to follow the sequence in which those tools touch your source code.
 %
 %
-\subsubsection{kits}
+\subsubsection{kits}\label{subsubsec:kits}
 %
 But before we do that, we must talk about \textit{kits}. A kit is kind of an umbrella setting, which combines the information of the following bits and pieces, like \verb,qmake,, \verb,compiler,, and \verb,device type,. This is the information hub that QtCreator uses to pull all information together and initiate its actions.
 \begin{figure}[H]
@@ -656,7 +656,7 @@ But before we do that, we must talk about \textit{kits}. A kit is kind of an umb
 \end{figure}
 %
 %
-\subsubsection{qmake}
+\subsubsection{qmake}\label{subsubsec:qmake}
 %
 \begin{figure}[H]
   \centering
@@ -935,10 +935,7 @@ exec "/Users/sven/SailfishOS/bin/Qt Creator.app/Contents/MacOS/../Resources/mers
 %
 \subsubsection{Project settings}\label{subsubsec:projectsettings}
 %
-%
-\subsubsection{Two ways to Rome}\label{subsubsec:2way2rome}
-%
-As so often in life there is more than one way to do things. There are the \nameref{subsubsec:projectsettingsdetail}, see page \pageref{subsubsec:projectsettingsdetail}. This is the place where you define what happens when you build / compile / clean or deploy.
+As so often in life there is more than one way to do things. There are the $\vbox{\hbox{\includegraphics[scale=0.4]{./gfx/QtCreator/projects.png}}}$ \emph{project settings}. This is the place where you define what happens when you build and compile.
 % 
 \begin{figure}[H]
   \centering
@@ -947,17 +944,70 @@ As so often in life there is more than one way to do things. There are the \name
   \label{fig:ProjectSettings01}
 \end{figure}
 %
-The second way is the fast \emph{mode selector}, that switches between the settings that were defined in \nameref{subsubsec:projectsettingsdetail}. It's the sailfish button above the green run button.
+The second way is the fast \emph{mode selector} $\vbox{\hbox{\includegraphics[scale=0.4]{./gfx/QtCreator/ModeSelector.png}}}$ that switches between the settings that were defined in the \emph{project settings}. It's the sailfish button above the green run button.
 %
 %
-\subsubsection{Project settings in detail}\label{subsubsec:projectsettingsdetail}
+You have started a project just with the \verb,SailfishOS-i486-x86, setting\footnote{Or vice versa.} or meanwhile there is another platform available. In any of those cases the $\vcenter{\hbox{\includegraphics[scale=0.6]{./gfx/QtCreator/addkitbutton.png}}}$ button is your way to go. This way you can add new target platforms. In Qt-Speak they are called \nameref{subsubsec:kits}, a combination of Qt library, compiler and deployment target.
+
+Right next to it is a little section for each platform you have chosen to build for. Each of this sections is decided into a \emph{build} and \emph{run} pane. As you can guess, \emph{build} defines how to build your app, \emph{run} defines how to run it.
+% 
+\begin{figure}[H]
+  \centering
+  \includegraphics[scale=0.6]{./gfx/QtCreator/kitbuildrun.png} 
+  \caption{Settings for build and run for each target.}
+  \label{fig:kitbuildrun}
+\end{figure}
 %
-TODO
+%
+\subsubsection{Build settings}\label{subsubsec:buildsettings}
+%
+Do you want to build a \verb,debug, version of your app with all the debug symbol built-in? Or are you ready to ship your app to the \nameref{harbour}?
+%
+\begin{figure}[H]
+  \centering
+  \includegraphics[scale=0.6]{./gfx/QtCreator/DebugRelease.png} 
+  \caption{Build Debug or Release version?.}
+  \label{fig:DebugRelease}
+\end{figure}
+%
+The build directory of your app will be the same as your source directory. Usually you can change that with the ``Shadow build'' checkbox, but on Nov 12, 2013 there was an entry in the mailing list that Jolla still works on an SDK that supports that.
+%
+\begin{figure}[H]
+  \centering
+  \includegraphics[scale=0.5]{./gfx/QtCreator/GeneralBuildDirectory.png} 
+  \caption{Where should your code be built?.}
+  \label{fig:GeneralBuildDirectory}
+\end{figure}
+%
+The \nameref{subsec:mersdkpkg} has mounted your home drive and eventually a separate source code directory from your development machine. So don't wonder why the build directory is local on your machine?
+
+The \emph{Build steps} section defines what happens if you actually build your app. If you open up the details, you can see the called command line.
+%
+\begin{figure}[H]
+  \centering
+  \includegraphics[scale=0.5]{./gfx/QtCreator/BuildSteps.png} 
+  \caption{How to build?.}
+  \label{fig:BuildSteps}
+\end{figure}
+%
+Usually \nameref{subsubsec:qmake} is called, followed by \nameref{subsubsec:make}. \emph{Note}: those commands are not invoked locally, they run remote on the \nameref{subsec:MerSDK}, as defined in the preferences for the QtCreator\footnote{Preferences->bash scripts->merssh->VM}.
+
+\emph{Clean steps} defines how your project is \verb,make clean,ed.
+%
+\begin{figure}[H]
+  \centering
+  \includegraphics[scale=0.5]{./gfx/QtCreator/CleanSteps.png} 
+  \caption{How to clean your project?.}
+  \label{fig:CleanSteps}
+\end{figure}
+%
+
+The \emph{Build environment} defines the environment variables that are used during build.
 %
 %
 \subsubsection{Pimp the clean process}\label{subsubsec:pimpclean}
 %
-Every now and then you clean your project. What bugged my for some time using QtCreator\footnote{That has nothing to do with the SailfishOS SDK, the regular QtCreator does that, too.} was that it left the Makefile after you cleaned the project. This way \verb,qmake, is often not run after a \verb,make clean,. No problem, just hit the button $\vcenter{\hbox{\includegraphics[scale=0.6]{./gfx/QtCreator/addcleanstep.png}}}$ and create an extra step that is executed every time after the cleanup has been done.
+Every now and then you clean your project. What bugged my for some time using QtCreator\footnote{That has nothing to do with the SailfishOS SDK, the regular QtCreator does that, too.} was that it left the Makefile after you cleaned the project. This way \verb,qmake, is often not run after a \verb,make clean,. No problem, just choose the \emph{\nameref{subsubsec:buildsettings}} pane of the \emph{project settings} and hit the button $\vcenter{\hbox{\includegraphics[scale=0.6]{./gfx/QtCreator/addcleanstep.png}}}$ and create an extra step that is executed every time after the cleanup has been done.
 %
 \begin{figure}[H]
   \centering
