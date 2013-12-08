@@ -961,7 +961,7 @@ Right next to it is a little section for each platform you have chosen to build 
 %
 \subsubsection{Build settings}\label{subsubsec:buildsettings}
 %
-Do you want to build a \verb,debug, version of your app with all the debug symbol built-in? Or are you ready to ship your app to the \nameref{harbour}?
+Do you want to build a \verb,debug, version of your app with all the debug symbol built-in? Or are you ready to ship your app to the \nameref{sec:harbour}?
 %
 \begin{figure}[H]
   \centering
@@ -1045,7 +1045,7 @@ Choose \emph{Deploy By Copying Binaries} if you are in an early development stag
   \label{fig:RunSettingsCopyBinary}
 \end{figure}
 %
-If your app is almost ready to ship to the \nameref{harbour}, you can change to \emph{RPM}. Now your compiled files will be packaged into a RPM file, transferred to the target device and installed like any other application from the store.
+If your app is almost ready to ship to the \nameref{sec:harbour}, you can change to \emph{RPM}. Now your compiled files will be packaged into a RPM file, transferred to the target device and installed like any other application from the store.
 %
 \begin{figure}[H]
   \centering
@@ -1218,14 +1218,155 @@ The emulator comes with a demo application that shows the silica components.
 %
 Now that we have seen all the tools, bits and pieces, I will try to give an overview how everything works together, when you compile your code in QtCreator for SailfishOS.
 %
+%
+\subsubsection{Build process}\label{subsubsec:buildprocess}
+%
+As an example we just assume that the user\footnote{That means you ;-)} builds an app for the emulator and thus uses the \verb,SailfishOS-i486-x86, target.
+\\
+\\
+\begin{tabular}{l|l|l}
+  \emph{QtCreator} & \emph{Mer SDK VM} & \emph{emulator} \\ \hline
+  %
+  \parbox[t]{0.33\textwidth}{user starts build} &
+  \parbox[t]{0.33\textwidth}{} &
+  \parbox[t]{0.33\textwidth}{} \\ \hline
+  %
+  \parbox[t]{0.33\textwidth}{qmake} &
+  % ~/.config/SailfishAlpha2/mer-sdk-tools/MerSDK/SailfishOS-i486-x86/qmake
+  \parbox[t]{0.33\textwidth}{} &
+  \parbox[t]{0.33\textwidth}{} \\ \hline
+  %
+  \parbox[t]{0.33\textwidth}{merssh} &
+  \parbox[t]{0.33\textwidth}{} &
+  \parbox[t]{0.33\textwidth}{} \\ \hline
+  %
+  \parbox[t]{0.33\textwidth}{} &
+  \parbox[t]{0.33\textwidth}{mb2 -mertarget SailfishOS-i486-x86 qmake} &
+  \parbox[t]{0.33\textwidth}{} \\ \hline
+  %
+  \parbox[t]{0.33\textwidth}{make} &
+  % ~/.config/SailfishAlpha2/mer-sdk-tools/MerSDK/SailfishOS-i486-x86/make
+  \parbox[t]{0.33\textwidth}{} &
+  \parbox[t]{0.33\textwidth}{} \\ \hline
+  %
+  \parbox[t]{0.33\textwidth}{merssh} &
+  \parbox[t]{0.33\textwidth}{} &
+  \parbox[t]{0.33\textwidth}{} \\ \hline
+  %
+  \parbox[t]{0.33\textwidth}{} &
+  \parbox[t]{0.33\textwidth}{mb2 -mertarget SailfishOS-i486-x86 make} &
+  \parbox[t]{0.33\textwidth}{} \\ \hline
+  %
+  \parbox[t]{0.33\textwidth}{parse output} &
+  \parbox[t]{0.33\textwidth}{} &
+  \parbox[t]{0.33\textwidth}{} \\ \hline  
+\end{tabular} \\
+%
+%
+\subsubsection{Run app}\label{subsubsec:runapp}
+%
+Now the user hits \emph{run}, variation 1 = \emph{Deploy By Copying Binaries}.
+\\
+\\
+\begin{tabular}{l|l|l}
+  \emph{QtCreator} & \emph{Mer SDK VM} & \emph{emulator} \\ \hline
+  %
+  \parbox[t]{0.33\textwidth}{user runs app} &
+  \parbox[t]{0.33\textwidth}{} &
+  \parbox[t]{0.33\textwidth}{} \\ \hline
+  %
+  \parbox[t]{0.33\textwidth}{start emulator if necessary} &
+  \parbox[t]{0.33\textwidth}{} &
+  \parbox[t]{0.33\textwidth}{} \\ \hline
+  %
+  \parbox[t]{0.33\textwidth}{deploy} &
+  \parbox[t]{0.33\textwidth}{} &
+  \parbox[t]{0.33\textwidth}{} \\ \hline
 
-TODO put some text and images here.
-TODO find out, how the packaging happens, Makefile?
+  %
+  \parbox[t]{0.33\textwidth}{merssh} &
+  \parbox[t]{0.33\textwidth}{} &
+  \parbox[t]{0.33\textwidth}{} \\ \hline
+  %
+  \parbox[t]{0.33\textwidth}{} &
+  \parbox[t]{0.33\textwidth}{mb2 -mertarget SailfishOS-i486-x86 deploy --rsync} &
+  \parbox[t]{0.33\textwidth}{} \\ \hline
+  %
+  \parbox[t]{0.33\textwidth}{} &
+  \parbox[t]{0.33\textwidth}{copying files to the emulator} &
+  \parbox[t]{0.33\textwidth}{} \\ \hline
+  %
+  \parbox[t]{0.33\textwidth}{run executable on remote device} &
+  \parbox[t]{0.33\textwidth}{} &
+  \parbox[t]{0.33\textwidth}{} \\ \hline
+  %
+  \parbox[t]{0.33\textwidth}{} &
+  \parbox[t]{0.33\textwidth}{} &
+  \parbox[t]{0.33\textwidth}{execute binary} \\ \hline
+  %
+  \parbox[t]{0.33\textwidth}{catch execution status} &
+  \parbox[t]{0.33\textwidth}{} &
+  \parbox[t]{0.33\textwidth}{} \\ \hline
+\end{tabular} \\
+\\
+\\
+%
+%
+Or the user hits \emph{run}, variation 2 = \emph{Deploy As RPM Package}.
+\\
+\\
+\begin{tabular}{l|l|l}
+  \emph{QtCreator} & \emph{Mer SDK VM} & \emph{emulator} \\ \hline
+  %
+  \parbox[t]{0.33\textwidth}{user runs app} &
+  \parbox[t]{0.33\textwidth}{} &
+  \parbox[t]{0.33\textwidth}{} \\ \hline
+  %
+  \parbox[t]{0.33\textwidth}{start emulator if necessary} &
+  \parbox[t]{0.33\textwidth}{} &
+  \parbox[t]{0.33\textwidth}{} \\ \hline
+  %
+  \parbox[t]{0.33\textwidth}{deploy} &
+  \parbox[t]{0.33\textwidth}{} &
+  \parbox[t]{0.33\textwidth}{} \\ \hline
+  %
+  \parbox[t]{0.33\textwidth}{merssh} &
+  \parbox[t]{0.33\textwidth}{} &
+  \parbox[t]{0.33\textwidth}{} \\ \hline
+  %
+  \parbox[t]{0.33\textwidth}{} &
+  \parbox[t]{0.33\textwidth}{mb2 -mertarget SailfishOS-i486-x86 deploy --pkcon} &
+  \parbox[t]{0.33\textwidth}{} \\ \hline
+  %
+  \parbox[t]{0.33\textwidth}{} &
+  \parbox[t]{0.33\textwidth}{building RPM package} &
+  \parbox[t]{0.33\textwidth}{} \\ \hline
+  %
+  \parbox[t]{0.33\textwidth}{} &
+  \parbox[t]{0.33\textwidth}{copying RPM package to the emulator} &
+  \parbox[t]{0.33\textwidth}{} \\ \hline
+  %
+  \parbox[t]{0.33\textwidth}{} &
+  \parbox[t]{0.33\textwidth}{} &
+  \parbox[t]{0.33\textwidth}{installing RPM package} \\ \hline
+  %
+  \parbox[t]{0.33\textwidth}{run executable on remote device} &
+  \parbox[t]{0.33\textwidth}{} &
+  \parbox[t]{0.33\textwidth}{} \\ \hline
+  %
+  \parbox[t]{0.33\textwidth}{} &
+  \parbox[t]{0.33\textwidth}{} &
+  \parbox[t]{0.33\textwidth}{execute binary} \\ \hline
+  %
+  \parbox[t]{0.33\textwidth}{catch execution status} &
+  \parbox[t]{0.33\textwidth}{} &
+  \parbox[t]{0.33\textwidth}{} \\ \hline
+\end{tabular} \\
 %
 %
 \section{Installing additional packages}\label{sec:addpkg}
 %
-You can use additional libraries for your code, so you don't have to write all functionality for yourself. Some of them are available on the emulator and the physical device later on. Sadly not all library packages that are available for Nemo/Mer are usable here. Have look in section \nameref{harbor} on \pageref{harbour} for details about allowed packages. That does not mean, that you can not use libraries that are not part of SailfishOS. You can deliver them with your app, linked to the correct location. Mind the problems\footnote{Think security updates.} that you inherit by doing so.
+You can use additional libraries for your code, so you don't have to write all functionality for yourself. Some of them are available on the emulator and the physical device later on. Sadly not all library packages that are available for Nemo/Mer are usable here. Have look in section \nameref{sec:harbour} on page \pageref{sec:harbour} for details about allowed packages. That does not mean, that you can not use libraries that are not part of SailfishOS. You can deliver them with your app, linked to the correct location. Mind the problems\footnote{Think security updates.} that you inherit by doing so.
 %
 %
 \subsection{Emulator}\label{subsec:pkgemulator}
@@ -1389,7 +1530,7 @@ Taken from \cite{ex01}.
 This section obviously needs a lot more information. Lacking a physical device or an SDK that enables me to interact with it, this has to be done in future.
 %
 %
-\section{Harbour}\label{harbor}
+\section{Harbour}\label{sec:harbour}
 %
 our wrote a fantastic app and now you want to bring it to the people. Head over to the Jolla Harbour\cite{jolla02} and submit your app.
 
