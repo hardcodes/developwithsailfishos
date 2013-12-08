@@ -174,8 +174,6 @@ You will need Virtual Box, because some components of the SailfishOS SDK come as
   \label{fig:vboxdownload}
 \end{figure}
 %
-% TODO provide images of a vbox installation
-%
 If you already use VirtualBox, you don't need to load it again, just skip that step. Just make sure that you have the latest updates installed.
 
 To take a dip, head over to the Sailfish Website\cite{sailfishos01} and download the SDK for your operating system.
@@ -846,7 +844,7 @@ So it is part of the QtCreator that is shipped with the SailfishOS SDK.
   \label{fig:mersshinvoked}
 \end{figure}
 %
-The existence of \verb,merssh, need further investigation, I can not tell more at the moment. Probably it corresponds to the settings of the Mer SDK, shown in figure \ref{fig:creatormersdk} on page \pageref{fig:creatormersdk}.
+All the programs called by QtCreator during the build and run process are more or less just proxy scripts\footnote{OSX and Linux come with bash scripts, Windows comes with?} that call \verb,merssh,, which in turn calls something on the \nameref{subsec:MerSDK}, see page \pageref{subsec:MerSDK}.
 
 More than that, it calls \verb,sb2, which is short for Scratchbox2, have a look at section \nameref{subsec:scratchbox2} on page \pageref{subsec:scratchbox2}, there are more details. For now let's just assume that ``Scratchbox 2 is a cross-compilation engine, it can be used to create a highly flexible SDK.''\cite{sb2}.
 %
@@ -870,12 +868,12 @@ And the result is:
 The picture is getting clearer now. QtCreator starts the SDK version of \verb,qmake, which call \verb,merssh, with all parameters needed to call \verb,qmake, via \verb,mb2, on the virtual machine.
 %
 %
-\subsubsection{Compilers}
+\subsubsection{gcc}\label{subsubsec:compilers:gcc}
 %
 %
 \begin{figure}[H]
   \centering
-  \includegraphics[scale=0.4]{./gfx/QtCreator/Compilers.png} 
+  \includegraphics[scale=0.35]{./gfx/QtCreator/Compilers.png} 
   \caption{Preferences, compiler tab.}
   \label{fig:creatorcompilers}
 \end{figure}
@@ -898,6 +896,8 @@ exec "/Users/sven/SailfishOS/bin/Qt Creator.app/Contents/MacOS/../Resources/mers
 \end{lstlisting}
 %
 \verb,$@, is replaced with the \verb,gcc, call parameters, \verb,oluhuone, is just the name of my current machine.
+
+One questions remains: when is this ever called? To my understanding \verb,qmake, and \verb,make, are called on the \nameref{subsec:MerSDK}. I would conclude that the compiler is invoked from inside the VM.
 %
 %
 \subsubsection{make}\label{subsubsec:make}
@@ -922,15 +922,21 @@ Resulting in
 /Users/sven/SailfishOS/bin/Qt Creator.app/Contents/MacOS/../Resources/merssh -sdktoolsdir /Users/sven/.config/SailfishAlpha2/mer-sdk-tools/MerSDK -commandtype mb2 -mertarget SailfishOS-i486-x86 make
 \end{lstlisting}
 %
+Calling \verb,make, on the development machine just calls a proxy script, which forwards the command via \verb,merssh, and executes \verb,make, on the \nameref{subsec:MerSDK}.
+%
 %
 \subsubsection{rpm}\label{subsubsec:rpm}
 %
-Guess what, a bash script:
+Red Hat Package Manager or RPM Package Manager (RPM) is a package management system.[4] The name RPM variously refers to the .rpm file format, files in this format, software packaged in such files, and the package manager itself. RPM was intended primarily for Linux distributions; the file format is the baseline package format of the Linux Standard Base\cite{wiki03}.
+
+Guess what, the command is a bash script inside the SDK:
 %
 \begin{lstlisting}[language=bash]
 #!/bin/bash
 exec "/Users/sven/SailfishOS/bin/Qt Creator.app/Contents/MacOS/../Resources/merssh" -sdktoolsdir "/Users/sven/.config/SailfishAlpha2/mer-sdk-tools/MerSDK" -commandtype mb2 -mertarget SailfishOS-i486-x86 rpm $@oluhuone:SailfishOS-i486-x86
 \end{lstlisting}
+%
+Again I wonder when this script is called, so far I think that the command \verb,deploy, is invoked when the user starts an app?
 %
 %
 \subsubsection{Project settings}\label{subsubsec:projectsettings}
@@ -1448,7 +1454,7 @@ Of course you can install additional software on the emulator\footnote{As long a
   \label{fig:mersdkpkg:sailfishos}
 \end{figure}
 %
-TODO
+TODO describe the history of Meego/Mer, the idea of a development VM
 %
 %
 \subsubsection{Directories}\label{subsubsec:mersdkdirectories}
@@ -1743,7 +1749,6 @@ Permission denied (publickey).
 # just a generic error message, then
 mv ~/.ssh/mer-qt-creator-rsa.pub ~/.ssh/mer-qt-creator-rsa.pub.backup
 ssh -p 2222 -i ~/.ssh/mer-qt-creator-rsa nemo@localhost
-TODO
 \end{lstlisting}
 %
 The private key file may have wrong permissions, the error message is very clear about that.
@@ -2066,6 +2071,7 @@ qtcreator-2.8/}
 %
 \bibitem [wiki01]{wiki01} Wikipedia, Model–view–controller (MVC) \\\url{http://en.wikipedia.org/wiki/Model–view–controller}
 \bibitem [wiki02]{wiki02} Wikipedia, Scratchbox2 \\\url{http://en.wikipedia.org/wiki/Scratchbox2}
+\bibitem [wiki03]{wiki03} RPM - Redhat Package Manager \\\url{http://en.wikipedia.org/wiki/RPM_Package_Manager}
 %
 %
 \bibitem[sb2]{sb2} Scratchbox2 homepage \\\url{https://maemo.gitorious.org/scratchbox2}
@@ -2073,7 +2079,7 @@ qtcreator-2.8/}
 %
 \bibitem[mer01]{mer01} Mer Wiki, Platform SDK and SB2 \\\url{https://wiki.merproject.org/wiki/Platform_SDK_and_SB2}
 \bibitem[mer02]{mer02} Mer Wiki, SailfishOS SDK hacks \\\url{https://wiki.merproject.org/wiki/Sailfish_SDK_Hacks}
-%
+\bibitem[mer03]{mer03} Mer Project, start page \\\url{http://merproject.org}
 %
 \bibitem [ex01]{ex01} Jolla details on eLinux \\\url{http://elinux.org/Jolla}
 %
