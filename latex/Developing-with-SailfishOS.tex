@@ -824,6 +824,30 @@ exec "/Users/sven/SailfishOS/bin/Qt Creator.app/Contents/MacOS/../Resources/mers
 %
 So that's the trick: \verb,$@, is replaced with the \verb,qmake, call parameters, \verb,oluhuone, is just the name of one of my computers.
 %
+%
+\subsubsection{.pro file}
+%
+Project files contain all the information required by \nameref{subsubsec:qmake} to build your application, library, or plugin. Generally, you use a series of declarations to specify the resources in the project, but support for simple programming constructs enables you to describe different build processes for different platforms and environments[QtCreator help].
+
+If you select the help mode of QtCreator and switch to \emph{Index}, you can search amongst other things for \verb,qmake, and have a look at the \verb,qmake Variable Reference,.
+%
+\begin{figure}[H]
+  \centering
+  \includegraphics[scale=0.7]{./gfx/QtCreator/HelpSelectIndex.png} 
+  \caption{QtCreator, Help, Index.}
+  \label{fig:HelpSelectIndex}
+\end{figure}
+%
+The fundamental behavior of qmake is influenced by variable declarations that define the build process of each project. Some of these declare resources, such as headers and source files, that are common to each platform. Others are used to customize the behavior of compilers and linkers on specific platforms[QtCreator help].
+%
+\begin{figure}[H]
+  \centering
+  \includegraphics[scale=0.7]{./gfx/QtCreator/HelpSearchQmake.png} 
+  \caption{QtCreator, search for qmake.}
+  \label{fig:HelpSearchQmake}
+\end{figure}
+%
+%
 \subsubsection{merssh}\label{subsubsec:merssh}
 %
 Looking with \verb,top, showed a process called \verb,merssh, when \verb,qmake, was started via QtCreator. Interesting, what's that?
