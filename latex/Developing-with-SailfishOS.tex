@@ -596,7 +596,7 @@ Compile and run your application.
 %
 Easy as pie, also see figure \ref{fig:emulatorexample} on page \pageref{fig:emulatorexample}. But what happens when and where if you click on those Icons? Look in section \textit{\nameref{sec:tools}}.
 
-A good starting point to look for a more sophisticated starting example is \emph{The missing HelloWorld. Wizard included} by Artem Marchenko\cite{gh01}. You should check that out!
+A good starting point to look for a more sophisticated starting example is \emph{The missing HelloWorld. Wizard included} by Artem Marchenko\cite{gh01}. You should check that out! It has all the tweaks needed to bring your app to the Jolla store!
 
 And you should look in the \verb,examples, folder of the SDK of course.
 %
@@ -1973,6 +1973,7 @@ This happened on a notebook where the hard drive is clearly a bottleneck but it 
 %
 \subsection{Emulator}
 %
+%
 \subsubsection{Deploying offline}
 %
 When you deploy an app to the emulator\footnote{Deploy happens when you hit \emph{run}.} and the deployment process discovers that you have dependent packages, it tries to download them automatically. That works not so well if you're offline. The following lines could show up in the \emph{Compile Output} tab.
@@ -1987,6 +1988,11 @@ Error message: Couldn't resolve host 'releases.sailfishos.org'
 \end{lstlisting}
 %
 At least for the first compilation of your app you may need a connection to the internet.
+%
+%
+\subsubsection{Timeout, emulator offline}
+%
+The emulator is running as you can see but QtCreator complains that it is not reachable. That is a well known bug, just hit the start button in QtCreator and try again.
 %
 %
 \section{Use your editor of choice}\label{sec:editorofchoice}
