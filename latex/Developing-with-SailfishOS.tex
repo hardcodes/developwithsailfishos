@@ -963,6 +963,11 @@ exec "/Users/sven/SailfishOS/bin/Qt Creator.app/Contents/MacOS/../Resources/mers
 Again I wonder when this script is called, so far I think that the command \verb,deploy, is invoked when the user starts an app?
 %
 %
+\subsubsection{spectacle / yaml}\label{subsubsec:spectacleyaml}
+%
+
+%
+%
 \subsubsection{Project settings}\label{subsubsec:projectsettings}
 %
 As so often in life there is more than one way to do things. There are the $\vbox{\hbox{\includegraphics[scale=0.4]{./gfx/QtCreator/projects.png}}}$ \emph{project settings}. This is the place where you define what happens when you build and compile.
@@ -1966,9 +1971,22 @@ Until now I found no solution for this.
 This happened on a notebook where the hard drive is clearly a bottleneck but it should nevertheless be fast enough to handle this task\footnote{No SSD, spinning disks with 5400 RPM.}.
 %
 %
-\subsubsection{Update via command line}
+\subsection{Emulator}
 %
-TODO
+\subsubsection{Deploying offline}
+%
+When you deploy an app to the emulator\footnote{Deploy happens when you hit \emph{run}.} and the deployment process discovers that you have dependent packages, it tries to download them automatically. That works not so well if you're offline.
+%
+\begin{lstlisting}[language=tex]
+Status: 	Downloading packages
+Package:	qt5-qttest-5.1.0+git17-1.13.1.i486
+Results:
+Fatal error: Download (curl) error for 'http://releases.sailfishos.org/sdk/latest/jolla/i486/qt/i486/qt5-qttest-5.1.0+git17-1.13.1.i486.rpm':
+Error code: Connection failed
+Error message: Couldn't resolve host 'releases.sailfishos.org'
+\end{lstlisting}
+%
+At least for the first compilation of your app you may need a connection to the internet.
 %
 %
 \section{Use your editor of choice}\label{sec:editorofchoice}
@@ -2140,6 +2158,11 @@ qtcreator-2.8/}
 \bibitem[mer02]{mer02} Mer Wiki, SailfishOS SDK hacks \\\url{https://wiki.merproject.org/wiki/Sailfish_SDK_Hacks}
 \bibitem[mer03]{mer03} Mer Project, start page \\\url{http://merproject.org}
 \bibitem[mer04]{mer04} Mer SDK on VirtualBox/Design \url{https://wiki.merproject.org/wiki/SDK_on_VirtualBox/Design}
+\bibitem[mer05]{mer05} Mer Wiki, spectacle \\\url{https://wiki.merproject.org/wiki/Spectacle}
+%
+%
+\bibitem[yaml01]{yaml01} yaml specs \\\url{http://www.yaml.org/spec/}
+%
 %
 \bibitem [ex01]{ex01} Jolla details on eLinux \\\url{http://elinux.org/Jolla}
 %
