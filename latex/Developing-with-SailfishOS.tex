@@ -1135,6 +1135,37 @@ The VM runs headless\footnote{You can change that in Preferences->Mer, uncheck "
   \label{fig:creatormersdk}
 \end{figure}
 %
+%
+\subsubsection{Directories}\label{subsubsec:mersdkdirectories}
+%
+VirtualBox shared folders are used for sharing files between the host and the build engine and emulators for\cite{mer04}:
+\begin{itemize}
+\item Configuration
+\item SSH keys
+\item Home directory
+\item Targets
+\item Other source directory trees
+\end{itemize}
+%
+\begin{figure}[H]
+  \centering
+  \includegraphics[scale=0.5]{./gfx/VirtualBox/vboxMerSettings02.png} 
+  \caption{Virtual Box, shared folders.}
+  \label{fig:vboxMerSettings02}
+\end{figure}
+%
+Those shared folders are mount to these positions in the filesystem of the Mer build engine for cross compilation:
+\begin{lstlisting}[language=bash]
+[root@SailfishSDK ~]# mount
+none on /etc/ssh/authorized_keys type vboxsf (rw,nodev,relatime)
+none on /home/mersdk type vboxsf (rw,nodev,relatime)
+none on /host_targets type vboxsf (rw,nodev,relatime)
+none on /etc/mersdk/share type vboxsf (rw,nodev,relatime)
+none on /home/src1 type vboxsf (rw,nodev,relatime)
+\end{lstlisting}
+
+%
+%
 \subsection{Scratchbox2}\label{subsec:scratchbox2}
 %
 ``Scratchbox2 (sbox2 or sb2) is a cross-compilation toolkit designed to make embedded Linux application development easier. It also provides a full set of tools to integrate and cross-compile an entire Linux distribution.
@@ -1477,13 +1508,6 @@ Of course you can install additional software on the emulator\footnote{As long a
   \caption{Choose ``SailfishOS'' from the left pane.}
   \label{fig:mersdkpkg:sailfishos}
 \end{figure}
-%
-TODO describe the history of Meego/Mer, the idea of a development VM
-%
-%
-\subsubsection{Directories}\label{subsubsec:mersdkdirectories}
-%
-TODO
 %
 %
 \subsubsection{Known Logins}\label{subsubsec:mersdklogins}
@@ -1897,9 +1921,7 @@ ls -lah /etc/ssh/authorized_keys/mersdk/authorized_keys
 ls -lah /etc/ssh/authorized_keys/root/authorized_keys
 \end{lstlisting}
 %
-
-TODO talk about the other drives.
-
+Handle the other shared folders according to this.
 %
 Your VM acts strange and you don't know why? Check if updates for VirtualBox are available. If yes, download and install the latest version and don't forget the extension pack.
 %
@@ -1917,6 +1939,9 @@ Your VM acts strange and you don't know why? Check if updates for VirtualBox are
   \label{fig:vboxupateavailable}
 \end{figure}
 %
+%
+\subsubsection{Slow}\label{subsubsec:ts:slowmersdk}
+%
 I had the situation where everything seems perfect and still it didn't work. For me the last resort was re-installing the VM with the Mer SDK, see section \nameref{sec:uninstall} on page \pageref{sec:uninstall}.
 %
 One one machine the VM was running but slow\footnote{As in tar pit.}, so every connection attempt timed out. Even control from VirtualBox itself was almost impossible.
@@ -1928,10 +1953,20 @@ One one machine the VM was running but slow\footnote{As in tar pit.}, so every c
   \label{fig:vboxtarpit}
 \end{figure}
 %
+This could even happen to a working and running VM to which I successfully logged in via ssh. Working inside the terminal: no problem: compiling: no go.
 Until now I found no solution for this.
 %
+\begin{figure}[H]
+  \centering
+  \includegraphics[scale=0.6]{./gfx/VirtualBox/MerSDKTimeout.png} 
+  \caption{Project ERROR: Could not connect to MerSDK Virtual Machine. Timeout waiting for reply from server.}
+  \label{fig:MerSDKTimeout}
+\end{figure}
 %
-\subsubsection{update via command line}
+This happened on a notebook where the hard drive is clearly a bottleneck but it should nevertheless be fast enough to handle this task\footnote{No SSD, spinning disks with 5400 RPM.}.
+%
+%
+\subsubsection{Update via command line}
 %
 TODO
 %
@@ -2104,6 +2139,7 @@ qtcreator-2.8/}
 \bibitem[mer01]{mer01} Mer Wiki, Platform SDK and SB2 \\\url{https://wiki.merproject.org/wiki/Platform_SDK_and_SB2}
 \bibitem[mer02]{mer02} Mer Wiki, SailfishOS SDK hacks \\\url{https://wiki.merproject.org/wiki/Sailfish_SDK_Hacks}
 \bibitem[mer03]{mer03} Mer Project, start page \\\url{http://merproject.org}
+\bibitem[mer04]{mer04} Mer SDK on VirtualBox/Design \url{https://wiki.merproject.org/wiki/SDK_on_VirtualBox/Design}
 %
 \bibitem [ex01]{ex01} Jolla details on eLinux \\\url{http://elinux.org/Jolla}
 %
