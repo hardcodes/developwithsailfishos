@@ -1,0 +1,476 @@
+#!/bin/bash
+# Copyright (C) 2013 Jolla Ltd.
+# Contact: David Greaves <david.greaves@jollamobile.com>
+# All rights reserved.
+#
+# Redistribution and use in source and binary forms, with or without
+# modification, are permitted provided that the following conditions
+# are met:
+#
+# - Redistributions of source code must retain the above copyright
+#   notice, this list of conditions and the following disclaimer.
+# - Redistributions in binary form must reproduce the above copyright
+#   notice, this list of conditions and the following disclaimer in
+#   the documentation and/or other materials provided with the
+#   distribution.
+#
+# THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+# AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+# IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+# ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+# LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+# CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+# SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+# INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+# CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+# ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+# POSSIBILITY OF SUCH DAMAGE.
+
+short_usage() {
+    cat <<EOF
+usage: $ME [-t <target>] [-s <specfile>] [-d <device>] [-p <projectdir>]
+           build [-d] [-j <n>] [<args>] | qmake [<args>] | make [<args>] | ssh <args>
+           install [<args>] | rpm [<args>] | deploy <args> | run <args>
+       $ME --help
+EOF
+    # exit if any argument is given
+    [ -n "$1" ] && exit 1
+}
+
+usage() {
+    short_usage
+    cat <<EOF
+
+  Executes a subset of build commands in the context of an rpmbuild.
+  Typically called from QtCreator to perform qmake/make phases of a project.
+  Note that any other build steps in the .spec file will also be run.
+
+  <specfile> will be looked for in the current rpm/ dir. If there is
+  more than one it must be provided.
+
+  CWD is used as a base dir for installroot/ and RPMS/ to allow for
+  shadowbuilds
+
+  $ME is aware of spectacle and will update the spec file if there is
+  an obvious yaml file which is newer.
+
+  $ME build [-d] [-j <n>] [<args>]
+                     : runs rpmbuild for the given spec file in the
+                       given sb2 target. Produces an rpm package.
+                     : -d     enable debug build
+                     : -j <n> use only 'n' CPUs to build
+                     : can use -s -t -p
+
+  $ME qmake [<args>] : runs qmake in the 'build' phase
+                       Note that this also verifies target
+                       build dependencies are up to date
+                     : can use -s -t -p  
+
+  $ME make [<args>]  : run make in the 'build' phase
+                     : can use -s -t -p  
+
+  $ME deploy --zypper|--pkcon|--rsync
+                     : runs the install or rpm-creation phase and then
+                       copies/installs the relevant files to the device
+                     : can use -s -t -p -d
+
+  $ME run|ssh [<args>] : runs a command (on device if --device given);
+                         intended for running gdb and a gdb server
+                     : can use -s -t -p -d
+
+  $ME install [<args>] : runs the 'install' phase to install to $buildroot
+                     : can use -s -t -p
+  $ME rpm [<args>]   : runs the install & rpm-creation phases
+                     : can use -s -t -p
+
+
+  -t | --target      : specify the sb2 target to use
+  -d | --device      : specify the device
+  -p | --projectdir  : when running shadow build/deploy from another dir
+  -s | --specfile    : if the specfile is not in rpm/*.spec and cannot be found using -p
+
+EOF
+}
+
+fatal() {
+    echo "Fatal: $*"
+    exit 1
+}
+
+assert_spec_supports_mb2() {
+    if ! grep "define qtc_qmake" "$spec" >/dev/null 2>&1 ; then
+	fatal "This specfile does not have the qtc_* macros defined"
+    fi
+}
+
+try_to_make_spec() { # Tries to create a missing spec
+    [[ -f "$1" ]] && return # It's not missing
+    yaml=$(dirname "$1")/$(basename "$1" .spec).yaml
+    [[ -f "$yaml" ]] || return # No yaml
+    ANSI_COLORS_DISABLED=1 specify -n -N "$yaml"
+}
+
+try_to_make_spec_from_yaml() {
+    # Tries to create a missing spec from a given yaml
+    try_to_make_spec $(dirname "$1")/$(basename "$1" .yaml).spec
+}
+
+ensure_spec_newer_than_yaml() {
+    yaml=$(dirname "$spec")/$(basename "$spec" .spec).yaml
+    [[ -f "$yaml" ]] || return # User has decided not to use yaml
+    if [[ "$yaml" -nt "$spec" ]]; then # -nt is newer than
+	ANSI_COLORS_DISABLED=1 specify -n -N "$yaml"
+    fi
+}
+
+verify_target_dependencies() {
+    rpmspec --query --buildrequires "$spec" | \
+        xargs --no-run-if-empty sb2 -t "$target" -m sdk-install -R zypper --non-interactive in
+}
+
+get_spec_tag() {
+    rpmspec --query --srpm --queryformat="$1" "$spec"
+}
+
+# Helper to read XML
+read_dom () {
+    local IFS=\>
+    read -d \< ENTITY CONTENT
+    local RET=$?
+    TAG_NAME=${ENTITY%% *}
+    ATTRIBUTES=${ENTITY#* }
+    return $RET
+}
+
+# This slurps the XML and converts tags like <subnet> to $device_subnet
+# Also sets device_name and device_type from the attributes
+get_device() {
+    local FOUND_DEVICE=
+    local IN_DEVICE=
+    local maintag=
+    while read_dom; do
+	case $TAG_NAME in
+	    device )
+		maintag=$TAG_NAME
+		eval local $ATTRIBUTES
+		if [[ "$name" == "$1" ]] ; then
+		    FOUND_DEVICE=1
+		    IN_DEVICE=1
+		    device_name="$name"
+		    device_type="$type"
+		else
+		    IN_DEVICE=
+		fi
+		;;
+	    engine )
+		maintag=$TAG_NAME
+		eval local $ATTRIBUTES
+		;;
+	    mac|index|subnet|ip|sshkeypath )
+		# Don't process and store nested tags if we're in
+		# device with wrong name
+		if [[ "$maintag" == "device" ]] && [[ $IN_DEVICE != 1 ]]; then
+		    continue
+		fi
+		eval ${maintag}_$TAG_NAME="$CONTENT"
+		;;
+	esac
+    done
+    # Set this up as it's useful
+    if [[ "$device_subnet" ]]; then
+	device_ip="$device_subnet".$device_index
+    fi
+    if [[ "$FOUND_DEVICE" == 1 ]]; then return 0; else return 1; fi
+}
+
+rsync_as() {
+    local user=$1;shift
+    local key="$(dirname "$DEVICES_XML")/${device_sshkeypath}/$user"
+    [[ -f "$key" ]] || fatal "No key for user $user on $device_name given in devices.xml"
+    RSYNC_RSH="ssh -F /etc/ssh/ssh_config.sdk -l $user -i $key" rsync "$@"
+}
+
+ssh_as() {
+    local user=$1;shift
+    local key="$(dirname "$DEVICES_XML")/${device_sshkeypath}/$user"
+    [[ -f "$key" ]] || fatal "No key for user $user on $device_name given in devices.xml"
+    ssh -F /etc/ssh/ssh_config.sdk -i $key -l $user $device_ip $@
+}
+
+cd_to_spec_setup_dir() {
+    _basedir=$(pwd)
+    local setup_dir=$(grep -Po '%setup.*-n.*' "$spec" | cut -s -f2 -d'/')
+    if [ -n "$setup_dir" ]; then
+	# in case we got a spec %{tag} out of this, try to expand it
+	setup_dir=$(get_spec_tag "$setup_dir")
+	cd "$setup_dir"
+    fi
+}
+
+run_build() {
+    # intended to provide mb build behaviour
+    verify_target_dependencies
+
+    sed -e '/^%patch/d' "$spec" > "$spec".$$
+
+    (
+	cd_to_spec_setup_dir;
+	rm -f $_basedir/RPMS/*;
+	eval sb2 -t $target rpmbuild --build-in-place \
+	    $BUILD_DEBUG \
+	    --define \"_smp_mflags -j$BUILD_JOBS\" \
+	    --define \"_rpmdir $_basedir/RPMS \" \
+	    --define \"_sourcedir $_basedir/rpm \" \
+	    --define \"_rpmfilename %%{name}-%%{version}-%%{release}.%%{arch}.rpm \" \
+	    --buildroot=\"$buildroot\" \
+	    --dobuild \
+	    --doinstall \
+	    --dobinary \
+	    --docheck \
+	    \"$spec\".$$
+    )
+    rm -f "$spec".$$
+}
+
+run_qmake() {
+    if [[ "$spec" ]]; then
+	# This is a good time to verify the target dependencies as per mb
+	verify_target_dependencies
+	(
+	    cd_to_spec_setup_dir;
+	    eval sb2 -t $target rpmbuild --build-in-place \
+		--dobuild \
+		--define \"noecho 1 \" \
+		--define \"qtc_builddir $_basedir \" \
+		--define \"qtc_make true ignoring make\" \
+		--define \"qtc_qmake5  %qmake5 $@\" \
+		--define \"qtc_qmake  %qmake $@\" \
+		\"$spec\"
+	)
+    else
+	sb2 -t $target qmake "$@"
+    fi
+}
+
+run_make() {
+    if [[ "$spec" ]]; then
+	(
+	    cd_to_spec_setup_dir;
+	    eval sb2 -t $target rpmbuild --build-in-place \
+		--dobuild \
+		--define \"noecho 1 \" \
+		--define \"qtc_builddir $_basedir \" \
+		--define \"qtc_qmake5 true ignoring qmake\" \
+		--define \"qtc_qmake true ignoring qmake\" \
+		--define \"qtc_make  make  %{?_smp_mflags} $@\" \
+		\"$spec\"
+	)
+    else
+	sb2 -t $target make "$@"
+    fi
+}
+
+run_install() {
+    # Install to buildroot which should be rsync'ed to /opt/sdk/$package on device
+    (
+	cd_to_spec_setup_dir;
+	eval sb2 -t $target rpmbuild --build-in-place \
+	    --define \"noecho 1 \" \
+	    --define \"qtc_builddir $_basedir \" \
+	    --define \"_sourcedir $_basedir/rpm \" \
+	    --buildroot=\"$buildroot\" \
+	    --doinstall \
+	    \"$spec\"
+    )
+}
+
+run_rpm() {
+    (
+	cd_to_spec_setup_dir;
+	rm -f $_basedir/RPMS/*;
+	eval sb2 -t $target rpmbuild --build-in-place \
+	    --define \"qtc_builddir $_basedir \" \
+	    --define \"_rpmdir $_basedir/RPMS \" \
+	    --define \"_sourcedir $_basedir/rpm \" \
+	    --define \"_rpmfilename %%{name}-%%{version}-%%{release}.%%{arch}.rpm \" \
+	    --buildroot=\"$buildroot\" \
+	    --doinstall \
+	    --dobinary \
+	    --docheck \
+	    \"$spec\"
+    )
+}
+
+run_deploy() {
+    [[ "$device_type" ]] || fatal "deploy must have a valid --device"
+    local fail_text="deploy must use one of --pkcon, --rsync or --zypper"
+    [[ -z ${1:-} ]] && fatal $fail_text
+
+    while [[ $1 ]]; do
+	case "$1" in
+	    "--pkcon" ) shift
+		run_rpm
+		rpms=$(find RPMS -name \*rpm | grep -v -- "-debug")
+		rsync_as root -av ${rpms} $device_ip:/root/RPMS/
+		ssh_as root pkcon --plain --noninteractive install-local ${rpms}
+		;;
+            "--zypper" ) shift
+		run_rpm
+		rpms=$(find RPMS -name \*rpm | grep -v -- "-debug")
+		rsync_as root -av ${rpms} $device_ip:/root/RPMS/
+		ssh_as root zypper --non-interactive in -f ${rpms}
+		;;
+            "--rsync" ) shift
+		user=$deviceuser
+		run_install
+		name=$(get_spec_tag "%{name}")
+		rsync_as $user -av ${buildroot}/. $device_ip:/opt/sdk/$name
+		;;
+	    *)
+		fatal $fail_text ;;
+	esac
+    done
+}
+
+ME=$(basename $0)
+target=""
+pkgdir="./rpm"
+DEVICES_XML=/etc/mersdk/share/devices.xml
+deviceuser=nemo
+
+# Virtualbox environment will install in this hardcoded location
+if [[ -f /etc/mer-sdk-vbox ]]; then
+    buildroot=/home/deploy/installroot
+else
+    buildroot=$(pwd)/installroot
+fi
+
+while [[ "$1" ]]; do
+    case "$1" in
+        "-t" | "--target") shift
+	    target="$1"; shift
+	    ;;
+        "-d" | "--device") shift
+	    device="$1"; shift
+	    get_device "$device" < $DEVICES_XML || fatal "'$device' not found in devices.xml"
+	    ;;
+        "-p" | "--projectdir") shift
+	    projdir="$1"; shift
+	    pkgdir="$projdir"/rpm
+	    [[ -d "$projdir" ]] || fatal "'$projdir' is not a directory"
+	    ;;
+        "-s" | "--specfile" ) shift
+	    spec="$1"; shift
+	    try_to_make_spec "$spec"
+	    [[ -f "$spec" ]] || fatal "'$spec' doesn't exist (and couldn't be made from a yaml)"
+	    ;;
+	install | rpm | deploy | build )
+	    needspec=1;
+	    break 2 ;;
+	qmake | make | run | ssh )
+	    break 2 ;;
+	*)
+	    usage
+	    exit 1
+            ;;
+    esac
+done
+
+if [[ ! "$target" ]]; then
+    if [[ -f ~/.scratchbox2/config ]]; then
+	. ~/.scratchbox2/config
+	target=$DEFAULT_TARGET
+    fi
+    [[ "$target" ]] || fatal "You must specify an sb2 target or have a default configured"
+fi
+
+[[ -d ~/.scratchbox2/$target ]] || fatal "$target is an invalid sb2 target"
+
+# spec rules are complex:
+#  a .spec is required for some but not all operations
+#  if -s is given then
+#    if it does not exist then specify tries to make it
+#    if it exists it will be used
+#  if there is a rpm/*.spec then that is used
+#  if there is a rpm/*.yaml then a spec is made and used
+
+if [[ ! "$spec" ]]; then
+    numspec=$(ls "$pkgdir"/*spec 2>/dev/null | wc -l)
+    if [[ $numspec -gt 1 ]]; then
+	[[ $needspec ]] && fatal "Too many spec files - please use -s to identify which to use"
+	echo "Too many spec files - not using any. Use -s to identify a specific one"
+	# spec is not set
+    fi
+
+    if [[ $numspec -eq 0 ]]; then
+	# No spec, try to find a yaml
+	numyaml=$(ls "$pkgdir"/*yaml 2>/dev/null | wc -l)
+	if [[ $numyaml -eq 1 ]]; then
+	    try_to_make_spec_from_yaml $(ls "$pkgdir"/*yaml)
+	    numspec=$(ls "$pkgdir"/*spec 2>/dev/null | wc -l)
+	else
+	    [[ $needspec ]] && fatal "No spec file found in '$pkgdir/' and couldn't make one from a yaml"
+	fi
+    fi
+
+    if [[ $numspec -eq 1 ]]; then
+	spec=$(ls "$pkgdir"/*spec)
+    else
+	# this is because we did try_to_make_spec_from_yaml and failed
+	[[ $needspec ]] && fatal "No spec file found in '$pkgdir/' and couldn't make one from a yaml"
+	
+    fi
+fi
+
+# Now if there is a spec given, make sure it is up-to-date
+if [[ "$spec" ]]; then
+    # turn 'spec' into an absolute path
+    spec=$(readlink -f "$spec")
+    ensure_spec_newer_than_yaml
+fi
+
+case "$1" in
+    qmake | make | install | rpm | deploy )
+	cmd=run_$1
+	if [[ "$spec" ]]; then
+	    assert_spec_supports_mb2
+	fi
+        shift
+        ;;
+    build )
+	cmd=run_$1; shift
+	BUILD_DEBUG='--define "debug_package %{nil} "'
+	BUILD_JOBS=$(getconf _NPROCESSORS_ONLN)
+	while [[ "$1" ]]; do
+	    case "$1" in
+		-d|--enable-debug) shift
+		    BUILD_DEBUG= ;;
+		-j*)
+		    # support giving -j with and without space between
+		    # it and the 'n'
+		    if [ ${#1} -gt 2 ]; then
+			BUILD_JOBS=${1:2}; shift
+		    else
+			[ -z "$2" ] && short_usage quit
+			BUILD_JOBS="$2"; shift 2;
+		    fi
+		    ;;
+		*)
+		    break
+		    ;;
+	    esac
+	done
+        ;;
+    run | ssh ) shift
+	if [[ "$device" ]]; then
+	    cmd="ssh_as $deviceuser"
+	else
+	    cmd="eval"
+	fi
+        ;;
+    *)
+	short_usage quit
+	;;
+esac
+
+$cmd "$@"

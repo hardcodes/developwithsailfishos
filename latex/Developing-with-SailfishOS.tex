@@ -645,7 +645,8 @@ Also I will not use the order of tabs in the preferences, but try to follow the 
 %
 \subsubsection{kits}\label{subsubsec:kits}
 %
-But before we do that, we must talk about \textit{kits}. A kit is kind of an umbrella setting, which combines the information of the following bits and pieces, like \verb,qmake,, \verb,compiler,, and \verb,device type,. This is the information hub that QtCreator uses to pull all information together and initiate its actions.
+But before we do that, we must talk about \textit{kits}. A kit is kind of an umbrella setting, which combines the information of the following bits and pieces, like \verb,qmake,, \verb,compiler,, and \verb,device type,. This is the information hub that QtCreator uses to pull all information together and initiate its actions when you build or start your application.
+%
 \begin{figure}[H]
   \centering
   \includegraphics[scale=0.35]{./gfx/QtCreator/kits486.png} 
@@ -653,6 +654,14 @@ But before we do that, we must talk about \textit{kits}. A kit is kind of an umb
   \label{fig:creatorkits}
 \end{figure}
 %
+So far there are 2 kits defined:
+\begin{itemize}
+\item MerSDK-SailfishOS-armv7hl \\
+		\emph{this kit is marked with a warning sign in the Alpha2 SDK, there is no device assigned yet.}
+\item MerSDK-SailfishOS-i486-x86
+\end{itemize}
+%
+Should you have a kit named \verb,Desktop,, it's of no use inside the QtCreator that comes with the SailfishOS SDK, try not to build your app with this kit!
 %
 \subsubsection{qmake}\label{subsubsec:qmake}
 %
@@ -1184,6 +1193,66 @@ At the opposite, Scratchbox2 allows one to set up a "virtual" environment that w
 Moreover, Scratchbox2 provides a technology called CPU-transparency that goes further in that area. With CPU-transparency, executables built for the host CPU or for the target CPU could be executed directly on the host with sbox2 handling the task to CPU-emulate if needed to run a program compiled for the target CPU. So, a build process could mix the usage of program built for different CPU architectures. That is especially useful when a build process requires building the program X to be able to use it to build the program Y (Example: building a Lexer that will be used to generate code for a specific package).''\cite{wiki02}
 
 The Wiki page of the Mer project contains a exhaustive description how to compile a program on platform A for platform B\cite{mer01}.
+%
+\subsubsection{sb2}\label{subsubsec:sb2}
+%
+You can find Scratchbox2 or the \verb,sb2, in the \verb,/usr/bin, folder of the \nameref{subsec:MerSDK}. This shell script is not called directly. The SailfishOS SDK uses {subsubsec:mb2} as a wrapper for convenience.
+%
+%
+\subsubsection{mb2}\label{subsubsec:mb2}
+%
+This is a convenience wrapper script in the \verb,/usr/bin, folder of the \nameref{subsec:MerSDK}.. Look at the source code in section \nameref{subsec:appendix:mb2} on page \pageref{subsec:appendix:mb2}.
+
+Here is just the usage part:
+\begin{lstlisting}[language=bash]
+  Executes a subset of build commands in the context of an rpmbuild.
+  Typically called from QtCreator to perform qmake/make phases of a project.
+  Note that any other build steps in the .spec file will also be run.
+
+  <specfile> will be looked for in the current rpm/ dir. If there is
+  more than one it must be provided.
+
+  CWD is used as a base dir for installroot/ and RPMS/ to allow for
+  shadowbuilds
+
+  mb2 is aware of spectacle and will update the spec file if there is
+  an obvious yaml file which is newer.
+
+  mb2 build [-d] [-j <n>] [<args>]
+                     : runs rpmbuild for the given spec file in the
+                       given sb2 target. Produces an rpm package.
+                     : -d     enable debug build
+                     : -j <n> use only 'n' CPUs to build
+                     : can use -s -t -p
+
+  mb2 qmake [<args>] : runs qmake in the 'build' phase
+                       Note that this also verifies target
+                       build dependencies are up to date
+                     : can use -s -t -p  
+
+  mb2 make [<args>]  : run make in the 'build' phase
+                     : can use -s -t -p  
+
+  mb2 deploy --zypper|--pkcon|--rsync
+                     : runs the install or rpm-creation phase and then
+                       copies/installs the relevant files to the device
+                     : can use -s -t -p -d
+
+  mb2 run|ssh [<args>] : runs a command (on device if --device given);
+                         intended for running gdb and a gdb server
+                     : can use -s -t -p -d
+
+  mb2 install [<args>] : runs the 'install' phase to install to $buildroot
+                     : can use -s -t -p
+  mb2 rpm [<args>]   : runs the install & rpm-creation phases
+                     : can use -s -t -p
+
+
+  -t | --target      : specify the sb2 target to use
+  -d | --device      : specify the device
+  -p | --projectdir  : when running shadow build/deploy from another dir
+  -s | --specfile    : if the specfile is not in rpm/*.spec and cannot be found using -p
+\end{lstlisting}
 %
 %
 \subsection{The SailfishOS Emulator}\label{subsec:SailfishEmulator}
@@ -2119,6 +2188,15 @@ Of course a big thanks goes out to everybody at Jolla. You are \verb,#unlike,!
 % TODO name some special persons here!
 %
 %
+\section{Appendix}\label{sec:appendix}
+%
+%
+\subsection{mb2 - bash script}\label{subsec:appendix:mb2}
+%
+\lstinputlisting{./sdk/mb2}[language=bash]
+%
+%
+
 \begin{thebibliography}{xxxxxxxxxxxx}
 %
 %
