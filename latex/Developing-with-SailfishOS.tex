@@ -899,6 +899,8 @@ And the result is:
 \end{lstlisting}
 %
 The picture is getting clearer now. QtCreator starts the SDK version of \verb,qmake, which call \verb,merssh, with all parameters needed to call \verb,qmake, via \verb,mb2, on the virtual machine.
+
+This time it is not a bash script and I haven't found the source code yet. Maybe this little piece of software is one of the closed ones.
 %
 %
 \subsubsection{gcc}\label{subsubsec:compilers:gcc}
@@ -1858,6 +1860,8 @@ Service detection performed. Please report any incorrect results at http://nmap.
 Nmap done: 1 IP address (1 host up) scanned in 6.49 seconds
 \end{lstlisting}
 %
+Maybe your VM isn't reacting at all, see \nameref{subsubsec:ts:slowmersdk} on page \pageref{subsubsec:ts:slowmersdk}.
+%
 %
 \subsubsection{SSH login pre Alpha2SDK}
 %
@@ -2078,6 +2082,8 @@ Until now I found no solution for this.
 \end{figure}
 %
 This happened on a notebook where the hard drive is clearly a bottleneck but it should nevertheless be fast enough to handle this task\footnote{No SSD, spinning disks with 5400 RPM.}.
+
+If nothing else works, power off the VM from inside VirtualBox. Even that may freeze. When the VM is in state \emph{aborted}, kill VirtualBox and start it again. Now start the VM manually from inside VirtualBox. QtCreator will not recognize such a VM as running. Hit the $\vcenter{\hbox{\includegraphics[scale=0.6]{../media/gfx/QtCreator/SDKstart.png}}}$ button and after its green again, your good to go.
 %
 %
 \subsection{Emulator}
