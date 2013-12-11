@@ -969,12 +969,33 @@ Guess what, the command is a bash script inside the SDK:
 exec "/Users/sven/SailfishOS/bin/Qt Creator.app/Contents/MacOS/../Resources/merssh" -sdktoolsdir "/Users/sven/.config/SailfishAlpha2/mer-sdk-tools/MerSDK" -commandtype mb2 -mertarget SailfishOS-i486-x86 rpm $@oluhuone:SailfishOS-i486-x86
 \end{lstlisting}
 %
-Again I wonder when this script is called, so far I think that the command \verb,deploy, is invoked when the user starts an app?
+This script is called when you \verb,deploy, your app. Deploying happens implicitly if you \emph{run} the application. See section \nameref{subsubsec:runsettings} on page \pageref{subsubsec:runsettings}. Or you can deploy explicitly.
+%
+%
+\subsubsection{deploy}\label{subsubsec:deploy}
+%
+There are two ways to start the deployment process, also have a look at  section \nameref{subsubsec:runsettings} on page \pageref{subsubsec:runsettings}.
+%
+\begin{figure}[H]
+  \centering
+  \includegraphics[scale=0.5]{../media/gfx/QtCreator/deploy01-01.png} 
+  \caption{Deploy via ``build'' menu.}
+  \label{fig:deploy01-01}
+\end{figure}
+%
+% 
+\begin{figure}[H]
+  \centering
+  \includegraphics[scale=0.5]{../media/gfx/QtCreator/deploy01-02.png} 
+  \caption{Deploy via ``project tree''.}
+  \label{fig:deploy01-02}
+\end{figure}
+%
 %
 %
 \subsubsection{spectacle / yaml}\label{subsubsec:spectacleyaml}
 %
-
+TODO
 %
 %
 \subsubsection{Project settings}\label{subsubsec:projectsettings}
@@ -1657,6 +1678,20 @@ Developing with the emulator only will do you no good. You have to experience yo
 Taken from \cite{ex01}.
 
 This section obviously needs a lot more information. Lacking a physical device or an SDK that enables me to interact with it, this has to be done in future.
+%
+%
+\subsection{How do I deploy a package to my phone?}
+%
+As of now there is only the Alpha2 SDK out that has no built-in features to deploy a package to your device.
+
+But you can help yourself\footnote{Since I have no device yet, I couldn't test this. Time will come, more details will follow.}:
+%
+\begin{enumerate}
+\item build RPM
+\item deploy RPM, look in the output for the location
+\item copy RPM to Jolla phone
+\item use \verb,pkcon install-local, to install it locally
+\end{enumerate}
 %
 %
 \section{Harbour}\label{sec:harbour}
