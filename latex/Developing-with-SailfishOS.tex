@@ -1175,7 +1175,7 @@ The VM runs headless\footnote{You can change that in Preferences->Mer, uncheck "
 %
 \subsubsection{Directories}\label{subsubsec:mersdkdirectories}
 %
-VirtualBox shared folders are used for sharing files between the host and the build engine and emulators for\cite{mer04}:
+VirtualBox shared folders are used for sharing files between the host and the build engine and emulators\cite{mer04}:
 \begin{itemize}
 \item Configuration
 \item SSH keys
@@ -1201,6 +1201,10 @@ none on /etc/mersdk/share type vboxsf (rw,nodev,relatime)
 none on /home/src1 type vboxsf (rw,nodev,relatime)
 \end{lstlisting}
 
+You can also see those and many other settings on the command line via the \verb,VBoxManage, command.
+\begin{lstlisting}[language=bash]
+VBoxManage showvminfo "MerSDK"
+\end{lstlisting}
 %
 %
 \subsection{Scratchbox2}\label{subsec:scratchbox2}
@@ -2060,7 +2064,7 @@ Your VM acts strange and you don't know why? Check if updates for VirtualBox are
 %
 \subsubsection{Slow}\label{subsubsec:ts:slowmersdk}
 %
-I had the situation where everything seems perfect and still it didn't work. For me the last resort was re-installing the VM with the Mer SDK, see section \nameref{sec:uninstall} on page \pageref{sec:uninstall}.
+I had the situation where everything seems perfect and still it didn't work. For me the last resort was re-installing the VM with the Mer SDK, see section \nameref{sec:uninstall} on page \pageref{sec:uninstall} but even that did not help in the end.
 %
 One one machine the VM was running but slow\footnote{As in tar pit.}, so every connection attempt timed out. Even control from VirtualBox itself was almost impossible.
 %
@@ -2084,6 +2088,22 @@ Until now I found no solution for this.
 This happened on a notebook where the hard drive is clearly a bottleneck but it should nevertheless be fast enough to handle this task\footnote{No SSD, spinning disks with 5400 RPM.}.
 
 If nothing else works, power off the VM from inside VirtualBox. Even that may freeze. When the VM is in state \emph{aborted}, kill VirtualBox and start it again. Now start the VM manually from inside VirtualBox. QtCreator will not recognize such a VM as running. Hit the $\vcenter{\hbox{\includegraphics[scale=0.6]{../media/gfx/QtCreator/SDKstart.png}}}$ button and after its green again, your good to go.
+\\
+\\
+Inside the VirtualBox manual is a section that may describe the cause for these problems\cite{vbox02}, as it talks about slow disk systems and that is truly the case here. I am testing this right now, don't know yet if that really helps = call this experimental.
+
+Open your terminal and run the following commands
+%
+\begin{lstlisting}[language=bash]
+VBoxManage showvminfo "MerSDK"|grep SATA
+Storage Controller Name (0):            SATA
+SATA (1, 0): /Users/sven/SailfishOS/mersdk/mer.vdi (UUID: fd25a075-e327-46b6-8657-3ab4c4294f94)
+# the 0 in 'Storage Controller Name (0)' is what we are looking for
+# it translates to the 0 in 'LUN#0' in the following command
+VBoxManage setextradata "MerSDK" "VBoxInternal/Devices/ahci/0/LUN#0/Config/FlushInterval" 5000000
+# reasonable values for FlushInterval are between 1000000 (write often) and 10000000 (write bigger chunks)
+# so I chose the middle ground
+\end{lstlisting}
 %
 %
 \subsection{Emulator}
@@ -2263,6 +2283,9 @@ Of course a big thanks goes out to everybody at Jolla. You are \verb,#unlike,!
 %
 %
 \bibitem[vbox01]{vbox01} VirtualBox, a virtualization platform from Oracle\\\url{https://www.virtualbox.org/wiki/Downloads}
+\bibitem[vbox02]{vbox02} Guest shows IDE/SATA errors for file-based images on slow host file system\\\url{http://www.virtualbox.org/manual/ch12.html#idp59864608}
+%
+%
 \bibitem [hc01]{hc01} hardcodes, that's my nickname and my website\\\url{http://www.hardcodes.de}
 \bibitem [hc02]{hc02} This document on Github\\\url{https://github.com/hardcodes/developwithsailfishos.git}
 \bibitem [hc03]{hc03} Alternative Icon for the QtCreator inside of the SailfishOS SDK\\\url{http://blog.hardcodes.de/articles/68/sailfish-os-icon}
