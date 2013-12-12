@@ -2103,11 +2103,17 @@ Open your terminal and run the following commands
 VBoxManage showvminfo "MerSDK"|grep SATA
 Storage Controller Name (0):            SATA
 SATA (1, 0): /Users/sven/SailfishOS/mersdk/mer.vdi (UUID: fd25a075-e327-46b6-8657-3ab4c4294f94)
-# the 0 in 'Storage Controller Name (0)' is what we are looking for
-# it translates to the 0 in 'LUN#0' in the following command
-VBoxManage setextradata "MerSDK" "VBoxInternal/Devices/ahci/0/LUN#0/Config/FlushInterval" 5000000
+# the 1 in 'SATA (1, 0)' is what we are looking for
+# it translates to the 1 in 'LUN#1' in the following command
+#                                |
+#                                +--------------------------------+
+#                                                                 |
+VBoxManage setextradata "MerSDK" "VBoxInternal/Devices/ahci/0/LUN#1/Config/FlushInterval" 5000000
 # reasonable values for FlushInterval are between 1000000 (write often) and 10000000 (write bigger chunks)
 # so I chose the middle ground
+# if it fails after all and your VM refuses to start, you can remove the value with
+VBoxManage setextradata "MerSDK" "VBoxInternal/Devices/ahci/0/LUN#1/Config/FlushInterval"
+VBoxManage setextradata "MerSDK" "VBoxInternal/Devices/ahci/0/LUN#1/Config/IgnoreFlush"
 \end{lstlisting}
 %
 %
@@ -2290,7 +2296,7 @@ A big thank you goes to Juergen Bocklage-Ryannel and Johan Thelin for creating s
 %
 %
 \bibitem[vbox01]{vbox01} VirtualBox, a virtualization platform from Oracle\\\url{https://www.virtualbox.org/wiki/Downloads}
-\bibitem[vbox02]{vbox02} Guest shows IDE/SATA errors for file-based images on slow host file system\\\url{http://www.virtualbox.org/manual/ch12.html#idp59864608}
+\bibitem[vbox02]{vbox02} Guest shows IDE/SATA errors for file-based images on slow host file system\\\url{http://www.virtualbox.org/manual/ch12.html#idp60327840}
 %
 %
 \bibitem [hc01]{hc01} hardcodes, that's my nickname and my website\\\url{http://www.hardcodes.de}
