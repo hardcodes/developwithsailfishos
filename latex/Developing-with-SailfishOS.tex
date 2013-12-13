@@ -2076,7 +2076,7 @@ One one machine the VM was running but slow\footnote{As in tar pit.}, so every c
 \begin{figure}[H]
   \centering
   \includegraphics[scale=0.6]{../media/gfx/VirtualBox/vboxtarpit.png} 
-  \caption{Vm can not be controlled.}
+  \caption{VM can not be controlled.}
   \label{fig:vboxtarpit}
 \end{figure}
 %
@@ -2095,6 +2095,22 @@ This happened on a notebook where the hard drive is clearly a bottleneck but it 
 If nothing else works, power off the VM from inside VirtualBox. Even that may freeze. When the VM is in state \emph{aborted}, kill VirtualBox and start it again. Now start the VM manually from inside VirtualBox. QtCreator will not recognize such a VM as running. Hit the $\vcenter{\hbox{\includegraphics[scale=0.6]{../media/gfx/QtCreator/SDKstart.png}}}$ button and after its green again, your good to go.
 \\
 \\
+Funny enough after looking into the logfile\footnote{Have look in the ~/SailfishOS/mersdk/MerSDK/Logs folder} of the VM, I found this message:
+%
+\begin{lstlisting}[language=tex]
+AIOMgr: Host limits number of active IO requests to 16. Expect a performance impact.
+\end{lstlisting}
+%
+After some google'ing I found a hint mentioning the \emph{I/O Host Cache} setting being off\footnote{This was for Vagrant which also utilizes VitualBox.}. So I checked to box for a test.
+%
+\begin{figure}[H]
+  \centering
+  \includegraphics[scale=0.6]{../media/gfx/VirtualBox/IOCache.png} 
+  \caption{Turn on the host I/O cache.}
+  \label{fig:IOCache}
+\end{figure}
+%
+
 Inside the VirtualBox manual is a section that may describe the cause for these problems\cite{vbox02}, as it talks about slow disk systems and that is truly the case here\footnote{From the slow notebook hard drive perspective}, but I must admit that I did not experience the mentioned IDE/SATA errors.
 
 I am testing this right now, don't know yet if that really helps = call this experimental.
@@ -2118,7 +2134,9 @@ VBoxManage setextradata "MerSDK" "VBoxInternal/Devices/ahci/0/LUN#1/Config/Flush
 VBoxManage setextradata "MerSDK" "VBoxInternal/Devices/ahci/0/LUN#1/Config/IgnoreFlush"
 \end{lstlisting}
 %
-This didn't solve all my problems so far but the VM got more responsive\footnote{This comes at a price of course, the more often the VM writes the more often it will stress the host machine = your development computer.}, the cursor is actually visible and blinks if I log into the VM directly.
+This didn't solve all my problems so far but the VM got more responsive\footnote{This comes at a price of course, the more often the VM writes the more often it will stress the host machine = your development computer.}.
+
+So far all tweaks have the same effect: they work after I implemented them bot only for a certain time. Then everything goes back to normal =  poor performance or not working at all. But all the problems occur on 1 of 3 OSC machines I've tested the SDK on.
 %
 %
 \subsection{Emulator}
