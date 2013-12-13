@@ -161,7 +161,7 @@ All mentioned trademarks and trade names are the property of their respective ho
 
 If you find typos, errors or quirks, have suggestions how to make this document better, please drop me a note. Or collaborate.\hspace{4 pt}\verb,#jolla2gether,!
 
-Don't panic if you are not comfortable with writing in \LaTeX, I am happy to use your Libre/Open Office or even Word documents.
+Don't panic if you are not comfortable with writing in \LaTeX, I am happy to use your Libre/Open Office or even Word documents. The source will be converted to \verb,MultiMarkDown, in near future\footnote{whatever that means} to lower the barrier for contribution. This way you can use your editor of choice and must not learn too many obscure instructions. 
 %
 \section{Download and install}\label{sec:dai}
 %
@@ -2095,7 +2095,9 @@ This happened on a notebook where the hard drive is clearly a bottleneck but it 
 If nothing else works, power off the VM from inside VirtualBox. Even that may freeze. When the VM is in state \emph{aborted}, kill VirtualBox and start it again. Now start the VM manually from inside VirtualBox. QtCreator will not recognize such a VM as running. Hit the $\vcenter{\hbox{\includegraphics[scale=0.6]{../media/gfx/QtCreator/SDKstart.png}}}$ button and after its green again, your good to go.
 \\
 \\
-Inside the VirtualBox manual is a section that may describe the cause for these problems\cite{vbox02}, as it talks about slow disk systems and that is truly the case here. I am testing this right now, don't know yet if that really helps = call this experimental.
+Inside the VirtualBox manual is a section that may describe the cause for these problems\cite{vbox02}, as it talks about slow disk systems and that is truly the case here\footnote{From the slow notebook hard drive perspective}, but I must admit that I did not experience the mentioned IDE/SATA errors.
+
+I am testing this right now, don't know yet if that really helps = call this experimental.
 
 Open your terminal and run the following commands
 %
@@ -2110,11 +2112,13 @@ SATA (1, 0): /Users/sven/SailfishOS/mersdk/mer.vdi (UUID: fd25a075-e327-46b6-865
 #                                                                 |
 VBoxManage setextradata "MerSDK" "VBoxInternal/Devices/ahci/0/LUN#1/Config/FlushInterval" 5000000
 # reasonable values for FlushInterval are between 1000000 (write often) and 10000000 (write bigger chunks)
-# so I chose the middle ground
+# so I chose the middle ground (meanwhile I am at 1000000)
 # if it fails after all and your VM refuses to start, you can remove the value with
 VBoxManage setextradata "MerSDK" "VBoxInternal/Devices/ahci/0/LUN#1/Config/FlushInterval"
 VBoxManage setextradata "MerSDK" "VBoxInternal/Devices/ahci/0/LUN#1/Config/IgnoreFlush"
 \end{lstlisting}
+%
+This didn't solve all my problems so far but the VM got more responsive\footnote{This comes at a price of course, the more often the VM writes the more often it will stress the host machine = your development computer.}, the cursor is actually visible and blinks if I log into the VM directly.
 %
 %
 \subsection{Emulator}
@@ -2144,8 +2148,57 @@ The emulator is running as you can see but QtCreator complains that it is not re
 \section{Use your editor of choice}\label{sec:editorofchoice}
 %
 Now you are happy with coding for a device with SailfishOS and the SDK, API and all, but for some reason you want to use \emph{your} editor\footnote{notepad^^, vi, emacs, eclipse, named it.} of choice. Because you are used to it, never used something else, it's better, whatever.
+
+Well, I don't know what editor you are using and providing instructions for all them seems unfeasible. Instead I will try to walk you through all the build/compile/steps on the command line. This way you can see what's really happening behind the scenes and can integrate those steps into the environment of your choice. There are at least two ways to do this. First is the way QtCreator goes: call wrapper scripts. The second is to really walk barefooted.
 %
-TODO provide one example of how to build with a foreign editor
+%
+\subsubsection{QtCreator way}\label{subsubsec:byfoot:qtcreator}
+%
+TODO
+%
+%
+\subsubsection{Going barefooted}\label{subsubsec:barefooted:qtcreator}
+%
+TODO
+%
+%
+\section{SDK / API (TODO)}\label{sec:sdk:api}
+%
+%
+%
+\subsubsection{Application lifecycle}
+%
+TODO
+%
+%
+%
+\subsubsection{Gyroscope - device rotation}
+%
+TODO
+%
+%
+%
+\subsubsection{GPS - where am I?}
+%
+TODO
+%
+%
+%
+\subsubsection{Bluetooth}
+%
+TODO
+%
+%
+%
+\subsubsection{NFC}
+%
+TODO
+%
+%
+%
+\subsubsection{The other half}
+%
+TODO
 %
 %
 \section{Community}\label{sec:community}
@@ -2264,6 +2317,8 @@ Sorry, as for installation: until now I can not provide information here.
 \section{Thanks}\label{sec:thanks}
 %
 Of course a big thanks goes out to everybody at Jolla. You are \verb,#unlike <3,\\\\
+%
+Thanks go to David Greaves for convincing me to use another markup language\footnote{Yes, it's still not converted but hey, I am already persuaded}.\\\\
 %
 A big thank you goes to Juergen Bocklage-Ryannel and Johan Thelin for creating such a wonderful online resource about QML\cite{qml01}.
 %
