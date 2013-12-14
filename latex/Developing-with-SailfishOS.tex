@@ -1119,7 +1119,7 @@ Do you want to build a \verb,debug, version of your app with all the debug symbo
   \label{fig:DebugRelease}
 \end{figure}
 %
-The build directory of your app will be the same as your source directory. Usually you can change that with the ``Shadow build'' checkbox, but on Nov 12, 2013 there was an entry in the mailing list that Jolla still works on an SDK that supports that.
+The build directory of your app can but must not be the same as your source directory\footnote{Shadow builds work since the Alpha3 SDK.}. If you check ``Shadow build'', the code will be built in another directory (for each kit). This way you do not need to \verb,make clean, after changing between the targets.
 %
 \begin{figure}[H]
   \centering
@@ -1203,6 +1203,7 @@ If your app is almost ready to ship to the \nameref{sec:harbour}, you can change
   \label{fig:RunSettingsRpm}
 \end{figure}
 %
+\emph{Files to deploy} show which files from your computer go where on the target device.
 Either way uses a variation of the \verb,mb2 deploy, command on the \nameref{subsec:MerSDK}, which means that the binaries or packages are transferred from one VM to the other VM.
 
 The \emph{Run configuration} contains information about how your app is run on the target device.
