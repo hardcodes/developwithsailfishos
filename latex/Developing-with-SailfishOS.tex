@@ -938,6 +938,194 @@ The fundamental behavior of qmake is influenced by variable declarations that de
   \label{fig:HelpSearchQmake}
 \end{figure}
 %
+The \verb,.pro, file from a new created SailfishOS application looks like
+%
+\begin{lstlisting}[language=tex]
+# The name of your app.
+# NOTICE: name defined in TARGET has a corresponding QML filename.
+#         If name defined in TARGET is changed, following needs to be
+#         done to match new name:
+#         - corresponding QML filename must be changed
+#         - desktop icon filename must be changed
+#         - desktop filename must be changed
+#         - icon definition filename in desktop file must be changed
+TARGET = NAME_OF_THEAPP
+
+CONFIG += sailfishapp
+
+SOURCES += src/NAME_OF_THEAPP.cpp
+
+OTHER_FILES += qml/NAME_OF_THEAPP.qml \
+    qml/cover/CoverPage.qml \
+    qml/pages/FirstPage.qml \
+    qml/pages/SecondPage.qml \
+    rpm/NAME_OF_THEAPP.spec \
+    rpm/NAME_OF_THEAPP.yaml \
+    NAME_OF_THEAPP.desktop
+\end{lstlisting}
+%
+The target is the name of the compiled binary.
+%
+\begin{lstlisting}[language=tex]
+TARGET = NAME_OF_THEAPP
+\end{lstlisting}
+%
+All SailfishOS silica application share some common settings, those are imported with the \verb,sailfishapp.prf, Qt feature file.
+%
+\begin{lstlisting}[language=tex]
+CONFIG += sailfishapp
+\end{lstlisting}
+%
+Your C++ implementation files are SOURCES\footnote{The corresponding header files are HEADERS.}.
+%
+\begin{lstlisting}[language=tex]
+SOURCES += src/NAME_OF_THEAPP.cpp
+\end{lstlisting}
+%
+All kind of resource files are the \verb,OTHER_FILES,.
+%
+\begin{lstlisting}[language=tex]
+OTHER_FILES += qml/NAME_OF_THEAPP.qml \
+    qml/cover/CoverPage.qml \
+    qml/pages/FirstPage.qml \
+    qml/pages/SecondPage.qml \
+    rpm/NAME_OF_THEAPP.spec \
+    rpm/NAME_OF_THEAPP.yaml \
+    NAME_OF_THEAPP.desktop
+\end{lstlisting}
+%
+More directives can be found in the help system.
+%
+%
+\subsubsection{.prf file}
+%
+You may ask yourself what the \verb,CONFIG += sailfishapp, line does? It tells \verb,qmake, to include the content of the \verb,sailfishapp.prf, file while it processes the \verb,.pro, file of your application. Those files are called Qt feature files and work more or less like \verb,.pro, files. Their purpose is to share common configuration between different projects.
+
+Have a look into the
+%
+\begin{lstlisting}[language=tex]
+~/SailfishOS/mersdk/targets/SailfishOS-i486-x86/usr/share/qt5/mkspecs/features/
+\end{lstlisting}
+%
+folder, there are some more\footnote{Those are actually copies to satisfy QtCreator. During compilation the same files stored on the Mer SDK virtual machine are used.}.
+%
+\begin{lstlisting}[language=tex]
+#
+# sailfishapp.prf: Qt Feature file for libsailfishapp
+# Usage: CONFIG += sailfishapp
+#
+# Copyright (c) 2013 Jolla Ltd.
+# Contact: Thomas Perl <thomas.perl@jollamobile.com>
+# All rights reserved.
+#
+# This file is part of libsailfishapp
+#
+# You may use this file under the terms of BSD license as follows:
+#
+# Redistribution and use in source and binary forms, with or without
+# modification, are permitted provided that the following conditions are met:
+#     * Redistributions of source code must retain the above copyright
+#       notice, this list of conditions and the following disclaimer.
+#     * Redistributions in binary form must reproduce the above copyright
+#       notice, this list of conditions and the following disclaimer in the
+#       documentation and/or other materials provided with the distribution.
+#     * Neither the name of the Jolla Ltd nor the
+#       names of its contributors may be used to endorse or promote products
+#       derived from this software without specific prior written permission.
+#
+# THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+# ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+# WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+# DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDERS OR CONTRIBUTORS BE LIABLE FOR
+# ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+# (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+# LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+# ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+# (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+# SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+#
+
+QT += quick qml
+
+target.path = /usr/bin
+
+qml.files = qml
+qml.path = /usr/share/$${TARGET}
+
+desktop.files = $${TARGET}.desktop
+desktop.path = /usr/share/applications
+
+icon.files = $${TARGET}.png
+icon.path = /usr/share/icons/hicolor/86x86/apps
+
+INSTALLS += target qml desktop icon
+
+CONFIG += link_pkgconfig
+PKGCONFIG += sailfishapp
+INCLUDEPATH += /usr/include/sailfishapp
+
+OTHER_FILES += $$files(rpm/*)
+\end{lstlisting}
+%
+First of all two Qt modules are added to the project.
+%
+\begin{lstlisting}[language=tex]
+QT += quick qml
+\end{lstlisting}
+%
+Your target binary is copied to \verb,/usr/bin, when \verb,make, is called\footnote{Not really, this would happen if the program would be compiled and deployed on your development machine. TODO}.
+%
+\begin{lstlisting}[language=tex]
+target.path = /usr/bin
+\end{lstlisting}
+%
+TARGET is a special name in a Qt project configuration file. Other group of files can be named freely as long as they don't collide with qmake variable names. All files from the folder \emph{qml} will be installed in the directory \verb,/usr/share/NAME_OF_THEAPP,.
+%
+\begin{lstlisting}[language=tex]
+qml.files = qml
+qml.path = /usr/share/$${TARGET}
+\end{lstlisting}
+%
+The file \verb,NAME_OF_THEAPP.desktop, will be installed in the folder\\ \verb,/usr/share/applications,.
+%
+\begin{lstlisting}[language=tex]
+desktop.files = $${TARGET}.desktop
+desktop.path = /usr/share/applications
+\end{lstlisting}
+%
+Your icon file \verb,NAME_OF_THEAPP.png, will be installed in\\ \verb,/usr/share/icons/hicolor/86x86/apps,.
+%
+\begin{lstlisting}[language=tex]
+icon.files = $${TARGET}.png
+icon.path = /usr/share/icons/hicolor/86x86/apps
+\end{lstlisting}
+%
+If you run \verb,qmake;, it will build a \verb,Makefile, which contains the rules to install four sets of files. First the target install set  which is built-in Qt projects.
+%
+\begin{lstlisting}[language=tex]
+INSTALLS += target qml desktop icon
+\end{lstlisting}
+%
+Then there are the remaining three as above self defined install sets \verb,qmk,, \verb,dektop, and \verb,icon,. When you \verb,make, your application the install sets will be processed in the given order.
+
+TODO
+%
+\begin{lstlisting}[language=tex]
+CONFIG += link_pkgconfig
+\end{lstlisting}
+%
+TODO
+%
+\begin{lstlisting}[language=tex]
+PKGCONFIG += sailfishapp
+\end{lstlisting}
+%
+When you compile your program the \verb,, defines where \verb,#include,ed header files are looked for.
+%
+\begin{lstlisting}[language=tex]
+INCLUDEPATH += /usr/include/sailfishapp
+\end{lstlisting}
+%
 %
 \subsubsection{merssh}\label{subsubsec:merssh}
 %
@@ -1194,7 +1382,7 @@ Choose \emph{Deploy By Copying Binaries} if you are in an early development stag
   \label{fig:RunSettingsCopyBinary}
 \end{figure}
 %
-If your app is almost ready to ship to the \nameref{sec:harbour}, you can change to \emph{RPM}. Now your compiled files will be packaged into a RPM file, transferred to the target device and installed like any other application from the store.
+If your app is almost ready to ship to the \nameref{sec:harbour}, you can change to \emph{RPM}. Now your binary and resource files will be packaged into a RPM file, transferred to the target device and installed like any other application from the store. As RPM packages can contain dependencies to other packages, you can profit from an automatic installation of those packages you depend on\footnote{Have a look at section \nameref{sec:harbour} on page \pageref{sec:harbour} which other packages are allowed or the other way around: which packages are not blacklisted}.
 %
 \begin{figure}[H]
   \centering
