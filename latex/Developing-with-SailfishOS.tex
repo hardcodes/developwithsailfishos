@@ -214,6 +214,7 @@ Double click on the downloaded disk image for the SailfishOS SDK and run the ins
   \label{fig:installsdk02}
 \end{figure}
 %
+Since the Alpha2 SDK you can select a separate folder for your source code if it is stored outside your home folder. Since the Alpha3 SDK this setting should work.
 %
 \begin{figure}[H]
   \centering
@@ -230,6 +231,7 @@ Double click on the downloaded disk image for the SailfishOS SDK and run the ins
   \label{fig:installsdk04}
 \end{figure}
 %
+The Alpha3 SDK added a screen here, where you (de-)select components.
 %
 \begin{figure}[H]
   \centering
@@ -265,7 +267,7 @@ Double click on the downloaded disk image for the SailfishOS SDK and run the ins
 With the installation came two hidden directories, you should know about. More about those directories will follow later on.
 \\
 \\
-\verb,$HOME/.config/SailfishAlpha2,\\
+\verb,$HOME/.config/SailfishAlpha3,\\
 \verb,$HOME/.scratchbox2,\\
 \\
 After you installed the SDK, you should immediately update the components.
@@ -828,7 +830,7 @@ The \verb,qmake, from the SailfishOS SDK is just a simple bash script, that invo
 %
 \begin{lstlisting}[language=bash]
 #!/bin/bash
-exec "/Users/sven/SailfishOS/bin/Qt Creator.app/Contents/MacOS/../Resources/merssh" -sdktoolsdir "/Users/sven/.config/SailfishAlpha2/mer-sdk-tools/MerSDK" -commandtype mb2 -mertarget SailfishOS-i486-x86 qmake $@oluhuone:SailfishOS-i486-x86
+exec "/Users/sven/SailfishOS/bin/Qt Creator.app/Contents/MacOS/../Resources/merssh" -sdktoolsdir "/Users/sven/.config/SailfishAlpha3/mer-sdk-tools/MerSDK" -commandtype mb2 -mertarget SailfishOS-i486-x86 qmake $@oluhuone:SailfishOS-i486-x86
 \end{lstlisting}
 %
 So that's the trick: \verb,$@, is replaced with the \verb,qmake, call parameters, \verb,oluhuone, is just the name of one of my computers.
@@ -895,7 +897,7 @@ $ ps -ef|grep "merssh"
 %
 And the result is:
 \begin{lstlisting}[language=bash]
-/Users/sven/SailfishOS/bin/Qt Creator.app/Contents/MacOS/../Resources/merssh -sdktoolsdir /Users/sven/.config/SailfishAlpha2/mer-sdk-tools/MerSDK -commandtype mb2 -mertarget SailfishOS-i486-x86 qmake /Users/sven/QtProjects/TestSailfishOS/TestSailfishOS.pro -r -spec linux-g++ CONFIG+=debug CONFIG+=declarative_debug CONFIG+=qml_debug -after OBJECTS_DIR=obj MOC_DIR=moc UI_DIR=ui RCC_DIR=rcc
+/Users/sven/SailfishOS/bin/Qt Creator.app/Contents/MacOS/../Resources/merssh -sdktoolsdir /Users/sven/.config/SailfishAlpha3/mer-sdk-tools/MerSDK -commandtype mb2 -mertarget SailfishOS-i486-x86 qmake /Users/sven/QtProjects/TestSailfishOS/TestSailfishOS.pro -r -spec linux-g++ CONFIG+=debug CONFIG+=declarative_debug CONFIG+=qml_debug -after OBJECTS_DIR=obj MOC_DIR=moc UI_DIR=ui RCC_DIR=rcc
 \end{lstlisting}
 %
 The picture is getting clearer now. QtCreator starts the SDK version of \verb,qmake, which call \verb,merssh, with all parameters needed to call \verb,qmake, via \verb,mb2, on the virtual machine.
@@ -927,7 +929,7 @@ So far I don't know why this piece of software is not installed with the rest of
 Looking inside \verb,gcc, from the SDK I also find a bash script:
 \begin{lstlisting}[language=bash]
 #!/bin/bash
-exec "/Users/sven/SailfishOS/bin/Qt Creator.app/Contents/MacOS/../Resources/merssh" -sdktoolsdir "/Users/sven/.config/SailfishAlpha2/mer-sdk-tools/MerSDK" -commandtype sb2 -mertarget SailfishOS-i486-x86 gcc $@oluhuone:SailfishOS-i486-x86
+exec "/Users/sven/SailfishOS/bin/Qt Creator.app/Contents/MacOS/../Resources/merssh" -sdktoolsdir "/Users/sven/.config/SailfishAlpha3/mer-sdk-tools/MerSDK" -commandtype sb2 -mertarget SailfishOS-i486-x86 gcc $@oluhuone:SailfishOS-i486-x86
 \end{lstlisting}
 %
 \verb,$@, is replaced with the \verb,gcc, call parameters, \verb,oluhuone, is just the name of my current machine.
@@ -941,7 +943,7 @@ Again, \verb,make, is just a bash script, \verb,$@, replaced, \verb,oluhuone, my
 %
 \begin{lstlisting}[language=bash]
 #!/bin/bash
-exec "/Users/sven/SailfishOS/bin/Qt Creator.app/Contents/MacOS/../Resources/merssh" -sdktoolsdir "/Users/sven/.config/SailfishAlpha2/mer-sdk-tools/MerSDK" -commandtype mb2 -mertarget SailfishOS-i486-x86 make $@oluhuone:SailfishOS-i486-x86
+exec "/Users/sven/SailfishOS/bin/Qt Creator.app/Contents/MacOS/../Resources/merssh" -sdktoolsdir "/Users/sven/.config/SailfishAlpha3/mer-sdk-tools/MerSDK" -commandtype mb2 -mertarget SailfishOS-i486-x86 make $@oluhuone:SailfishOS-i486-x86
 \end{lstlisting}
 %
 %
@@ -954,7 +956,7 @@ $ ps -ef|grep "merssh"
 Resulting in
 %
 \begin{lstlisting}[language=bash]
-/Users/sven/SailfishOS/bin/Qt Creator.app/Contents/MacOS/../Resources/merssh -sdktoolsdir /Users/sven/.config/SailfishAlpha2/mer-sdk-tools/MerSDK -commandtype mb2 -mertarget SailfishOS-i486-x86 make
+/Users/sven/SailfishOS/bin/Qt Creator.app/Contents/MacOS/../Resources/merssh -sdktoolsdir /Users/sven/.config/SailfishAlpha3/mer-sdk-tools/MerSDK -commandtype mb2 -mertarget SailfishOS-i486-x86 make
 \end{lstlisting}
 %
 Calling \verb,make, on the development machine just calls a proxy script, which forwards the command via \verb,merssh, and executes \verb,make, on the \nameref{subsec:MerSDK}.
@@ -968,7 +970,7 @@ Guess what, the command is a bash script inside the SDK:
 %
 \begin{lstlisting}[language=bash]
 #!/bin/bash
-exec "/Users/sven/SailfishOS/bin/Qt Creator.app/Contents/MacOS/../Resources/merssh" -sdktoolsdir "/Users/sven/.config/SailfishAlpha2/mer-sdk-tools/MerSDK" -commandtype mb2 -mertarget SailfishOS-i486-x86 rpm $@oluhuone:SailfishOS-i486-x86
+exec "/Users/sven/SailfishOS/bin/Qt Creator.app/Contents/MacOS/../Resources/merssh" -sdktoolsdir "/Users/sven/.config/SailfishAlpha3/mer-sdk-tools/MerSDK" -commandtype mb2 -mertarget SailfishOS-i486-x86 rpm $@oluhuone:SailfishOS-i486-x86
 \end{lstlisting}
 %
 This script is called when you \verb,deploy, your app. Deploying happens implicitly if you \emph{run} the application. See section \nameref{subsubsec:runsettings} on page \pageref{subsubsec:runsettings}. Or you can deploy explicitly.
@@ -1395,7 +1397,7 @@ As an example we just assume that the user\footnote{That means you ;-)} builds a
   \parbox[t]{0.33\textwidth}{} \\ \hline
   %
   \parbox[t]{0.33\textwidth}{qmake} &
-  % ~/.config/SailfishAlpha2/mer-sdk-tools/MerSDK/SailfishOS-i486-x86/qmake
+  % ~/.config/SailfishAlpha3/mer-sdk-tools/MerSDK/SailfishOS-i486-x86/qmake
   \parbox[t]{0.33\textwidth}{} &
   \parbox[t]{0.33\textwidth}{} \\ \hline
   %
@@ -1408,7 +1410,7 @@ As an example we just assume that the user\footnote{That means you ;-)} builds a
   \parbox[t]{0.33\textwidth}{} \\ \hline
   %
   \parbox[t]{0.33\textwidth}{make} &
-  % ~/.config/SailfishAlpha2/mer-sdk-tools/MerSDK/SailfishOS-i486-x86/make
+  % ~/.config/SailfishAlpha3/mer-sdk-tools/MerSDK/SailfishOS-i486-x86/make
   \parbox[t]{0.33\textwidth}{} &
   \parbox[t]{0.33\textwidth}{} \\ \hline
   %
