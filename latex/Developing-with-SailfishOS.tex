@@ -483,11 +483,91 @@ With the installation come some directories.
 %
 \subsection{Linux}
 %
-Since I have not installed the SDK on Linux yet, I can not provide any information here. Sorry!
-
-Apart from that I have no physical Linux machine that is connected to a display and can be diverted for a test installation. A virtual machine might work but that would result in VMs inside a VM, not very promising.
-
-Volunteers present?
+Download the Linux installer from the VirtualBox homepage. My distribution is Debian base, so I chose the 64bit Debian package. Open your terminal and install with
+%
+\begin{figure}[H]
+  \centering
+  \includegraphics[scale=0.4]{../media/gfx/VirtualBox/vboxlinux01-01.png} 
+  \caption{Install VirtualBox from the terminal.}
+  \label{fig:vboxlinux01-01}
+\end{figure}
+%
+\begin{lstlisting}[language=bash]
+cd downloads
+sudo dpkg --install ./virtualbox-4.3_4.3.4-91027~Debian~wheezy_amd64.deb
+# as you can see in the screenshot there are missing dependencies, install them with
+sudo apt-get -f install
+# and now finnish the installation
+sudo dpkg --install ./virtualbox-4.3_4.3.4-91027~Debian~wheezy_amd64.deb
+\end{lstlisting}
+%
+Now download the installer from \cite{sailfishos01},
+%
+\begin{figure}[H]
+  \centering
+  \includegraphics[scale=0.6]{../media/gfx/Linux/linux01-01.png} 
+  \caption{Install SailfishOS SDK on Linux, step 1.}
+  \label{fig:vboxlinux01-01}
+\end{figure}
+%
+make it executable and start it. From now on it's mostly like on OSX and/or Windows.
+%
+\begin{figure}[H]
+  \centering
+  \includegraphics[scale=0.4]{../media/gfx/Linux/linux01-02.png} 
+  \caption{Install SailfishOS SDK on Linux, step 2.}
+  \label{fig:vboxlinux01-02}
+\end{figure}
+%
+%
+\begin{figure}[H]
+  \centering
+  \includegraphics[scale=0.6]{../media/gfx/Linux/linux01-04.png} 
+  \caption{Install SailfishOS SDK on Linux, step 4.}
+  \label{fig:vboxlinux01-04}
+\end{figure}
+%
+%
+\begin{figure}[H]
+  \centering
+  \includegraphics[scale=0.6]{../media/gfx/Linux/linux01-05.png} 
+  \caption{Install SailfishOS SDK on Linux, step 5.}
+  \label{fig:vboxlinux01-05}
+\end{figure}
+%
+%
+\begin{figure}[H]
+  \centering
+  \includegraphics[scale=0.6]{../media/gfx/Linux/linux01-06.png} 
+  \caption{Install SailfishOS SDK on Linux, step 6.}
+  \label{fig:vboxlinux01-06}
+\end{figure}
+%
+%
+\begin{figure}[H]
+  \centering
+  \includegraphics[scale=0.6]{../media/gfx/Linux/linux01-07.png} 
+  \caption{Install SailfishOS SDK on Linux, step 7.}
+  \label{fig:vboxlinux01-07}
+\end{figure}
+%
+%
+\begin{figure}[H]
+  \centering
+  \includegraphics[scale=0.6]{../media/gfx/Linux/linux01-08.png} 
+  \caption{Install SailfishOS SDK on Linux, step 8.}
+  \label{fig:vboxlinux01-08}
+\end{figure}
+%
+%
+\begin{figure}[H]
+  \centering
+  \includegraphics[scale=0.6]{../media/gfx/Linux/linux01-09.png} 
+  \caption{Install SailfishOS SDK on Linux, step 9.}
+  \label{fig:vboxlinux01-09}
+\end{figure}
+%
+Now you can start and use the SDK. How to start depends on your distribution. Maybe a menu entry was created, maybe you must create one on your own. The binary is in the \verb,~/SailfishOS/bin, folder.
 %
 %
 \subsection{Remove plugins}\label{subsec:removeplugins}
