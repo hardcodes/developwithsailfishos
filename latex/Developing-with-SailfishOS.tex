@@ -1232,7 +1232,7 @@ You can find Scratchbox2 or the \verb,sb2, in the \verb,/usr/bin, folder of the 
 %
 This is a convenience wrapper script in the \verb,/usr/bin, folder of the \nameref{subsec:MerSDK}.. Look at the source code in section \nameref{subsec:appendix:mb2} on page \pageref{subsec:appendix:mb2}.
 
-Here is just the usage part to trap what is happening when this script is called\footnote{It should be alright to show a snippet since I included the whole source with copyright notice.}.
+Here is just the usage part to grab what is happening when this script is called\footnote{It should be alright to show a snippet since I included the whole source with copyright notice.}.
 %
 \begin{lstlisting}[language=bash]
   Executes a subset of build commands in the context of an rpmbuild.
@@ -1288,13 +1288,29 @@ Here is just the usage part to trap what is happening when this script is called
 \subsection{The SailfishOS Emulator}\label{subsec:SailfishEmulator}
 %
 ``The emulator is an x86 VM image containing a stripped down version of the target device software. It emulates most of the functions of the target device running Sailfish operating system, such as gestures, task switching and ambience theming.''\cite{sailfishos3}.
-At least with the AlphaSDK2 the emulator can not simulate device rotations.
+At least with the AlphaSDK3 the emulator can not simulate device rotations.
 %
 \begin{figure}[H]
   \centering
-  \includegraphics[scale=0.3]{../media/gfx/silica/emulatorexample.png} 
+  \includegraphics[scale=0.3]{../media/gfx/emulator/emulatorexample.png} 
   \caption{Emulator running the templated SailfishOS Qt Quick Application.}
   \label{fig:emulatorexample}
+\end{figure}
+%
+The Alpha3 SDK emulator brought new settings for developers.
+
+Choose
+$\vcenter{\hbox{\includegraphics[scale=0.3]{../media/gfx/emulator/developerSettings01-01.png}}}$, tap on
+$\vcenter{\hbox{\includegraphics[scale=0.3]{../media/gfx/emulator/developerSettings01-02.png}}}$ and then
+$\vcenter{\hbox{\includegraphics[scale=0.3]{../media/gfx/emulator/developerSettings01-03.png}}}$ \\
+%
+Finally in the developer settings you can choose a password for the user \verb,nemo, or update the package repositories.
+%
+\begin{figure}[H]
+  \centering
+  \includegraphics[scale=0.3]{../media/gfx/emulator/developerSettings01-04.png} 
+  \caption{Choose password or update package repositories.}
+  \label{fig:developerSettings01-04}
 \end{figure}
 %
 %
@@ -1599,7 +1615,7 @@ Of course you can install additional software on the emulator\footnote{As long a
 \begin{tabular}{lll}
   \emph{user} & \emph{password} & \emph{comment} \\
   \hline 
-  nemo & nemo &  \\
+  nemo & nemo\footnote{Since the Alpha3 SDK you can set your own password in the emulator settings.} &  \\
   root &  & no password needed, just works in the VM for me \\
 \end{tabular}
 %
@@ -1642,6 +1658,26 @@ or
 ssh -p 2222 -i /Users/sven/SailfishOS/vmshare/ssh/private_keys/engine/root root@localhost
 Last login: Fri Dec  6 16:41:16 2013
 [root@SailfishSDK ~]# 
+\end{lstlisting}
+%
+%
+\subsubsection{Public keys}
+%
+With the SDK come the public/private keys for SSH connections\footnote{There were some changes from Alpha1 to Alpha3 SDK.}.
+%
+\begin{lstlisting}[language=bash]
+tree ~/SailfishOS/vmshare/ssh/private_keys 
+/Users/sven/SailfishOS/vmshare/ssh/private_keys
++-- SailfishOS_Emulator
+|   +-- nemo
+|   +-- nemo.pub
+|   +-- root
+|   +-- root.pub
++-- engine
+    +-- mersdk
+    +-- mersdk.pub
+    +-- root
+    +-- root.pub
 \end{lstlisting}
 %
 %
