@@ -161,7 +161,7 @@ All mentioned trademarks and trade names are the property of their respective ho
 
 If you find typos, errors or quirks, have suggestions how to make this document better, please drop me a note. Or collaborate.\hspace{4 pt}\verb,#jolla2gether,!
 
-Don't panic if you are not comfortable with writing in \LaTeX, I am happy to use your Libre/Open Office or even Word documents. The source will be converted to \verb,MultiMarkDown, in near future\footnote{whatever that means} to lower the barrier for contribution. This way you can use your editor of choice and must not learn too many obscure instructions. 
+Don't panic if you are not comfortable with writing in \LaTeX, I am happy to use your Libre/Open Office or even Word documents. The source will be converted to \verb,MultiMarkDown, in near future\footnote{whatever \emph{near} means.} to lower the barrier for contribution. This way you can use your editor of choice and must not learn too many obscure instructions. 
 %
 \section{Download and install}\label{sec:dai}
 %
@@ -483,7 +483,7 @@ With the installation come some directories.
 %
 \subsection{Linux}
 %
-Download the Linux installer from the VirtualBox homepage. My distribution is Debian base, so I chose the 64bit Debian package. Open your terminal and install with
+Download the Linux installer from the VirtualBox homepage. My distribution of choice is Debian based, so I chose the 64bit Debian package. Open your terminal and install with
 %
 \begin{figure}[H]
   \centering
@@ -567,7 +567,7 @@ make it executable and start it. From now on it's mostly like on OSX and/or Wind
   \label{fig:vboxlinux01-09}
 \end{figure}
 %
-Now you can start and use the SDK. How to start depends on your distribution. Maybe a menu entry was created, maybe you must create one on your own. The binary is in the \verb,~/SailfishOS/bin, folder.
+Now you can start and use the SDK. How to start depends on your distribution. Maybe a menu entry was created, maybe you must create one on your own. The binary is in the \verb,~/SailfishOS/bin, folder\footnote{If you have chosen the default location, of course.}.
 %
 %
 \subsection{Remove plugins}\label{subsec:removeplugins}
@@ -739,7 +739,8 @@ But before we do that, we must talk about \textit{kits}. A kit is kind of an umb
 So far there are 2 kits defined:
 \begin{itemize}
 \item MerSDK-SailfishOS-armv7hl \\
-		\emph{this kit is marked with a warning sign in the Alpha2 SDK, there is no device assigned yet.}
+		\emph{this kit is marked with a warning sign in the Alpha2 SDK, there is no device assigned yet.\\
+		The Alph3 SDK brings device support but it's not configured yet.}
 \item MerSDK-SailfishOS-i486-x86
 \end{itemize}
 %
@@ -1079,7 +1080,7 @@ Your target binary is copied to \verb,/usr/bin, when \verb,make, is called\footn
 target.path = /usr/bin
 \end{lstlisting}
 %
-TARGET is a special name in a Qt project configuration file. Other group of files can be named freely as long as they don't collide with qmake variable names. All files from the folder \emph{qml} will be installed in the directory \verb,/usr/share/NAME_OF_THEAPP,.
+\verb,TARGET, is a special name in a Qt project configuration file. Other group of files can be named freely as long as they don't collide with qmake variable names. All files from the folder \emph{qml} will be installed in the directory\\ \verb,/usr/share/NAME_OF_THEAPP, \\The \verb,$${TARGET}, directive resolves to the content of the variable \verb,TARGET, and that's \verb,NAME_OF_THEAPP, in our case here.
 %
 \begin{lstlisting}[language=tex]
 qml.files = qml
@@ -1120,7 +1121,7 @@ TODO
 PKGCONFIG += sailfishapp
 \end{lstlisting}
 %
-When you compile your program the \verb,, defines where \verb,#include,ed header files are looked for.
+When you compile your program the \verb,, defines where \verb,#include,d header files are looked up.
 %
 \begin{lstlisting}[language=tex]
 INCLUDEPATH += /usr/include/sailfishapp
@@ -1499,7 +1500,7 @@ The Wiki page of the Mer project contains a exhaustive description how to compil
 %
 \subsubsection{sb2}\label{subsubsec:sb2}
 %
-You can find Scratchbox2 or the \verb,sb2, in the \verb,/usr/bin, folder of the \nameref{subsec:MerSDK}. This shell script is not called directly. The SailfishOS SDK uses {subsubsec:mb2} as a wrapper for convenience.
+You can find Scratchbox2 or the \verb,sb2, in the \verb,/usr/bin, folder of the \nameref{subsec:MerSDK}. This shell script is not called directly. The SailfishOS SDK uses \nameref{subsubsec:mb2} as a wrapper for convenience.
 %
 %
 \subsubsection{mb2}\label{subsubsec:mb2}
@@ -1744,7 +1745,7 @@ Now the user hits \emph{run}, variation 1 = \emph{Deploy By Copying Binaries}.
   \parbox[t]{0.33\textwidth}{} \\ \hline
   %
   \parbox[t]{0.33\textwidth}{} &
-  \parbox[t]{0.33\textwidth}{mb2 -mertarget SailfishOS-i486-x86 deploy --rsync} &
+  \parbox[t]{0.33\textwidth}{mb2 -mertarget SailfishOS-i486-x86 deploy --rsync\footnote{TODO examine the steps, there has to be a make install inside.}} &
   \parbox[t]{0.33\textwidth}{} \\ \hline
   %
   \parbox[t]{0.33\textwidth}{} &
@@ -2654,7 +2655,9 @@ Of course a big thanks goes out to everybody at Jolla. You are \verb,#unlike <3,
 %
 Thanks go to David Greaves for convincing me to use another markup language\footnote{Yes, it's still not converted but hey, I am already persuaded}.\\\\
 %
-A big thank you goes to Juergen Bocklage-Ryannel and Johan Thelin for creating such a wonderful online resource about QML\cite{qml01}.
+A big thank you goes to Juergen Bocklage-Ryannel and Johan Thelin for creating such a wonderful online resource about QML\cite{qml01}.\\\\
+%
+Artem Marchenko takes care of the missing hello world, thank you!
 %
 % TODO name some special persons here!
 %
