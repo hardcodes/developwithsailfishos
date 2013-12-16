@@ -1224,7 +1224,7 @@ exec "/Users/sven/SailfishOS/bin/Qt Creator.app/Contents/MacOS/../Resources/mers
 I've grepped the command line for the \verb,merssh, while building the application.
 %
 \begin{lstlisting}[language=bash]
-$ ps -ef|grep "merssh"
+ps -ef|grep "merssh"
 \end{lstlisting}
 %
 Resulting in
@@ -1234,6 +1234,139 @@ Resulting in
 \end{lstlisting}
 %
 Calling \verb,make, on the development machine just calls a proxy script, which forwards the command via \verb,merssh, and executes \verb,make, on the \nameref{subsec:MerSDK}.
+%
+%
+\subsubsection{yaml / spectacle}\label{subsubsec:spectacleyaml}
+%
+Before the deployment process can build a RPM packages of your application, it needs some information about it. This information is provided in the form of \verb,.spec,\footnote{RPM specifications (.spec) files.} text files that are used by the \verb,rpmbuild, program to create the package. If you would do this by hand, you would put the sources into \verb,~/rpmbuild/SOURCES,, the \verb,.spec, named \verb,NAME_OF_THEAPP.spec, into \verb,~/rpmbuild/SPECS, folder, \verb,cd, into it and run
+%
+\begin{lstlisting}[language=bash]
+rpmbuild -ba NAME.spec
+\end{lstlisting}
+%
+to build binary and source packages. Those \verb,.spec, files are text files but quite hard to read for humans, so in SailfishOS development you will use an intermediate format, called \verb,.yaml,. These contain all the data needed to build a package in a more human friendly presentation. What's inside your \verb,.yaml, depends on your \verb,.pro, file. As a consequence, a new \verb,.yaml, file is built every time you change your \verb.pro. file. The base \verb,.yaml, file of a new SailfishOS QT Quick Application project looks like
+%
+\begin{lstlisting}[language=tex]
+Name:    NAME_OF_THEAPP
+Summary: My SailfishOS Application
+Version: 0.1
+Release: 1
+# The contents of the Group field must be one of the groups listed here:
+# http://gitorious.org/meego-developer-tools/spectacle/blobs/master/data/GROUPS
+Group: Qt/Qt
+URL: http://example.org/
+License: LICENSE
+# This must be generated before uploading a package to a remote build service
+Sources:
+- '%{name}-%{version}.tar.bz2'
+Description: |
+  Short description of my SailfishOS Application
+Configure: none
+# The qtc5 builder inserts macros to allow QtCreator to have fine
+# control over qmake/make execution
+Builder: qtc5
+# Build dependencies should ideally be specified using pkgconfig:
+PkgConfigBR:
+- sailfishapp >= 0.0.10
+- Qt5Core
+- Qt5Qml
+- Qt5Quick
+
+# Build dependencies without a pkgconfig setup can be listed here
+# PkgBR:
+#   - package-needed-to-build
+
+# Runtime dependencies which are not automatically detected
+Requires:
+- sailfishsilica-qt5 >= 0.10.9
+# All installed files
+Files:
+- '%{_datadir}/icons/hicolor/86x86/apps/%{name}.png'
+- '%{_datadir}/applications/%{name}.desktop'
+- '%{_datadir}/%{name}/qml'
+- '%{_bindir}'
+# This section is overwritten by Qt Creator. Do not remove the comments.
+# Sections ends.
+\end{lstlisting}
+%
+A \verb,.yaml, text file contains information to resolve build and runtime dependencies. First we will see the directives to describe the creation of a \verb,.spec, text file.
+%
+\begin{lstlisting}[language=tex]
+Name:
+\end{lstlisting}
+\emph{Required} - contains the name of the application. That is not the name presented to the user, this is the name of the built binary and its relating files like icons and so on. This should \emph{always} match the \verb,TARGET, declaration in the \verb,.pro, file.
+%
+%
+\begin{lstlisting}[language=tex]
+Summary:
+\end{lstlisting}
+\emph{Required} - a short description of your application.
+%
+%
+\begin{lstlisting}[language=tex]
+Version:
+\end{lstlisting}
+\emph{Required} - the version number of your package\footnote{TODO: what are the conventions? Should this always match the version in the Qt project file?}.
+%
+%
+\begin{lstlisting}[language=tex]
+Release:
+\end{lstlisting}
+TODO
+%
+%
+\begin{lstlisting}[language=tex]
+Group:
+\end{lstlisting}
+\emph{Required} - the group in which the application appears in the application launcher. This should always be \verb,Qt/Qt, for a SailfishOS application.
+%
+%
+\begin{lstlisting}[language=tex]
+License:
+\end{lstlisting}
+\emph{Required} - the name of the license the built package adheres to. This should be the name of the license under which you publish your application.
+%
+%
+\begin{lstlisting}[language=tex]
+Description:
+\end{lstlisting}
+\emph{Optional} - a long(er) description of your package/application. The \verb,|, pipe sign means that newlines in the description field shall not be converted into spaces.
+%
+%
+\begin{lstlisting}[language=tex]
+Builder:
+\end{lstlisting}
+\emph{Optional} - the name of the tool which was used to build the package. Technically this keyword is optional but you should provide it to prevent warning messages about undefined macro files. Just leave it as it is: \verb,qtc5,.
+%
+%
+\begin{lstlisting}[language=tex]
+PkgConfigBR
+\end{lstlisting}
+\emph{Optional} - 
+%
+%
+\begin{lstlisting}[language=tex]
+Requires:
+\end{lstlisting}
+\emph{Optional} - contains the information which packages are needed at runtime. Those packages will be downloaded and installed automatically\footnote{This is true if the package is known in the repositories of your SailfishOS device.} when your this RMP package is installed\footnote{Have a look at the Harbour rules, there are only a few packages available that you can use here.}.
+%
+%
+\begin{lstlisting}[language=tex]
+Files:
+\end{lstlisting}
+\emph{Optional} - lists the files that are copied to the system when the RPM package is being installed. Each line listed here corresponds to one of the file groups referred to in the \verb,INSTALL, section of your \verb,.prf, or \verb,.pro, file.
+%
+%
+\begin{lstlisting}[language=tex]
+\end{lstlisting}
+%
+%
+\begin{lstlisting}[language=tex]
+\end{lstlisting}
+%
+%
+\begin{lstlisting}[language=tex]
+\end{lstlisting}
 %
 %
 \subsubsection{rpm}\label{subsubsec:rpm}
@@ -1268,12 +1401,6 @@ There are two ways to start the deployment process, also have a look at  section
   \caption{Deploy via ``project tree''.}
   \label{fig:deploy01-02}
 \end{figure}
-%
-%
-%
-\subsubsection{spectacle / yaml}\label{subsubsec:spectacleyaml}
-%
-TODO
 %
 %
 \subsubsection{Project settings}\label{subsubsec:projectsettings}
@@ -2745,6 +2872,11 @@ qtcreator-2.8/}
 %
 %
 \bibitem[qml01]{qml01} QML Book - free online resource about QML\\\url{http://qmlbook.org/}
+%
+%
+\bibitem[rpm01]{rpm01} Fedora project - how to build packages \\\url{https://fedoraproject.org/wiki/How_to_create_an_RPM_package}
+%
+%
 \end{thebibliography}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \end{document}
