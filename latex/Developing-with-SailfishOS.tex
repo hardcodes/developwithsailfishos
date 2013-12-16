@@ -1238,7 +1238,7 @@ Calling \verb,make, on the development machine just calls a proxy script, which 
 %
 \subsubsection{yaml / spectacle}\label{subsubsec:spectacleyaml}
 %
-Before the deployment process can build a RPM packages of your application, it needs some information about it. This information is provided in the form of \verb,.spec,\footnote{RPM specifications (.spec) files.} text files that are used by the \verb,rpmbuild, program to create the package. If you would do this by hand, you would put the sources into \verb,~/rpmbuild/SOURCES,, the \verb,.spec, named \verb,NAME_OF_THEAPP.spec, into \verb,~/rpmbuild/SPECS, folder, \verb,cd, into it and run
+Before the deployment process can build an RPM package of your application, it needs some information about it. This information is provided in the form of \verb,.spec,\footnote{RPM specifications (.spec) files.} text files that are used by the \verb,rpmbuild, program to create the package. If you would do this by hand, you would put the sources into \verb,~/rpmbuild/SOURCES,, the \verb,.spec, named \verb,NAME_OF_THEAPP.spec, into \verb,~/rpmbuild/SPECS, folder, \verb,cd, into it and run
 %
 \begin{lstlisting}[language=bash]
 rpmbuild -ba NAME.spec
@@ -1291,82 +1291,81 @@ Files:
 %
 A \verb,.yaml, text file contains information to resolve build and runtime dependencies. First we will see the directives to describe the creation of a \verb,.spec, text file.
 %
+\emph{Required} - contains the name of the application. That is not the name presented to the user, this is the name of the built binary and its relating files like icons and so on. This should \emph{always} match the \verb,TARGET, declaration in the \verb,.pro, file.
 \begin{lstlisting}[language=tex]
 Name:
 \end{lstlisting}
-\emph{Required} - contains the name of the application. That is not the name presented to the user, this is the name of the built binary and its relating files like icons and so on. This should \emph{always} match the \verb,TARGET, declaration in the \verb,.pro, file.
 %
 %
+\emph{Required} - a short description of your application.
 \begin{lstlisting}[language=tex]
 Summary:
 \end{lstlisting}
-\emph{Required} - a short description of your application.
 %
 %
+\emph{Required} - the version number of your package\footnote{TODO: what are the conventions? Should this always match the version in the Qt project file?}.
 \begin{lstlisting}[language=tex]
 Version:
 \end{lstlisting}
-\emph{Required} - the version number of your package\footnote{TODO: what are the conventions? Should this always match the version in the Qt project file?}.
 %
 %
+TODO
 \begin{lstlisting}[language=tex]
 Release:
 \end{lstlisting}
-TODO
 %
 %
+\emph{Required} - the group in which the application appears in the application launcher. This should always be \verb,Qt/Qt, for a SailfishOS application.
 \begin{lstlisting}[language=tex]
 Group:
 \end{lstlisting}
-\emph{Required} - the group in which the application appears in the application launcher. This should always be \verb,Qt/Qt, for a SailfishOS application.
 %
 %
+\emph{Required} - the name of the license the built package adheres to. This should be the name of the license under which you publish your application.
 \begin{lstlisting}[language=tex]
 License:
 \end{lstlisting}
-\emph{Required} - the name of the license the built package adheres to. This should be the name of the license under which you publish your application.
 %
 %
+\emph{Optional} - a long(er) description of your package/application. The \verb,|, pipe sign means that newlines in the description field shall not be converted into spaces.
 \begin{lstlisting}[language=tex]
 Description:
 \end{lstlisting}
-\emph{Optional} - a long(er) description of your package/application. The \verb,|, pipe sign means that newlines in the description field shall not be converted into spaces.
 %
 %
+\emph{Optional} - the name of the tool which was used to build the package. Technically this keyword is optional but you should provide it to prevent warning messages about undefined macro files. Just leave it as it is: \verb,qtc5,.
 \begin{lstlisting}[language=tex]
 Builder:
 \end{lstlisting}
-\emph{Optional} - the name of the tool which was used to build the package. Technically this keyword is optional but you should provide it to prevent warning messages about undefined macro files. Just leave it as it is: \verb,qtc5,.
 %
 %
+\emph{Optional} - build dependencies that make use of the assistance of \verb,pkg-config,\cite{fd01}.
 \begin{lstlisting}[language=tex]
 PkgConfigBR
 \end{lstlisting}
-\emph{Optional} - 
 %
 %
+\emph{Optional} - contains the information which packages are needed at runtime. Those packages will be downloaded and installed automatically\footnote{This is true if the package is known in the repositories of your SailfishOS device.} when your this RMP package is installed\footnote{Have a look at the Harbour rules, there are only a few packages available that you can use here.}.
 \begin{lstlisting}[language=tex]
 Requires:
 \end{lstlisting}
-\emph{Optional} - contains the information which packages are needed at runtime. Those packages will be downloaded and installed automatically\footnote{This is true if the package is known in the repositories of your SailfishOS device.} when your this RMP package is installed\footnote{Have a look at the Harbour rules, there are only a few packages available that you can use here.}.
 %
 %
+\emph{Optional} - lists the files that are copied to the system when the RPM package is being installed. Each line listed here corresponds to one of the file groups referred to in the \verb,INSTALL, section of your \verb,.prf, or \verb,.pro, file.
+
+\verb,%{name}, is resolved to the \verb,Name:, entry.
 \begin{lstlisting}[language=tex]
 Files:
 \end{lstlisting}
-\emph{Optional} - lists the files that are copied to the system when the RPM package is being installed. Each line listed here corresponds to one of the file groups referred to in the \verb,INSTALL, section of your \verb,.prf, or \verb,.pro, file.
 %
 %
-\begin{lstlisting}[language=tex]
+\subsubsection{pkg-config}\label{subsubsec:pkgconfig}
+%
+\begin{lstlisting}[language=bash]
+pkg-config --list-all
 \end{lstlisting}
 %
-%
-\begin{lstlisting}[language=tex]
-\end{lstlisting}
-%
-%
-\begin{lstlisting}[language=tex]
-\end{lstlisting}
+Works just in the scratch box environment; TODO
 %
 %
 \subsubsection{rpm}\label{subsubsec:rpm}
@@ -1381,6 +1380,24 @@ exec "/Users/sven/SailfishOS/bin/Qt Creator.app/Contents/MacOS/../Resources/mers
 \end{lstlisting}
 %
 This script is called when you \verb,deploy, your app. Deploying happens implicitly if you \emph{run} the application. See section \nameref{subsubsec:runsettings} on page \pageref{subsubsec:runsettings}. Or you can deploy explicitly.
+
+Here are some useful commands, we are examining the package \verb,qt5-qtcore,.
+
+\begin{lstlisting}[language=bash]
+[root@SailfishSDK ~]# rpm -q qt5-qtcore
+# shows package version number
+\end{lstlisting}
+%
+\begin{lstlisting}[language=bash]
+[root@SailfishSDK ~]# rpm -ql qt5-qtcore
+# shows all the files contained in the package qt5-qtcore
+\end{lstlisting}
+%
+\begin{lstlisting}[language=bash]
+[root@SailfishSDK ~]# rpm -qR qt5-qtcore
+# shows package dependencies
+\end{lstlisting}
+
 %
 %
 \subsubsection{deploy}\label{subsubsec:deploy}
@@ -2875,6 +2892,11 @@ qtcreator-2.8/}
 %
 %
 \bibitem[rpm01]{rpm01} Fedora project - how to build packages \\\url{https://fedoraproject.org/wiki/How_to_create_an_RPM_package}
+\bibitem[rpm02]{rpm02} Fedora project - PackageKit CLI (pkcon) \\\url{http://docs.fedoraproject.org/en-US/Fedora/14/html/
+Software_Management_Guide/PackageKit_CLI.html}
+%
+%
+\bibitem[fd01]{fd01} FreeDesktop - pkg-config guide \\\url{http://people.freedesktop.org/~dbn/pkg-config-guide.html}
 %
 %
 \end{thebibliography}
