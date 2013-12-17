@@ -1109,15 +1109,10 @@ INSTALLS += target qml desktop icon
 %
 Then there are the remaining three as above self defined install sets \verb,qmk,, \verb,dektop, and \verb,icon,. When you \verb,make, your application the install sets will be processed in the given order.
 
-TODO
+This tells \verb,qmake, to make use of an external library that is supported by \nameref{subsubsec:pkgconfig}. The name of the external library is \verb,sailfishapp,.
 %
 \begin{lstlisting}[language=tex]
 CONFIG += link_pkgconfig
-\end{lstlisting}
-%
-TODO
-%
-\begin{lstlisting}[language=tex]
 PKGCONFIG += sailfishapp
 \end{lstlisting}
 %
@@ -1309,7 +1304,7 @@ Version:
 \end{lstlisting}
 %
 %
-TODO
+This value represents the release version of your RPM package. It is recommended to change this number each time you submit a changed package to the harbour.
 \begin{lstlisting}[language=tex]
 Release:
 \end{lstlisting}
