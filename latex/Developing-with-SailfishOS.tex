@@ -1101,7 +1101,7 @@ icon.files = $${TARGET}.png
 icon.path = /usr/share/icons/hicolor/86x86/apps
 \end{lstlisting}
 %
-If you run \verb,qmake;, it will build a \verb,Makefile, which contains the rules to install four sets of files. First the target install set  which is built-in Qt projects.
+If you run \verb,qmake, it will build a \verb,Makefile, which contains the rules to install four sets of files. First the target install set  which is built-in Qt projects.
 %
 \begin{lstlisting}[language=tex]
 INSTALLS += target qml desktop icon
@@ -1239,7 +1239,7 @@ Before the deployment process can build an RPM package of your application, it n
 rpmbuild -ba NAME.spec
 \end{lstlisting}
 %
-to build binary and source packages. Those \verb,.spec, files are text files but quite hard to read for humans, so in SailfishOS development you will use an intermediate format, called \verb,.yaml,. These contain all the data needed to build a package in a more human friendly presentation. What's inside your \verb,.yaml, depends on your \verb,.pro, file. As a consequence, a new \verb,.yaml, file is built every time you change your \verb.pro. file. The base \verb,.yaml, file of a new SailfishOS QT Quick Application project looks like
+to build binary and source packages. Those \verb,.spec, files are also text files but quite hard to read for humans, so in SailfishOS development you will use an intermediate format, called \verb,.yaml,. These contain all the data needed to build a package in a more human friendly presentation. What's inside your \verb,.yaml, depends on your \verb,.pro, file. As a consequence, a new \verb,.yaml, file is built every time you change your \verb.pro. file. The base \verb,.yaml, file of a new SailfishOS QT Quick Application project looks like
 %
 \begin{lstlisting}[language=tex]
 Name:    NAME_OF_THEAPP
@@ -1563,7 +1563,7 @@ To see them, you must start the emulator and click on the $\vcenter{\hbox{\inclu
 %
 The \emph{Analyzer Settings} are clearly for \verb,valgrind, a static analyzer tool. I haven't used it one the emulator yet and on OSX Mountain Lion it does not run anymore. I'd prefer \verb,clang, which is AFAIK not available on the SDK.
 
-The \emph{Debugger Settings} are for TODO.
+The \emph{Debugger Settings} are for TODO (the checkboxes are pretty cleat that it's about switching debugger support on and off but I haven't used it in this environment so far - so I don't make things up here).
 
 %
 %
