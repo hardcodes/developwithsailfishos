@@ -1,0 +1,39 @@
+%
+\section{Physical device}\label{sec:device}
+%
+Developing with the emulator only will do you no good. You have to experience your program on a real device. Things that might look great on an emulator, may not even work on a real phone. It maybe just you fingers that are hiding the screen. Buttons are too small or too close.
+%
+%
+\subsection{How to connect to SSH over usb connection from PC}
+%
+\begin{itemize}
+\item the usb is either \verb,usb_storage, or \verb,usb_net,
+\item enable developer mode
+\item enable SSH (it's openssh, not dropbear)
+\item set password
+\item goto usb settings
+\item change that to developer mode
+\item reconnect usb cable
+\item you should see the ip address of the device on the UI
+\item you should be able to ssh to that address from PC (set an ip address first)
+\end{itemize}
+Taken from \cite{ex01}.
+
+This section obviously needs a lot more information. Lacking a physical device or an SDK that enables me to interact with it, this has to be done in future.
+%
+%
+\subsection{How do I deploy a package to my phone?}
+%
+As of now there is only the Alpha2 SDK out that has no built-in features to deploy a package to your device.
+
+But you can help yourself\footnote{Since I have no device yet, I couldn't test this. Time will come, more details will follow.}:
+%
+\begin{enumerate}
+\item build RPM
+\item deploy RPM, look in the output for the location
+\item copy RPM to Jolla phone
+\item use \verb,pkcon install-local, to install it locally
+\end{enumerate}
+%
+Also have a look at \cite{mer02}.
+%
