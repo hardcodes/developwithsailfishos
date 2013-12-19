@@ -1,0 +1,100 @@
+{Run app}\label{subsubsec:runapp}
+%
+Now the user hits \emph{run}, variation 1 = \emph{Deploy By Copying Binaries}.
+\\
+\\
+\begin{tabular}{l|l|l}
+  \emph{QtCreator} & \emph{Mer SDK VM} & \emph{emulator} \\ \hline
+  %
+  \parbox[t]{0.33\textwidth}{user runs app} &
+  \parbox[t]{0.33\textwidth}{} &
+  \parbox[t]{0.33\textwidth}{} \\ \hline
+  %
+  \parbox[t]{0.33\textwidth}{start emulator if necessary} &
+  \parbox[t]{0.33\textwidth}{} &
+  \parbox[t]{0.33\textwidth}{} \\ \hline
+  %
+  \parbox[t]{0.33\textwidth}{deploy} &
+  \parbox[t]{0.33\textwidth}{} &
+  \parbox[t]{0.33\textwidth}{} \\ \hline
+
+  %
+  \parbox[t]{0.33\textwidth}{merssh} &
+  \parbox[t]{0.33\textwidth}{} &
+  \parbox[t]{0.33\textwidth}{} \\ \hline
+  %
+  \parbox[t]{0.33\textwidth}{} &
+  \parbox[t]{0.33\textwidth}{mb2 -mertarget SailfishOS-i486-x86 deploy --rsync\footnote{TODO examine the steps, there has to be a make install inside.}} &
+  \parbox[t]{0.33\textwidth}{} \\ \hline
+  %
+  \parbox[t]{0.33\textwidth}{} &
+  \parbox[t]{0.33\textwidth}{copying files to the emulator} &
+  \parbox[t]{0.33\textwidth}{} \\ \hline
+  %
+  \parbox[t]{0.33\textwidth}{run executable on remote device} &
+  \parbox[t]{0.33\textwidth}{} &
+  \parbox[t]{0.33\textwidth}{} \\ \hline
+  %
+  \parbox[t]{0.33\textwidth}{} &
+  \parbox[t]{0.33\textwidth}{} &
+  \parbox[t]{0.33\textwidth}{execute binary} \\ \hline
+  %
+  \parbox[t]{0.33\textwidth}{catch execution status} &
+  \parbox[t]{0.33\textwidth}{} &
+  \parbox[t]{0.33\textwidth}{} \\ \hline
+\end{tabular} \\
+\\
+\\
+%
+%
+Or the user hits \emph{run}, variation 2 = \emph{Deploy As RPM Package}.
+\\
+\\
+\begin{tabular}{l|l|l}
+  \emph{QtCreator} & \emph{Mer SDK VM} & \emph{emulator} \\ \hline
+  %
+  \parbox[t]{0.33\textwidth}{user runs app} &
+  \parbox[t]{0.33\textwidth}{} &
+  \parbox[t]{0.33\textwidth}{} \\ \hline
+  %
+  \parbox[t]{0.33\textwidth}{start emulator if necessary} &
+  \parbox[t]{0.33\textwidth}{} &
+  \parbox[t]{0.33\textwidth}{} \\ \hline
+  %
+  \parbox[t]{0.33\textwidth}{deploy} &
+  \parbox[t]{0.33\textwidth}{} &
+  \parbox[t]{0.33\textwidth}{} \\ \hline
+  %
+  \parbox[t]{0.33\textwidth}{merssh} &
+  \parbox[t]{0.33\textwidth}{} &
+  \parbox[t]{0.33\textwidth}{} \\ \hline
+  %
+  \parbox[t]{0.33\textwidth}{} &
+  \parbox[t]{0.33\textwidth}{mb2 -mertarget SailfishOS-i486-x86 deploy --pkcon} &
+  \parbox[t]{0.33\textwidth}{} \\ \hline
+  %
+  \parbox[t]{0.33\textwidth}{} &
+  \parbox[t]{0.33\textwidth}{building RPM package} &
+  \parbox[t]{0.33\textwidth}{} \\ \hline
+  %
+  \parbox[t]{0.33\textwidth}{} &
+  \parbox[t]{0.33\textwidth}{copying RPM package to the emulator} &
+  \parbox[t]{0.33\textwidth}{} \\ \hline
+  %
+  \parbox[t]{0.33\textwidth}{} &
+  \parbox[t]{0.33\textwidth}{} &
+  \parbox[t]{0.33\textwidth}{installing RPM package} \\ \hline
+  %
+  \parbox[t]{0.33\textwidth}{run executable on remote device} &
+  \parbox[t]{0.33\textwidth}{} &
+  \parbox[t]{0.33\textwidth}{} \\ \hline
+  %
+  \parbox[t]{0.33\textwidth}{} &
+  \parbox[t]{0.33\textwidth}{} &
+  \parbox[t]{0.33\textwidth}{execute binary} \\ \hline
+  %
+  \parbox[t]{0.33\textwidth}{catch execution status} &
+  \parbox[t]{0.33\textwidth}{} &
+  \parbox[t]{0.33\textwidth}{} \\ \hline
+\end{tabular} \\
+%
