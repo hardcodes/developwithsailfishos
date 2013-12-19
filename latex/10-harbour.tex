@@ -1,0 +1,124 @@
+%
+\section{Harbour}\label{sec:harbour}
+%
+our wrote a fantastic app and now you want to bring it to the people. Head over to the Jolla Harbour\cite{jolla02} and submit your app.
+
+There are some things about naming an such to consider when you prepare your app, here is the Sailfish FAQ from the Jolla Harbour as of now = Dec. 2nd 2013. This is of course a moving target, which means there will be more libraries available in future. Even if you don't have an app ready to submit, you should look there once in a while. Ne need to re-invent the wheel here. If there is missing something, contact Jolla.
+
+\begin{lstlisting}[language=TeX]
+Naming
+What should I name the application?
+You have to use the prefix "harbour-" in front of the application name. Only lower case characters are allowed.
+Why do I have to name my Application with a prefix?
+The reason for this requirement is so that applications do not clash with other installed packages on the device. It also allows us to verify certain things automatically, e.g. imports of your own QML modules.
+What is that '$NAME' you use here in the FAQ's?
+That is your application name including the prefix "harbour-" (e.g. harbour-myawesomeapp).
+How can I name the app in the application launch grid? I don't want that long name with prefix to appear there!
+In the .desktop file, there is the "Name=" field. The string defined there is shown in the application launcher as the application name. That name does not have to be unique. So there might be more than one application called "HelloWorld!" in the application launcher grid. The package name of the application ($NAME) does not appear in the UI.
+Where must this $NAME be used?
+the executable binary: /usr/bin/$NAME
+the .desktop file: /usr/share/applications/$NAME.desktop
+the icon: /usr/share/icons/hicolor/86x86/apps/$NAME.png
+the folder in /usr/share where you can install other application files: /usr/share/$NAME
+The rpm package name, note that is not necessarily the same as the RPM file name! 
+The name you get with:
+rpm -q --queryformat='%{NAME}\n' -p harbour-awesomeapp-1.0.0.armv7hl.rpm
+That is what is set in .spec resp. .yaml file under "Name: "
+Your own QML imports resp. modules, but with "-" replaced with "." due to QML grammar rules. e.g import harbour.myawesomeapp.MyQmlModule 1.0 as MyModule
+Do I need to put that unique $NAME into the "Title" field when I upload an app to the Harbour?
+No, in the "Title" field you can use a pretty name that will be shown to the user in the store client UI.
+RPM-Packaging
+In which locations can I install files?
+You are allowed to install:
+/usr/bin/$NAME <- the executable binary
+/usr/share/applications/$NAME.desktop <- the desktop file
+/usr/share/icons/hicolor/86x86/apps/$NAME.png <- the icon file
+/usr/share/$NAME/* <- anything else (data files, private shared libraries, private QML imports, etc..) goes here
+Why are you so restrictive? Why can't I install my libraries, images etc in places where I think it makes sense?
+We have to ensure that rpms can be installed and do not conflict with other rpms. It will also allow us to install store applications under a different path (rpm --relocate) in the future.
+What does the package name have to be? (.spec/.yaml "Name: foo")
+Use "Name: $NAME". See Naming section in this FAQ.
+Icons
+Which size should the application icon be?
+86x86. Older SDK versions contain a template which suggests a size of 90x90. That is obsolete and will soon be updated with the next SDK version.
+Where shall the icon be installed?
+/usr/share/icons/hicolor/86x86/apps/$NAME.png. Older SDK versions contain a template which suggests a size of 90x90 and also a different install path. That is obsolete, not supported anymore, and will soon be updated with the next SDK version.
+What file formats are supported for the icon?
+The icon must be a PNG file.
+How do I define an icon in the .desktop file, so it shows up in the application launcher?
+Icon=$NAME
+
+You must not use absolute path names. There was a bug in older SDK versions (lipstick < 0.18.6) so the absolute path was necessary and the template suggested it. That will soon be updated with the next SDK version. The reason to not use absolute path names is: it would allow us in the future to install store applications under a different path.
+
+.desktop-Files
+What do I have to put into the Exec= line?
+Exec=$NAME (for Silica applications using C++ and QML) or Exec=sailfish-qml $NAME (for QML-only Silica applications without an application binary)
+What do I have to put into the Icon= line?
+Icon=$NAME
+What do I have to put into the Name= line?
+The name defined there is shown in the application launcher as the application name. That name does not have to be unique. So there might be more than one application called "HelloWorld!" in the application launcher grid.
+What do I have to put into the X-Nemo-Application-Type= line and what is it good for?
+For Silica Qt 5 applications, use "X-Nemo-Application-Type=silica-qt5" - this will make sure that the application is launched using the right booster, and will make startup faster.
+How can I disable single-instance launching?
+In general, you should use single-instance launching (tapping on the application icon will bring the existing window to the foreground). If for some reason your application conflicts with single-instance launching, you can add "X-Nemo-Single-Instance=no" to your .desktop file to disable this behaviour.
+QML API
+Which QML modules (imports) are allowed?
+Currently the following QML modules (imports) are allowed:
+QtQuick 2.0
+QtQuick 2.1
+QtMultimedia 5.0
+Sailfish.Silica 1.0
+QtQuick.LocalStorage 2.0
+QtQuick.XmlListModel 2.0
+QtQuick.Particles 2.0
+QtQuick.Window 2.0
+Why do you not allow more QML modules from Qt/Nemo/Mer or other 3rd party?
+Not all modules have a stable API. Before promising compatibility, we must first make sure that we can promise the API is of high quality and will not change (through a review process). We are open for suggestions to provide more APIs.
+Can I use QML modules, which I ship together with the application?
+Yes, you can do that. But you have to prefix the name of the imports with your $NAME, but with "-" replaced with "." due to QML grammar rules (e.g. harbour.myapp.myQmlObject, where harbour-myapp = $NAME). And you have to install them under /usr/share/$NAME (loadable QML plugins or the QML files) if the type is not built into the application (setContextProperty).
+Shared Libraries
+Which shared libraries can I link against?
+Currently the following shared libraries are allowed:
+libsailfishapp.so.1
+libmdeclarativecache5.so.0
+libQt5Quick.so.5
+libQt5Qml.so.5
+libQt5Network.so.5
+libQt5Gui.so.5
+libQt5Core.so.5
+libGLESv2.so.2
+libpthread.so.0
+libstdc++.so.6
+libm.so.6
+libgcc_s.so.1
+libc.so.6
+ld-linux-armhf.so.3
+libQt5Concurrent.so.5
+libQt5Multimedia.so.5
+libQt5Sql.so.5
+libQt5Svg.so.5
+libQt5XmlPatterns.so.5
+libQt5Xml.so.5
+librt.so.1
+libz.so.1
+libQt5DBus.so.5
+Why do you allow just such a limited amount of shared libraries?
+We can only whitelist libraries that have both a stable API and ABI, and which we are sure we can provide for the forseeable future. For now, the list is quite small, but as Sailfish OS matures, we expect to add more. We are open for suggestions to allow more stable shared libraries.
+Can I link against shared libraries which I ship with the app together in the same rpm?
+Yes, you can do that. But you have to install the library under /usr/share/$NAME/. You have to ensure yourself that the rpath in your executable is set correct, so the linker finds the library. Future versions of invoker might set the LD_LIBRARY_PATH to /usr/share/$NAME/, but that is not yet in place.
+You do not allow QtOpenGL, what is the alternative?
+QtGui in Qt 5 includes a number of classes to replace the QtOpenGL classes. In many cases, using the QtGui equivalents will just involve a renaming (QGL* -> QOpenGL*) and removing the linking against QtOpenGL. There are API changes involved in some cases, but these should not be too difficult.
+
+Startup performance is better without using QtOpenGL, which is one reason we are disallowing it. This is due to its dependency on QtWidgets, which is quite a large library.
+
+Why do you not allow QtWidgets?
+QtWidgets is not optimized for (or well tested) on Sailfish OS. Furthermore, it is generally not going to result in a good user experience due to using non-touch-optimized controls, and software rendering (which will be much slower than rendering using OpenGL ES on Sailfish OS).
+I think library XYZ would be useful for others too, I want to make that library available in the store. Can I submit a library only rpm?
+No, the app store, is as the name says, an application store and not a shared library store. But if you think an important library is missing in SailfishOS and you want to see it available in the platform, then please join the Mer and Nemo project and make the library available in one of these projects. Then suggest the library to become a supported one (by making sure it has a stable API, and is well-maintained and supported).
+Runtimes
+Can I submit Python applications?
+Currently not, there are some enablers missing for that. But we are working on it, to make that happen. You can support us with that effort, please ask in Nemo project how to help with Python.
+Can I submit Perl/Ruby/$MY_FAVOURITE_LANGUAGE applications?
+No, and we currently do not plan to support that. But feel free to request it, if there is enough interest, we might allow it in the future.
+\end{lstlisting}
+%
