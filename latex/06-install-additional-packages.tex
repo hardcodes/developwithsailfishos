@@ -10,7 +10,7 @@ You can login from your development machine via terminal and \verb,ssh,, the emu
 \begin{lstlisting}[language=bash]
 $ ssh -p 2223 nemo@localhost
 nemo@localhost's password:
-# the password is nemo
+# the password was nemo before Alpha3 SDK, now you must set it in the settings app inside the emulator!
 ,---
 | SailfishOS 0.98.0.67 (i486,testing)
 '---
@@ -19,10 +19,62 @@ nemo@localhost's password:
 %
 As an alternative you can log in the running VM of the emulator. Press CMD+F2\footnote{On OSX your function keys will probably not work as regular function keys, they provide OSX functionality as printed on then, e.g. volume up/down. Go to System Preferences->Keyboard->Keyboard and check check "Use all F1, F2, etc. as standard function keys".}\footnote{On Windows and Linux use the CTRL Key instead of CMD.} to change to the login screen. User and password are of course the same.
 %
+Additional software and libraries come in \verb,RPM, packages and the management tool on the emulator was \verb,zypper, before the Alpha3 SDK. Now there is \verb,pkcon,\cite{pkcon01} available on the emulator and physical device.
+%
+%
+\subsubsection{pkcon}\label{subsubsec:pkcon}
+%
+Here are the most needed commands to handle packages on the emulator. It should be obvious that you need an internet connection while handling packages.
+
+Update the package repository.
+\begin{lstlisting}[language=bash]
+[nemo@SailfishEmul ~]$ pkcon get-updates
+\end{lstlisting}
+%
+\begin{lstlisting}[language=bash]
+[nemo@SailfishEmul ~]$ pkcon search name sailfish
+#                                           ^
+#                                           |
+#                                           |
+#               that is the (part of the) name you are looking for
+\end{lstlisting}
+%
+Install a package.
+\begin{lstlisting}[language=bash]
+[nemo@SailfishEmul ~]$ pkcon install "libsailfishapp-devel"
+\end{lstlisting}
+\emph{There may be packages available which depend on other packages that are not in any public repository, hence those can not be installed}.
+\\
+\\
+Remove a package.
+\begin{lstlisting}[language=bash]
+[nemo@SailfishEmul ~]$ pkcon remove "libsailfishapp-devel"
+\end{lstlisting}
+%
+\emph{Note}: you do \underline{not} need the development packages on the emulator or physical device.
+%
+\subsubsection{Known Logins}\label{subsubsec:emulatorlogins}
+%
+\begin{tabular}{lll}
+  \emph{user} & \emph{password} & \emph{comment} \\
+  \hline 
+  nemo & nemo\footnote{Since the Alpha3 SDK you can set your own password in the emulator settings.} &  \\
+  root &  & no password needed, just works in the VM for me \\
+\end{tabular}
+%
+%
+\subsection{Mer SDK Build Engine}\label{subsec:mersdkpkg}
+%
+\begin{figure}[H]
+  \centering
+  \includegraphics[scale=0.4]{../media/gfx/QtCreator/MerSDKsettings.png} 
+  \caption{Choose ``SailfishOS'' from the left pane.}
+  \label{fig:mersdkpkg:sailfishos}
+\end{figure}
 %
 \subsubsection{zypper}\label{subsubsec:zypper}
 %
-Additional software and libraries come in \verb,RPM, packages and the management tool on the emulator is \verb,zypper,. It provides ``functions like repository access, dependency solving, package installation''\cite{suse01}.\\
+Additional software and libraries come in \verb,RPM, packages and the management tool on the Mer SDK Build Engine is \verb,zypper,\footnote{As it was for the emulator before the Alpha3 SDK.}. It provides ``functions like repository access, dependency solving, package installation''\cite{suse01}.\\
 \\
 %
 \begin{lstlisting}[language=bash]
@@ -59,30 +111,6 @@ will install the library \verb,boost-filesystem, and all its dependencies on the
 \end{lstlisting}
 will remove the library \verb,boost-filesystem, and all its dependencies from the emulator.
 Of course you can install additional software on the emulator\footnote{As long as this software is not part of your app.} that helps you to edit files directly or manage the filesystem better. 
-\\
-\\
-\emph{Note}: you do \underline{not} need the development packages on the emulator of physical device.
-%
-%
-\subsubsection{Known Logins}\label{subsubsec:emulatorlogins}
-%
-\begin{tabular}{lll}
-  \emph{user} & \emph{password} & \emph{comment} \\
-  \hline 
-  nemo & nemo\footnote{Since the Alpha3 SDK you can set your own password in the emulator settings.} &  \\
-  root &  & no password needed, just works in the VM for me \\
-\end{tabular}
-%
-%
-\subsection{Mer SDK Build Engine}\label{subsec:mersdkpkg}
-%
-\begin{figure}[H]
-  \centering
-  \includegraphics[scale=0.4]{../media/gfx/QtCreator/MerSDKsettings.png} 
-  \caption{Choose ``SailfishOS'' from the left pane.}
-  \label{fig:mersdkpkg:sailfishos}
-\end{figure}
-%
 %
 \subsubsection{Known Logins}\label{subsubsec:mersdklogins}
 %
