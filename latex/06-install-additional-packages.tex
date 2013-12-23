@@ -8,11 +8,22 @@ You can use additional libraries for your code, so you don't have to write all f
 %
 You can login from your development machine via terminal and \verb,ssh,, the emulator should be running.
 \begin{lstlisting}[language=bash]
-$ ssh -p 2223 nemo@localhost
+ssh -p 2223 nemo@localhost
 nemo@localhost's password:
 # the password was nemo before Alpha3 SDK, now you must set it in the settings app inside the emulator!
 ,---
 | SailfishOS 0.98.0.67 (i486,testing)
+'---
+[nemo@SailfishEmul ~]$
+\end{lstlisting}
+%
+Or you can use the private key that comes with the SDK.
+%
+\begin{lstlisting}[language=bash]
+ssh -p 2223 -i ~/SailfishOS/vmshare/ssh/private_keys/SailfishOS_Emulator/nemo nemo@localhost
+Last login: Fri Dec 20 08:31:18 2013 from 10.0.2.2
+,---
+| SailfishOS 1.0.1.11 (Laadunjarvi) (i486)
 '---
 [nemo@SailfishEmul ~]$
 \end{lstlisting}
@@ -59,7 +70,7 @@ Remove a package.
   \emph{user} & \emph{password} & \emph{comment} \\
   \hline 
   nemo & nemo\footnote{Since the Alpha3 SDK you can set your own password in the emulator settings.} &  \\
-  root &  & no password needed, just works in the VM for me \\
+  root &  & no password needed, use the private key \\
 \end{tabular}
 %
 %
