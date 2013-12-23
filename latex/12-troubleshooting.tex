@@ -327,3 +327,13 @@ At least for the first compilation of your app you may need a connection to the 
 %
 The emulator is running as you can see but QtCreator complains that it is not reachable. That is a well known bug, just hit the start button in QtCreator and try again.
 %
+\subsubsection{Battery life on real device}
+%
+Some community members have figured out that the NFC chip causes quite heavy battery draining. If you don't need the chip for now, there is a way to stop the underlying service. Login your device and enter
+%
+\begin{lstlisting}[language=bash]
+systemctl stop tohd.service
+# to stop the service and
+systenctl mask tohd.service
+# to make the change permanent, so it survives reboots
+\end{lstlisting}
