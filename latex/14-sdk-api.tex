@@ -3,10 +3,44 @@
 %
 %
 %
-\subsubsection{Application lifecycle}
+\subsubsection{Application start}
+%
+The startup code for an application can be quite simple.
+%
+\begin{lstlisting}[language=c++]
+#include <sailfishapp.h>
+int main(int argc, char *argv[])
+{
+    return SailfishApp::main(argc, argv);
+}
+\end{lstlisting}
+%
+If you're new to Qt you may wonder what happens here? The program barely started and we return immediately? Well, your program will \emph{not} return and quit, that's for sure. There is an event loop that's started in the background and as long this loop is running, your application will keep on doing what you want. On top of that it will use \verb,qml/<appname>.qml, as QML entry point, the GUI described in this file is the first thing your application will present to the user. If you intend to stay on the \verb,QML, side and not use \verb,C++, then this all of \verb,C++, you have to use. But you can also dive in deeper and have more control over the startup behavior. Set the cursor on the \verb,SailfishApp, keyword and press \verb,F2,. QtCreator will show you the header file and there are some comments about what's also possible.
+%
+%
+\subsubsection{Application states}
+%
+Every native SailfishOS application has to support two states:
+%
+\begin{description}
+\item [Active] the application runs full screen
+\item [Background] the application still runs but is visibly reduced to a cover
+\end{description}
+%
+If your application is running in background, it should behave responsible: reduce the consumption of resources. Stop all animations on the main views, free all resources you do not need to still your job. Just imagine yourself here, using a smartphone: it's frustrating if the battery drains too fast and you constantly have to look for a power supply.
+
+You can check with the Sailfish Silica property \\
+\verb,ApplicationWindow.applicationActive, \\
+in which state your application is. When the application is minimized to the background, the cover will be loaded and shown. It's defined in the \\
+\verb,ApplicationWindow.cover, \\
+property. You can present information about the state of your application in the cover but must not show animations.
+%
+TODO: Active Covers.
+%
+%
+\subsubsection{Application stops}
 %
 TODO
-%
 %
 %
 \subsubsection{Gyroscope - device rotation}
