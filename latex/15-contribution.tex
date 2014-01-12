@@ -1,0 +1,70 @@
+\section{Contribution}\label{sec:contribution}
+%
+%
+SailfishOS is build on other open source projects and all those projects are happy about contribution. If you find a quirk and are able to fix it, you first should look from which project the software comes you intend to fix.
+For example, where comes \verb,mb2, from?
+
+\begin{lstlisting}[language=bash]
+[root@SailfishSDK ~]# rpm -qf /usr/bin/mb2
+sdk-utils-0.63.20-10.4.1.jolla.noarch
+[root@SailfishSDK ~]# zypper info sdk-utils
+Daten des Repositories laden ...
+Installierte Pakete lesen ...
+
+
+Informationen fuer Paket sdk-utils:
+
+Repository: sdk
+Name: sdk-utils
+Version: 0.63.20-10.4.1.jolla
+Arch: noarch
+Hersteller: meego
+Installiert: Ja
+Status: aktuell
+Installierte Groesse: 43,5 KiB
+Zusammenfassung: Mer SDK utility scripts
+Beschreibung: 
+Contains some utility scripts to support Mer SDK development
+[root@SailfishSDK ~]# zypper repos
+# | Alias       | Name        | Aktiviert | Aktualisieren
+--+-------------+-------------+-----------+--------------
+1 | adaptation0 | adaptation0 | Ja        | Nein         
+2 | adaptation1 | adaptation1 | Ja        | Nein         
+3 | hotfixes    | hotfixes    | Ja        | Nein         
+4 | jolla       | jolla       | Ja        | Nein         
+5 | mer-tools   | mer-tools   | Ja        | Nein         
+6 | sdk         | sdk         | Ja        | Nein 
+[root@SailfishSDK ~]# zypper --verbose repos --export allrepos
+[root@SailfishSDK ~]# cat allrepos.repo
+# skipped some lines
+[sdk]
+name=sdk
+enabled=1
+autorefresh=0
+baseurl=plugin:ssu?repo=sdk
+type=rpm-md
+gpgcheck=0
+# ah, ssh is in the game
+[root@SailfishSDK ~]# ssu repos
+void NetworkService::setPath(const QString&) "Method "GetProperties" with signature "" on interface "net.connman.Service" doesn't exist
+" 
+Enabled repositories (global): 
+ - adaptation0 ... http://releases.sailfishos.org/sdk/latest/nemo/adaptation-x86-common/i486/
+ - adaptation1 ... http://releases.sailfishos.org/sdk/latest/jolla-hw/adaptation-jolla-x86-emul/i486/
+ - hotfixes    ... http://releases.sailfishos.org/sdk/latest/hotfixes/i486/
+ - jolla       ... http://releases.sailfishos.org/sdk/latest/jolla/i486/
+ - mer-tools   ... http://releases.sailfishos.org/sdk/latest/mer-tools/builds/i486/packages/
+ - sdk         ... http://releases.sailfishos.org/sdk/latest/sdk/i486/
+
+Enabled repositories (user): 
+
+Disabled repositories (global, might be overridden by user config): 
+ - apps    ... http://releases.sailfishos.org/jolla-apps/latest/i486/
+ - apps-mw ... 
+
+Disabled repositories (user): 
+ - home ... https://download.jollamobile.com/home:/honeybadger/latest_i486/
+[root@SailfishSDK ~]#
+\end{lstlisting}
+%
+\url{http://releases.sailfishos.org/sdk/latest/sdk/i486/} is what we are looking for.

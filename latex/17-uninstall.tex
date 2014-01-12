@@ -1,0 +1,78 @@
+%
+\section{Uninstall}\label{sec:uninstall}
+%
+You really want to quit? Stay here, the water is warm! Jokes aside, for whatever reason you might want to uninstall the SDK, here is how is goes.
+%
+%
+\subsubsection{OSX}\label{subsec:uninst:osx}
+%
+%
+\begin{figure}[H]
+  \centering
+  \includegraphics[scale=0.6]{../media/gfx/OSX/OSXSDKMaintenaceTool.png} 
+  \caption{Inside the SailfishOS folder you find the maintenance application. Start it to uninstall the SDK.}
+  \label{fig:uninst:osx:maintenance}
+\end{figure}
+%
+%
+\begin{figure}[H]
+  \centering
+  \includegraphics[scale=0.6]{../media/gfx/OSX/osxuninstall01.png} 
+  \caption{Uninstall, step 1.}
+  \label{fig:uninst:osxuninstall01}
+\end{figure}
+%
+\begin{figure}[H]
+  \centering
+  \includegraphics[scale=0.6]{../media/gfx/OSX/osxuninstall02.png} 
+  \caption{Uninstall, step 2.}
+  \label{fig:uninst:osxuninstall02}
+\end{figure}
+%
+\begin{figure}[H]
+  \centering
+  \includegraphics[scale=0.6]{../media/gfx/OSX/osxuninstall03.png} 
+  \caption{Uninstall, step 3.}
+  \label{fig:uninst:osxuninstall03}
+\end{figure}
+%
+\begin{figure}[H]
+  \centering
+  \includegraphics[scale=0.6]{../media/gfx/OSX/osxuninstall04.png} 
+  \caption{Uninstall, step 4.}
+  \label{fig:uninst:osxuninstall04}
+\end{figure}
+%
+To make it really clean, remove orphaned files and directories. Of course you can keep those files for later use.
+%
+\begin{lstlisting}[language=bash]
+# remains from the pre Alpha2 SDK
+rm ~/.ssh/mer-qt-creator-rsa*
+# there seem remains of every iteration of the SDK
+rm -R ~/.config/SailfishAlpha*
+# created if you deploy an app
+rm -R ~/rpmbuild
+\end{lstlisting}
+%
+If you don't need VirtualBox anymore, mount the diskimage\footnote{You still have that,don't you?} and start the \verb,VirtualBox_Uninstall.tool,, a bash script that removes all components form your system.
+%
+\begin{figure}[H]
+  \centering
+  \includegraphics[scale=0.6]{../media/gfx/OSX/osxuninstall05.png} 
+  \caption{Uninstall of VirtualBox.}
+  \label{fig:uninst:osxuninstall05}
+\end{figure}
+%
+%
+\subsubsection{Windows}\label{subsec:uninst:win}
+%
+\begin{itemize}
+\item Go to the control panel, choose "programs and features" and uninstall the SailfishOS SDK.
+\item Uninstall the VirtualBox from the same window if you don't need it anymore.
+\end{itemize}
+%
+%
+\subsubsection{Linux}\label{subsec:uninst:linux}
+%
+Sorry, as for installation: until now I can not provide information here.
+%
