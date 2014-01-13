@@ -431,7 +431,7 @@ CONFIG += link_pkgconfig
 PKGCONFIG += sailfishapp
 \end{lstlisting}
 %
-When you compile your program the \verb,, defines where \verb,#include,d header files are looked up.
+When you compile your program the \verb,INCLUDEPATH, defines where \verb,#include,d header files are looked up.
 %
 \begin{lstlisting}[language=tex]
 INCLUDEPATH += /usr/include/sailfishapp
@@ -663,10 +663,50 @@ Requires:
 %
 \emph{Optional} - lists the files that are copied to the system when the RPM package is being installed. Each line listed here corresponds to one of the file groups referred to in the \verb,INSTALL, section of your \verb,.prf, or \verb,.pro, file.
 
-\verb,%{name}, is resolved to the \verb,Name:, entry.
+\verb,\%{name}, is resolved to the \verb,Name:, entry.
 \begin{lstlisting}[language=tex]
 Files:
 \end{lstlisting}
+%
+There are some variables or macros that can be used inside a .yaml file\cite{yaml02}:
+%
+\begin{lstlisting}[language=clean,basicstyle=\ttfamily\tiny]
+| Macro             | Typical Expansion    | Meaning                                      |
+|:------------------|:---------------------|:---------------------------------------------|
+|%{_bindir}	        | /usr/bin	           | Binary directory: where executables are      |
+|                   |                      | usually stored.                              |
+|%{_builddir}       | ~/rpmbuild/BUILD	   | Build directory: files are compiled within a |
+|                   |                      | subdirectory of the build directory.         |
+|                   |                      | See %buildsubdir.                            |
+|%{buildroot}       | ~/rpmbuild/BUILDROOT | Build root: where files are "installed"      |
+|                   |                      | during the %install stage, which copies      |
+|                   |                      | files from a subdirectory of %{_builddir}    |
+|                   |                      | to a subdirectory of %{buildroot}.           |
+|                   |                      | (Historically, %{buildroot} was in           |
+|                   |                      | "/var/tmp/".)                                |
+|%{buildsubdir}	    | %{_builddir}/%{name} | Build subdirectory: a subdirectory within    |
+|                   |                      | %{_builddir} where files are compiled during |
+|                   |                      | the %build stage. It is set after %setup.    |
+|%{_datadir}        | /usr/share           | Share directory.                             |
+|%{_defaultdocdir}  | /usr/share/doc       | Default documentation directory.             |
+|%{dist}            | .fcNUMBER	           | Distribution+version short name              |
+|                   |                      | (e.g. ".fc20")                               |
+|%{fedora} NUMBER   |                      | Number of fedora release (e.g. "20")         |
+|%{_includedir}	    | /usr/include         |                                              |
+|%{_infodir}        | /usr/share/info      |                                              |
+|%{_initrddir}      | /etc/rc.d/init.d     |                                              |
+|%{_libdir}	        | /usr/lib             |                                              |
+|%{_libexecdir}	    | /usr/libexec         |                                              |
+|%{_localstatedir}  | /var                 |                                              |
+|%{_mandir}	        | /usr/share/man       |                                              |
+|%{name}            |                      | Name of package, set by Name: tag            |
+|%{_sbindir}        | /usr/sbin            |                                              |
+|%{_sharedstatedir} | /var/lib             |                                              |
+|%{_sysconfdir}	    | /etc                 |                                              |
+|%{version}         |                      | Version of package, set by Version: tag      |
+\end{lstlisting}
+%
+As you can see, not everything makes sense in the SailfishOS environment.
 %
 %
 \subsubsection{pkg-config}\label{subsubsec:pkgconfig}
