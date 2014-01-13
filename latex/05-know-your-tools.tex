@@ -879,7 +879,14 @@ To see them, you must start the emulator and click on the $\vcenter{\hbox{\inclu
 The \emph{Analyzer Settings} are clearly for \verb,valgrind, a static analyzer tool. I haven't used it one the emulator yet and on OSX Mountain Lion it does not run anymore. I'd prefer \verb,clang, which is AFAIK not available on the SDK.
 
 The \emph{Debugger Settings} are for TODO (the checkboxes are pretty cleat that it's about switching debugger support on and off but I haven't used it in this environment so far - so I don't make things up here).
+%
 
+You can use 2 variables inside the parameters for build/run settings:
+%
+\begin{itemize}
+\item \verb,%{buildDir},
+\item \verb,%{sourceDir},
+\end{itemize}
 %
 %
 \subsection{Mer build engine for cross compilation}\label{subsec:MerSDK}
