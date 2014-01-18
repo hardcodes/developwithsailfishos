@@ -613,7 +613,7 @@ Summary:
 \end{lstlisting}
 %
 %
-\emph{Required} - the version number of your package\footnote{TODO: what are the conventions? Should this always match the version in the Qt project file?}.
+\emph{Required} - the version number of your package. This has not to match with the version number of your app although it might be easier to share the first 2 digits. Increase this number each time you send a new package version to the harbour, so that the staff can see that you actually have something change inside the package.
 \begin{lstlisting}[language=tex]
 Version:
 \end{lstlisting}
@@ -655,7 +655,7 @@ PkgConfigBR
 \end{lstlisting}
 %
 %
-\emph{Optional} - contains the information which packages are needed at runtime. Those packages will be downloaded and installed automatically\footnote{This is true if the package is known in the repositories of your SailfishOS device.} when your this RMP package is installed\footnote{Have a look at the Harbour rules, there are only a few packages available that you can use here.}.
+\emph{Optional} - contains the information which packages are needed at runtime. Those packages will be downloaded and installed automatically\footnote{This is true if the package is known in the repositories of your SailfishOS device.}, when your this RPM package is installed\footnote{Have a look at the Harbour rules, there are only a few packages available that you can use here.}.
 \begin{lstlisting}[language=tex]
 Requires:
 \end{lstlisting}
@@ -711,11 +711,15 @@ As you can see, not everything makes sense in the SailfishOS environment.
 %
 \subsubsection{pkg-config}\label{subsubsec:pkgconfig}
 %
-\begin{lstlisting}[language=bash]
-pkg-config --list-all
-\end{lstlisting}
+pkg-config is a helper tool used when compiling applications and libraries. It helps you insert the correct compiler options on the command line so an application can use \verb,gcc -o test, \verb,test.cpkg-config, \verb,--libs --cflags glib-2.0, for instance, rather than hard-coding values on where to find glib (or other libraries). It is language-agnostic, so it can be used for defining the location of documentation tools, for instance.\cite{fd02}
+The primary use of \verb,pkg-config, is to provide the necessary details for compiling and linking a program to a library. This metadata is stored in \verb,pkg-config, files. These files have the suffix \verb,.pc, and reside in specific locations known to the \verb,pkg-config, tool.\cite{fd01}
+
+That being said you find \verb,.pc, files on the SailfishOS MerSDK VM. If you compile for the emulator, it is\\
+\verb,/srv/mer/targets/SailfishOS-i486-x86/usr/lib/pkgconfig,\\
+\\
+So that means if you want to compile a program that depends on other libraries, there you find the names that you can use in the \verb,PkgConfigBR, section of the \verb,.yaml, file. Of course that does not mean that your app will be accepted in the harbor ;-)
 %
-Works just in the scratch box environment; TODO
+Using \verb,pkg-config, in the shell directly will not provide any useful information. It is used inside the \nameref{subsec:scratchbox2} environment.
 %
 %
 \subsubsection{rpm}\label{subsubsec:rpm}
