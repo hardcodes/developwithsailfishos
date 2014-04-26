@@ -19,4 +19,11 @@ Candidates (at the moment) are:
 So in future you might want to head over to http://fletcherpenney.net/multimarkdown/ for the tools and look at https://rawgithub.com/fletcher/human-markdown-reference/master/index.html for the syntax.
 Before I start converting the document, I want to add some topics that spin around in my head right now. Yes, the more I add, the more needs to be converted... As of now the document already got its raw structure and is split up in several sub-documents, so that I don't have to work on one big chunk of text.
 
+What's up?
+----------
+
+20140426 - latest update - not
+
+There are many ideas pouring out of my mind but so far developing with SailfishOS is IMHO impossible! The API is absent or at least not documented or not allowed to use. The level of frustration is thus too high for me right now. Bend and wait.
+
 This work is licensed under the Creative Commons Attribution-NonCommercial- ShareAlike 4.0 International License. To view a copy of this license, visit http: // creativecommons. org/ licenses/ by-nc-sa/ 4. 0/ deed. en_ US .
